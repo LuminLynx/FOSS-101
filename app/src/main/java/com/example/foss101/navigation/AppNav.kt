@@ -21,9 +21,12 @@ fun AppNav() {
             HomeScreen(onNavigate = navController::navigate)
         }
         composable("browse") { BrowseTermsScreen() }
+        composable("categories") { TermDetailsScreen() }
+        composable("search") { BrowseTermsScreen() }
         composable("details") { TermDetailsScreen() }
         composable("ai_tools") { AiToolsScreen() }
         composable("trend_watcher") { TrendWatcherScreen() }
+        composable("ask_glossary") { ChatScreen() }
         composable("chat") { ChatScreen() }
         composable("settings") { SettingsScreen() }
     }
