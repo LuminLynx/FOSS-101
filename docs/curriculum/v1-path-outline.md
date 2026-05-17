@@ -177,15 +177,15 @@ are locked.
 
 ## Production (Units 11–15) — partially locked
 
-"*Can we operate this in front of real users?*" Units 11, 12,
-and 13 are locked; Units 14–15 remain sketched.
+"*Can we operate this in front of real users?*" Units 11–14
+are locked; Unit 15 remains sketched.
 
 | # | Unit | Status | Trade-off it teaches | Prereqs |
 |---|---|---|---|---|
 | 11 | **Streaming UX** | 🔒 | What to stream (raw tokens / semantic chunks / status only) vs. how to render the streaming state (continuous flow / progressive sections / typed-out) vs. how to handle mid-stream failure (silent retry / partial accept / full restart) — three coupled decisions whose pairings produce three different user feels; mismatched pairings produce a UI the user reads as broken | 1, 3 |
 | 12 | **Tool use / function calling** | 🔒 | Tool granularity (many narrow tools / few broad composites) vs. schema strictness (strict validation / lenient acceptance) vs. error-recovery locus (model retries on tool-error / orchestrator catches and re-prompts) — three coupled decisions that determine whether a tool-using LLM feature feels reliable, capable, and debuggable, or feels brittle, narrow, and opaque to ship and operate | 1, 4, 6, 10 |
 | 13 | **Multimodal (vision basics)** | 🔒 | Send the raw image to a vision model (flexible, zero pipeline, expensive per image, hard to eval) vs. extract structured signal first with OCR / classical CV (cheap, precise, brittle to inputs it wasn't built for) vs. hybrid (cheap extractor with a VLM fallback on low-confidence) — the PM error is defaulting to "throw the image at the multimodal model" for a stable extraction problem, or building a brittle CV pipeline for genuinely open-ended visual understanding | 1, 4, 8 |
-| 14 | Agents / multi-step reasoning | 🟡 | When chain-of-thought helps vs. when it's expensive theater | — |
+| 14 | **Agents / multi-step reasoning** | 🔒 | How much to decompose (single call / fixed workflow / model-directed agent loop) vs. how the loop terminates (fixed step budget / model self-assessment / external verifier) vs. where errors are caught (let them compound / per-step validation / end-state check) — the PM error is building a model-directed agent loop for a task that is actually a fixed workflow, paying agent cost, latency, and unpredictability for zero capability gain; that mismatch is the "expensive theater" | 1, 4, 8, 12 |
 | 15 | Safety + content moderation | 🟡 | What stops a feature from getting your team in trouble | — |
 
 ### Position rationale (Unit 11)
@@ -286,6 +286,51 @@ and 13 are locked; Units 14–15 remain sketched.
   layer that must moderate images, both presuppose the
   vision-capability literacy this unit builds.
 
+### Position rationale (Unit 14)
+
+- **Agents as Unit 14** is the fourth Production-block unit and
+  is explicitly *downstream* of Unit 12 (Tool use) — agents are
+  tool-use orchestration loops, the dependency Unit 12's own
+  position rationale already names. This is a hard prereq, not
+  an adjacency (contrast Unit 13, which is adjacent to Unit 12,
+  not downstream). The agentic pattern is unintelligible without
+  tool-call mechanics first, so Unit 12 must precede it.
+- **The load-bearing pedagogy is that "give it an agent loop"
+  is not one decision but three coupled ones** — how much to
+  decompose, how the loop terminates, where errors are caught.
+  As with the Streaming UX (Unit 11) and Tool use (Unit 12)
+  trilemmas, the combination sets the feel: a fixed workflow
+  with a step budget and per-step validation is the
+  reliable-pipeline shape (most "agent" use cases); a
+  model-directed loop with an external verifier and an
+  end-state check is the true-agent shape (rare, expensive,
+  justified only when decomposition genuinely cannot be
+  predetermined); a single call is the just-prompt-it baseline.
+- **The "expensive theater" failure is a mismatch, not a bad
+  option.** Most features marketed internally as "agents" are
+  fixed workflows misdiagnosed as needing model-directed
+  agency. Building the loop anyway pays agent cost, latency,
+  and unpredictability for zero capability gain. Sharpens the
+  original sketch ("when chain-of-thought helps vs. when it's
+  expensive theater") into the diagnostic discipline the unit
+  teaches.
+- **Prereqs 1, 4, 8, 12.** Unit 12 (tool-use loops — the
+  structural prereq), Unit 8 (Cost dynamics — "expensive
+  theater" is fundamentally a cost argument; step count
+  multiplies token spend), Unit 4 (Evals — compounding error
+  and end-state correctness are eval problems, e.g. 0.9⁵ ≈
+  0.59), Unit 1 (LLM mechanics — what a model call is). Unit 3
+  (Latency) was considered and deliberately excluded: multi-step
+  loops do multiply latency, but the cost argument carries the
+  PM-decision weight and latency is a corollary the unit
+  introduces itself — keeping the chain minimal, the same
+  discipline applied to every prior lock.
+- **Position before Safety (Unit 15)** because an autonomous
+  multi-step agent is the *maximal* action and risk surface a
+  safety layer must govern. Safety is most urgent precisely for
+  agentic systems, so the agent unit must establish what that
+  surface is before Unit 15 governs it.
+
 ---
 
 ## Operating (Units 16–20) — placeholder
@@ -330,19 +375,23 @@ Revisit after closed beta.
 
 ## What this file commits us to
 
-1. **Author Unit 12 (Tool use / function calling) next.** Unit 11
-   (Streaming UX) shipped and passed gate 2026-05-16 (see
-   docs/UNIT_11_GATE.md — effective 100% after the p007/p014
-   rewrites). No detour into Unit 14 or Unit 15 because something
-   else is "more interesting." Unit 13 (Multimodal / vision
-   basics) is locked 2026-05-17, satisfying the one-unit-ahead
-   lock buffer for Unit 12. Unit 12's regression set is authored
-   under the carried-forward constraints from UNIT_11_GATE.md:
-   **no flagged-expected pairs** (the flag does not fire on real
-   answers regardless of shape) and **no parenthetical
-   option-lists / markdown headers / quote-led sentences in
-   answer text** (deterministic grader-payload triggers).
-2. **Lock Unit 14 (Agents / multi-step reasoning) before Unit 13
+1. **Author Unit 13 (Multimodal / vision basics) next.** Unit 12
+   (Tool use / function calling) shipped and passed gate
+   2026-05-17 (see docs/UNIT_12_GATE.md — true 100% on the
+   realignment re-run, the cleanest closeout in the path; 12/20
+   units published). No detour into Unit 15 because something
+   else is "more interesting." Unit 14 (Agents / multi-step
+   reasoning) is locked 2026-05-17, satisfying the one-unit-ahead
+   lock buffer for Unit 13. Unit 13's regression set is authored
+   under the cumulative constraints from UNIT_11_GATE.md /
+   UNIT_12_GATE.md: **no flagged-expected pairs**, **no
+   parenthetical option-lists / markdown headers / quote-led
+   sentences in answer text**, and the **AND-clause-criterion
+   authoring check** (when a pair is intended to meet a
+   criterion containing "AND", verify every conjunct is
+   satisfied explicitly, not just the first — the c2/c3-strict
+   pattern across Units 9/10/11/12).
+2. **Lock Unit 15 (Safety + content moderation) before Unit 14
    authoring begins.** Maintain the one-unit-ahead lock buffer
    so the prereq chain is always settled before slot (a) begins
    on the active unit.
