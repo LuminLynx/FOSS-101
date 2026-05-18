@@ -122,15 +122,22 @@ def mark_reviewed(user_id: str, unit_id: str) -> dict[str, Any]:
     serialize instead of both reading the same interval and writing
     the same next step (a lost tick that would under-advance the
     schedule). The lock is held until the transaction commits at the
-    end of this block. The due check uses the same locked SELECT and
-    a DB-side NOW() so it is consistent with the lock and immune to
-    app/DB clock skew. Keeping the ladder in Python (_next_interval)
-    rather than a SQL CASE keeps _LADDER the single normative source
-    (D6) without reintroducing a race.
+    end of this block. The due check uses a DB-side clock so it is
+    immune to app/DB clock skew, and specifically clock_timestamp()
+    (real wall time at evaluation) NOT NOW(): NOW() is the
+    transaction-start timestamp, fixed for the whole tx, so if this
+    SELECT waits on a FOR UPDATE lock held by a concurrent tick, a
+    request that started just before due_at but acquired the lock
+    after due_at would wrongly evaluate "not due" against the stale
+    tx time and return a false 409. The advance below keeps NOW() —
+    the sub-second difference is irrelevant over day-scale intervals
+    and matches D6's "now()". Keeping the ladder in Python
+    (_next_interval) rather than a SQL CASE keeps _LADDER the single
+    normative source (D6) without reintroducing a race.
     """
     with get_connection() as connection:
         current = connection.execute(
-            "SELECT interval_days, (due_at <= NOW()) AS is_due "
+            "SELECT interval_days, (due_at <= clock_timestamp()) AS is_due "
             "FROM review_schedule "
             "WHERE user_id = %s AND unit_id = %s "
             "FOR UPDATE",

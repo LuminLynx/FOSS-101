@@ -157,9 +157,14 @@ far into the future, defeating the cadence the feature exists to
 enforce. Founder-approved 2026-05-18.
 
 **Rule:** a tick is **rejected** if the unit is not yet due
-(`due_at > NOW()`, evaluated DB-side under the same
-`FOR UPDATE` lock as the advance). Only a due review advances
-the ladder.
+(`due_at > clock_timestamp()`, evaluated DB-side inside the same
+`FOR UPDATE`-locked SELECT as the advance). Only a due review
+advances the ladder. The gate uses `clock_timestamp()` (real
+wall time at evaluation), **not** `NOW()`: `NOW()` is the
+transaction-start timestamp and would go stale while the SELECT
+waits on the row lock under contention, yielding a false 409 for
+a request that became due during the wait (Codex review, PR
+#132).
 
 - **Error, not silent no-op** — a no-op would hide client bugs.
 - **HTTP `409 Conflict`, code `REVIEW_NOT_DUE`** — the resource
@@ -167,7 +172,7 @@ the ladder.
   considered and rejected: niche, poorly supported.)
 - **No grace window.** Ladder intervals are in days; sub-second
   clock skew is irrelevant and a tolerance knob is a tunable
-  nobody asked for (YAGNI). Strict `due_at > NOW()`.
+  nobody asked for (YAGNI). Strict `due_at > clock_timestamp()`.
 
 This composes with the existing not-scheduled case: a missing
 schedule row is still `404 REVIEW_NOT_SCHEDULED` (nothing to
