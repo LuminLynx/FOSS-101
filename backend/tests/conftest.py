@@ -21,6 +21,7 @@ TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
 # Tables truncated between gated tests. CASCADE handles the FK chain
 # (grades → completions, rubric_criteria → rubrics → decision_prompts, etc.).
 _TRUNCATE_TABLES = (
+    "review_schedule",
     "completions",
     "rubric_criteria",
     "rubrics",
