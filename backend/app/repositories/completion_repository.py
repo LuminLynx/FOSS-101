@@ -8,11 +8,17 @@ constraint, but we surface the existing row rather than raising).
 Per-criterion grader output lives in the `grades` table and is written
 by the grader service in Phase 2; this repository is intentionally
 narrow to the completion event itself.
+
+F5 (spaced review): a NEW completion seeds the first review via
+review_repository.seed_review (docs/F5_SPACED_REVIEW.md D3). This is
+the only cross-repository call here; it runs after the completion is
+durably committed and is idempotent, so it cannot lose a completion.
 """
 from __future__ import annotations
 
 from typing import Any
 
+from . import review_repository
 from ..db import get_connection
 
 
@@ -81,6 +87,15 @@ def record_completion(user_id: str, unit_id: str) -> dict[str, Any]:
             }
 
         connection.commit()
+
+    # F5 / D3: a NEW completion seeds the first spaced review (the
+    # alreadyCompleted=True path returned early above, so this only
+    # runs once per (user, unit) — re-completion never reseeds).
+    # seed_review is its own transaction; the completion is already
+    # durably committed above, and seed_review is idempotent
+    # (ON CONFLICT DO NOTHING), so a retry after a seed failure is
+    # safe and does not lose the completion.
+    review_repository.seed_review(user_id, unit_id)
 
     return {
         "completion": _map_completion_row(row),
