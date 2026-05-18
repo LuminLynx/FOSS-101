@@ -3,6 +3,7 @@ package com.example.foss101.data.remote.api
 import com.example.foss101.model.CompletionRecord
 import com.example.foss101.model.GradeResult
 import com.example.foss101.model.Path
+import com.example.foss101.model.ReviewDue
 import com.example.foss101.model.UnitDetail
 
 interface PathApiService {
@@ -17,6 +18,21 @@ interface PathApiService {
      * backend/app/main.py POST /api/v1/units/{unit_id}/grade.
      */
     suspend fun submitGrade(unitId: String, answer: String): GradeResult
+
+    /**
+     * F5 / D5 — spaced reviews due for the authenticated user,
+     * ordered by due_at then unit position. GET
+     * /api/v1/review-schedule (server NOW() when no due_before).
+     */
+    suspend fun listDueReviews(): List<ReviewDue>
+
+    /**
+     * F5 / D6 — mark a due review done; advances the ladder.
+     * POST /api/v1/review-schedule/{unitId}/reviewed. The server
+     * gates this (404 if never completed, 409 if not yet due);
+     * callers treat it as best-effort.
+     */
+    suspend fun markReviewed(unitId: String)
 }
 
 class PathApiException(

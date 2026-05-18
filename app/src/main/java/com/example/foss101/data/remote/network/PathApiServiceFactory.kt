@@ -8,6 +8,7 @@ import com.example.foss101.model.DecisionPrompt
 import com.example.foss101.model.Grade
 import com.example.foss101.model.GradeResult
 import com.example.foss101.model.Path
+import com.example.foss101.model.ReviewDue
 import com.example.foss101.model.Rubric
 import com.example.foss101.model.RubricCriterion
 import com.example.foss101.model.UnitDetail
@@ -94,6 +95,22 @@ private class HttpPathApiService(
             grades = grades,
             flagged = data.optBoolean("flagged")
         )
+    }
+
+    override suspend fun listDueReviews(): List<ReviewDue> = withContext(Dispatchers.IO) {
+        val envelope = request("GET", "api/v1/review-schedule", payload = null)
+        val array = envelope.optJSONArray("data") ?: JSONArray()
+        array.map(::parseReviewDue)
+    }
+
+    override suspend fun markReviewed(unitId: String) {
+        withContext(Dispatchers.IO) {
+            val encodedId = URLEncoder.encode(unitId, Charsets.UTF_8.name())
+            // POST with no body; the server takes no payload. A 404/409
+            // (never completed / not yet due) surfaces as PathApiException
+            // and is treated best-effort by the caller.
+            request("POST", "api/v1/review-schedule/$encodedId/reviewed", payload = null)
+        }
     }
 
     private fun request(method: String, path: String, payload: JSONObject?): JSONObject {
@@ -252,6 +269,15 @@ private fun parseCompletion(data: JSONObject): CompletionRecord = CompletionReco
     pathId = data.optString("pathId"),
     unitId = data.optString("unitId"),
     completedAt = data.optString("completedAt")
+)
+
+private fun parseReviewDue(item: JSONObject): ReviewDue = ReviewDue(
+    unitId = item.optString("unitId"),
+    slug = item.optString("slug"),
+    title = item.optString("title"),
+    dueAt = item.optString("dueAt"),
+    intervalDays = item.optInt("intervalDays", 0),
+    lastReviewedAt = if (item.isNull("lastReviewedAt")) null else item.optString("lastReviewedAt")
 )
 
 private fun <T> JSONArray.map(transform: (JSONObject) -> T): List<T> = buildList {

@@ -5,6 +5,7 @@ import com.example.foss101.data.repository.CompletionCache
 import com.example.foss101.data.repository.PathRepository
 import com.example.foss101.model.CompletionRecord
 import com.example.foss101.model.Path
+import com.example.foss101.model.ReviewDue
 import com.example.foss101.model.UnitDetail
 import com.example.foss101.model.UnitManifestEntry
 import kotlinx.coroutines.Dispatchers
@@ -179,6 +180,72 @@ class PathHomeViewModelTest {
         assertEquals("expected exactly one network call", 1, repository.getPathCalls)
     }
 
+    @Test
+    fun `reviews due surface alongside nextUnit`() = runTest(dispatcher) {
+        val path = samplePath(
+            UnitManifestEntry("u-1", "a", "A", 1, "published"),
+            UnitManifestEntry("u-2", "b", "B", 2, "published")
+        )
+        val repository = FakePathRepository(
+            path = path,
+            reviewsDue = listOf(
+                ReviewDue("u-1", "a", "A", "2026-05-18T00:00:00+00:00", 3, null)
+            )
+        )
+        val viewModel = PathHomeViewModel(repository, FakeCompletionCache(setOf("u-1")))
+
+        viewModel.load()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState as PathHomeUiState.Loaded
+        assertEquals("u-2", state.nextUnit?.id)          // spine intact
+        assertEquals(1, state.reviewsDue.size)            // alongside
+        assertEquals("u-1", state.reviewsDue.first().unitId)
+        assertEquals(1, repository.listDueReviewsCalls)
+    }
+
+    @Test
+    fun `failed review fetch never gates the screen (best-effort)`() = runTest(dispatcher) {
+        val path = samplePath(UnitManifestEntry("u-1", "a", "A", 1, "published"))
+        val repository = FakePathRepository(
+            path = path,
+            reviewsError = PathApiException("offline", statusCode = null)
+        )
+        val viewModel = PathHomeViewModel(repository, FakeCompletionCache())
+
+        viewModel.load()
+        advanceUntilIdle()
+
+        // D4: a review-fetch failure must still yield Loaded with the
+        // next unit intact and an empty reviews list — never Error.
+        val state = viewModel.uiState as PathHomeUiState.Loaded
+        assertEquals("u-1", state.nextUnit?.id)
+        assertTrue(state.reviewsDue.isEmpty())
+    }
+
+    @Test
+    fun `markReviewed optimistically drops the row and calls the repo`() = runTest(dispatcher) {
+        val path = samplePath(UnitManifestEntry("u-2", "b", "B", 2, "published"))
+        val repository = FakePathRepository(
+            path = path,
+            reviewsDue = listOf(
+                ReviewDue("u-1", "a", "A", "2026-05-18T00:00:00+00:00", 3, null)
+            )
+        )
+        val viewModel = PathHomeViewModel(repository, FakeCompletionCache(setOf("u-1")))
+        viewModel.load()
+        advanceUntilIdle()
+        assertEquals(1, (viewModel.uiState as PathHomeUiState.Loaded).reviewsDue.size)
+
+        viewModel.markReviewed("u-1")
+        advanceUntilIdle()
+
+        val state = viewModel.uiState as PathHomeUiState.Loaded
+        assertTrue("review row removed optimistically", state.reviewsDue.isEmpty())
+        assertEquals(listOf("u-1"), repository.markedReviewedUnitIds)
+        assertEquals("u-2", state.nextUnit?.id)  // spine untouched
+    }
+
     private fun samplePath(vararg units: UnitManifestEntry): Path = Path(
         id = "llm-systems-for-pms",
         slug = "llm-systems-for-pms",
@@ -194,12 +261,17 @@ private class FakePathRepository(
     private val error: Throwable? = null,
     private val cacheToSeed: FakeCompletionCache? = null,
     private val syncedUnitIds: Set<String> = emptySet(),
-    private val syncError: Throwable? = null
+    private val syncError: Throwable? = null,
+    private val reviewsDue: List<ReviewDue> = emptyList(),
+    private val reviewsError: Throwable? = null
 ) : PathRepository {
     var getPathCalls = 0
         private set
     var syncCalls = 0
         private set
+    var listDueReviewsCalls = 0
+        private set
+    val markedReviewedUnitIds = mutableListOf<String>()
 
     override suspend fun getPath(pathId: String): Path {
         getPathCalls++
@@ -224,6 +296,16 @@ private class FakePathRepository(
         syncCalls++
         syncError?.let { throw it }
         cacheToSeed?.replaceAll(syncedUnitIds)
+    }
+
+    override suspend fun listDueReviews(): List<ReviewDue> {
+        listDueReviewsCalls++
+        reviewsError?.let { throw it }
+        return reviewsDue
+    }
+
+    override suspend fun markReviewed(unitId: String) {
+        markedReviewedUnitIds.add(unitId)
     }
 }
 

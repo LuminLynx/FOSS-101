@@ -4,6 +4,7 @@ import com.example.foss101.data.remote.api.PathApiService
 import com.example.foss101.model.CompletionRecord
 import com.example.foss101.model.GradeResult
 import com.example.foss101.model.Path
+import com.example.foss101.model.ReviewDue
 import com.example.foss101.model.UnitDetail
 
 interface PathRepository {
@@ -26,6 +27,22 @@ interface PathRepository {
      * the same account.
      */
     suspend fun syncCompletedUnits()
+
+    /**
+     * F5 / D5 — spaced reviews currently due for the user. Surfaced
+     * alongside (never gating) the next new unit on path home; the
+     * ViewModel calls this best-effort and a failure must not block
+     * the rest of the screen.
+     */
+    suspend fun listDueReviews(): List<ReviewDue>
+
+    /**
+     * F5 / D6 — mark a due review done (advances the spaced-review
+     * ladder server-side). Best-effort: the server gates it
+     * (404 never-completed / 409 not-yet-due) and the caller
+     * swallows failures.
+     */
+    suspend fun markReviewed(unitId: String)
 }
 
 class ApiPathRepository(
@@ -53,4 +70,10 @@ class ApiPathRepository(
         val records = pathApiService.listCompletions()
         completionCache.replaceAll(records.map { it.unitId }.toSet())
     }
+
+    override suspend fun listDueReviews(): List<ReviewDue> =
+        pathApiService.listDueReviews()
+
+    override suspend fun markReviewed(unitId: String) =
+        pathApiService.markReviewed(unitId)
 }

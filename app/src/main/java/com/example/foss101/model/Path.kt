@@ -96,3 +96,18 @@ data class GradeResult(
     /** True when the grader flagged the answer for review (T2-B). */
     val flagged: Boolean
 )
+
+/**
+ * One spaced-review entry due for the user (F5 / Loop step 6).
+ * Mirrors the backend `_map_due_row` shape from
+ * GET /api/v1/review-schedule. `lastReviewedAt` is null until the
+ * unit has been reviewed at least once.
+ */
+data class ReviewDue(
+    val unitId: String,
+    val slug: String,
+    val title: String,
+    val dueAt: String,
+    val intervalDays: Int,
+    val lastReviewedAt: String?
+)
