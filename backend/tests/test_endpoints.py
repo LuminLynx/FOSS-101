@@ -306,3 +306,31 @@ def test_post_reviewed_returns_advanced_row(
     assert response.status_code == 200
     assert response.json()["data"]["intervalDays"] == 3
     assert captured == {"user_id": "u-endpoint-test", "unit_id": "unit-a"}
+
+
+def test_post_reviewed_returns_409_when_not_due(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
+) -> None:
+    def _raise(user_id: str, unit_id: str) -> dict[str, Any]:
+        raise review_repository.ReviewNotDueError(f"{user_id}/{unit_id}")
+
+    monkeypatch.setattr(review_repository, "mark_reviewed", _raise)
+
+    response = client.post(
+        "/api/v1/review-schedule/unit-a/reviewed", headers=auth_header
+    )
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "REVIEW_NOT_DUE"
+
+
+def test_review_schedule_naive_due_before_returns_400(
+    client: TestClient, auth_header: dict[str, str]
+) -> None:
+    # Parses fine but has no UTC offset -> rejected (D5/P2).
+    response = client.get(
+        "/api/v1/review-schedule",
+        params={"due_before": "2026-05-18T10:00:00"},
+        headers=auth_header,
+    )
+    assert response.status_code == 400
+    assert response.json()["error"]["code"] == "INVALID_DUE_BEFORE"

@@ -265,10 +265,14 @@ def get_review_schedule(
 ) -> JSONResponse:
     """F5 / D5 — spaced reviews due for the authenticated user.
 
-    `due_before` is an optional ISO-8601 timestamp; omitted means
-    "due right now" (server NOW()). Ordered by due_at then unit
-    position. Malformed `due_before` is a 400 (a request-boundary
-    input, so it is validated here, not deeper).
+    `due_before` is an optional ISO-8601 timestamp that MUST carry
+    a UTC offset; omitted means "due right now" (server NOW()).
+    Ordered by due_at then unit position. Malformed or
+    timezone-naive `due_before` is a 400 — a request-boundary
+    input, validated here, not deeper. Offset-less timestamps are
+    rejected (not silently assumed UTC) because Postgres would
+    interpret them in the session timezone, making the same string
+    filter different rows across environments.
     """
     parsed_due_before: datetime | None = None
     if due_before is not None:
@@ -286,6 +290,19 @@ def get_review_schedule(
                     ),
                 },
             )
+        if parsed_due_before.tzinfo is None:
+            return _envelope_response(
+                status_code=400,
+                data=None,
+                error={
+                    "code": "INVALID_DUE_BEFORE",
+                    "message": (
+                        f"due_before '{due_before}' must include a UTC "
+                        "offset (e.g. '2026-05-18T10:00:00+00:00'); "
+                        "offset-less timestamps are ambiguous."
+                    ),
+                },
+            )
     due = review_repository.list_due(
         user_id=current_user_id,
         due_before=parsed_due_before,
@@ -300,8 +317,10 @@ def post_review_reviewed(
 ) -> JSONResponse:
     """F5 / D6 — mark a due review done; advance it one ladder step.
 
-    404 if the (user, unit) pair was never completed (so never
-    seeded) — there is nothing to advance.
+    404 REVIEW_NOT_SCHEDULED if the (user, unit) pair was never
+    completed (so never seeded) — nothing to advance. 409
+    REVIEW_NOT_DUE if it is scheduled but not yet due (D6
+    amendment) — something to advance, just not yet.
     """
     try:
         result = review_repository.mark_reviewed(
@@ -317,6 +336,18 @@ def post_review_reviewed(
                 "message": (
                     f"No review scheduled for unit '{unit_id}' — it was "
                     "never completed."
+                ),
+            },
+        )
+    except review_repository.ReviewNotDueError:
+        return _envelope_response(
+            status_code=409,
+            data=None,
+            error={
+                "code": "REVIEW_NOT_DUE",
+                "message": (
+                    f"Review for unit '{unit_id}' is not due yet; ticking "
+                    "early would bypass the spaced-review cadence."
                 ),
             },
         )
