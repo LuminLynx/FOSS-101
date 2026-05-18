@@ -1,9 +1,11 @@
 package com.example.foss101.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -13,22 +15,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.foss101.ui.theme.LibellaTheme
+
+// Flat hairline status cards — paper surface, single rule, no elevation.
+
+@Composable
+private fun StateCard(modifier: Modifier, content: @Composable () -> Unit) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, LibellaTheme.colors.hairline),
+        content = { content() }
+    )
+}
 
 @Composable
 fun LoadingState(message: String, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
+    StateCard(modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyMedium,
@@ -40,20 +52,12 @@ fun LoadingState(message: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun EmptyState(message: String, modifier: Modifier = Modifier) {
-    StateMessage(
-        message = message,
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
+    StateMessage(message, modifier, MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
 @Composable
 fun ErrorState(message: String, modifier: Modifier = Modifier) {
-    StateMessage(
-        message = message,
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.error
-    )
+    StateMessage(message, modifier, MaterialTheme.colorScheme.error)
 }
 
 @Composable
@@ -62,10 +66,7 @@ private fun StateMessage(
     modifier: Modifier = Modifier,
     color: androidx.compose.ui.graphics.Color
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
+    StateCard(modifier) {
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
