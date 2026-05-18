@@ -1,0 +1,747 @@
+# Regression set for the Multimodal (vision basics) unit
+# (multimodal-bundle-0).
+#
+# Unit 13. Authored 2026-05-18 under the cumulative gate
+# constraints carried forward through UNIT_12_GATE.md:
+#   * NO flagged-expected pairs. The flag does not fire on real
+#     answers regardless of shape (refuted across Units
+#     2/9/10/11/12). Off-topic answers the grader can confidently
+#     grade all-not-met are gradable — flagged: false (T2-B
+#     locked reading, docs/PHASE_2_GATE.md / PR #72).
+#   * NO parenthetical option-lists in answer text — never
+#     "approach (VLM, extract-first, or hybrid)" inside an
+#     answer; write it as prose. This was the deterministic
+#     grader-payload trigger in Unit 11 p007/p014.
+#   * NO markdown-style section headers (Unit 9 p016 lesson),
+#     NO quote-led sentences (Unit 11 lesson).
+#   * English-only per docs/curriculum/v1-path-outline.md.
+#   * AND-clause-criterion authoring check (escalated in
+#     docs/UNIT_12_GATE.md to a live checklist item): every
+#     rubric criterion here is an AND. Partial/borderline pairs
+#     are authored so the expected value matches the grader's
+#     STRICT reading — both conjuncts must hold for met:true —
+#     not the lenient first-conjunct one. This is the direct
+#     Unit 9/10/11/12 c2/c3-strict lesson applied at authoring
+#     time to minimize realignment churn.
+#
+# Position-to-criterion mapping (from
+# content/units/multimodal-bundle-0.md rubric):
+#
+#   1. "Names the three approaches — raw image to a VLM,
+#      extract-first with OCR/classical CV, hybrid extractor +
+#      VLM fallback — AND frames the decision as diagnosing the
+#      task shape first, not picking by model capability."
+#   2. "Explains the approach/shape mismatch mechanism — VLM on
+#      a barcode/fixed form overpays and loses evaluability for
+#      zero capability gain; a brittle CV pipeline on open-ended
+#      understanding just fails outside its training
+#      distribution — AND identifies the cost/eval consequence
+#      (image tokens a distinct/dominant cost line; free text
+#      over arbitrary images hard to eval)."
+#   3. "Maps an approach to a task shape correctly (open-ended
+#      -> VLM; stable bounded -> extract-first; high-volume
+#      mostly-stable-with-a-tail -> hybrid) and why the shape
+#      drives it AND names the common PM error (reaching for the
+#      most capable model by default instead of diagnosing the
+#      task shape)."
+#
+# Scenario the decision prompt makes explicit: a feature that
+# auto-fills an expense from a user-uploaded receipt photo — a
+# mostly-stable extraction task with a long tail, which makes all
+# three approach traps natural.
+#
+# Authoring distribution (21 pairs; Unit 12's gate-passing
+# shape — the cleanest in the path, 95% -> 100%):
+#   * 6 all-three-met, varied English voices
+#       p001 (balanced prose), p002 (terse engineering),
+#       p005 (been-bitten), p016 (long-narrative),
+#       p017 (structured PM-doc — flowing prose),
+#       p018 (short-form)
+#   * 5 partial credit (2 of 3), authored to the strict-AND
+#     reading
+#       p006 (c1+c2), p007 (c1+c3), p008 (c2+c3),
+#       p011 (c1+c3), p021 (c1+c3)
+#   * 2 single-criterion-met
+#       p009 (c1), p010 (c2)
+#   * 6 all-missed on-topic — PM-error patterns
+#       p004, p012, p014, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable (NOT flagged) —
+#     boundary probes
+#       p003 (pivots to PII/privacy governance — off-topic for
+#       the *how*), p013 (pivots to image *generation*, a
+#       different capability than image understanding)
+#   * 0 flagged-expected — retired per UNIT_11_GATE.md
+#
+# Check: 6 + 5 + 2 + 6 + 2 = 21.
+
+unit_id: multimodal-bundle-0
+
+description: |
+  Phase 3 / Unit 13 gate set. Authored 2026-05-18 against the
+  locked T2-B reading, under the cumulative UNIT_12_GATE.md
+  carried-forward constraints: zero flagged-expected pairs, no
+  parenthetical option-lists in answer text, no markdown
+  headers, no quote-led sentences, English-only, and the
+  AND-clause-criterion authoring check (every criterion is an
+  AND; borderline pairs authored so the expected value matches
+  the grader's strict both-conjuncts reading from the start).
+  21 pairs in Unit 12's proven 6/5/2/6/2 gate-passing shape.
+
+pairs:
+  - id: p001
+    label: All three met, balanced prose covering the three approaches and the receipt shape
+    answer: |
+      Eng saying the model is good enough to read a receipt is
+      the trap. The question is not whether the model can see the
+      image, every frontier model can. The question is the shape
+      of this visual task, and that should be diagnosed before
+      any approach is picked rather than reaching for the most
+      capable model by default.
+
+      There are three approaches. The first is sending the raw
+      image to a vision model, which is right for open-ended
+      visual understanding where the input is unbounded. The
+      second is extracting a structured signal first with OCR or
+      classical CV, which is right for stable, well-defined
+      extraction. The third is a hybrid where a cheap extractor
+      handles the common case and a VLM falls back on
+      low-confidence inputs, which is right for high-volume tasks
+      that are mostly stable with a long tail.
+
+      Receipt auto-fill is that third shape. Most receipts are
+      standard, a small tail are crumpled, angled, or
+      handwritten. So the approach is a hybrid: OCR for the 95
+      percent, VLM fallback on the weird 5 percent, because the
+      shape drives the choice. The failure of the
+      send-it-to-the-VLM instinct is concrete: image input is
+      billed in tokens proportional to resolution, so a
+      high-detail receipt photo is a distinct and often dominant
+      cost line, and the free-text output is hard to eval, so we
+      would overpay per receipt and lose the ability to measure
+      extraction accuracy for zero capability gain over OCR on
+      the standard case. Before launch I want the task shape
+      classified, the fallback threshold and its precision and
+      recall agreed, and cost-per-image measured at the
+      resolution we actually send.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p002
+    label: All three met, terse engineering voice
+    answer: |
+      Three approaches, pick by task shape, not by model
+      capability. Raw image to a VLM is for open-ended
+      understanding. Extract-first with OCR or classical CV is
+      for stable bounded extraction. Hybrid, cheap extractor with
+      VLM fallback, is for high-volume mostly-stable-with-a-tail.
+
+      Receipt auto-fill is mostly-stable-with-a-tail at volume,
+      so hybrid: OCR the standard receipts, fall back to the VLM
+      on low confidence, because the shape says so.
+
+      Mismatch mechanism if we just send every image to the VLM:
+      image tokens scale with resolution, so each receipt is a
+      large and often dominant cost line, and free text over
+      arbitrary receipt photos is hard to eval, so we overpay and
+      lose evaluability for no capability gain on the 95 percent
+      OCR already solves. The standard PM error is defaulting to
+      the most capable model instead of diagnosing the shape.
+      Before launch: shape classified, threshold tuned with
+      precision/recall, cost-per-image measured.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p005
+    label: All three met, been-bitten practitioner voice
+    answer: |
+      I shipped exactly this on a prior product and the token
+      bill was the surprise. We sent every receipt straight to
+      the vision model because it could read them, and we never
+      classified the task shape first — that was the mistake.
+
+      What I would do now is name the three approaches up front.
+      Raw image to a vision model is for open-ended understanding
+      where the input is unbounded. Extracting the signal first
+      with OCR or classical CV is for stable, well-defined
+      extraction. A hybrid, a cheap extractor with a VLM fallback
+      on low confidence, is for high-volume work that is mostly
+      stable with a long tail.
+
+      Receipts are that last shape, so the answer is the hybrid,
+      and the shape is what dictates it, not the model's
+      capability. The mechanism behind our original failure: a
+      high-resolution receipt photo is billed in image tokens
+      proportional to detail, so it became our dominant
+      cost-per-transaction line, and the VLM's free-text output
+      was hard to eval, so we could not even tell how often it
+      was wrong — we overpaid and lost evaluability for no gain
+      over OCR on the standard 95 percent. The error was reaching
+      for the most capable model by default instead of diagnosing
+      the shape. Before launch I want the shape classified, the
+      fallback threshold's precision and recall agreed, and
+      cost-per-image measured at our real resolution.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p016
+    label: All three met, long narrative voice
+    answer: |
+      Let me walk through how I would scope this rather than sign
+      off on the plan as stated. Eng wants to send each receipt
+      image to the vision model and parse the result, and the
+      justification is that the model is good enough to read a
+      receipt. That justification is the trap, because every
+      frontier model can see an image; the real work is figuring
+      out the shape of this particular visual task before any
+      approach is chosen, instead of reaching for the most
+      capable model by reflex.
+
+      I see three approaches and I want them named explicitly.
+      The first is handing the raw image to a vision model, which
+      earns its cost when the task is open-ended understanding,
+      reasoning over arbitrary, unbounded visual input. The
+      second is extracting a structured signal first using OCR or
+      classical computer vision, which is the right tool when the
+      task is stable and well defined, the same fields in roughly
+      the same place every time. The third is a hybrid, where a
+      cheap deterministic extractor handles the bulk of inputs
+      and a VLM is the fallback only on low-confidence cases,
+      which fits a task that is high volume and mostly stable but
+      carries a long tail of awkward inputs.
+
+      Receipt auto-fill is the third shape almost exactly. The
+      overwhelming majority of receipts are printed and
+      legible and yield to OCR; a minority are crumpled,
+      photographed at an angle, faded, or handwritten. So the
+      approach the shape selects is the hybrid, and it is the
+      shape that selects it, not the desire to use the strongest
+      model. The mechanism behind why the eng plan operates badly
+      is specific. Image input is billed in tokens that scale
+      with resolution and detail, so a high-detail receipt photo
+      is a distinct and frequently dominant cost line per
+      transaction, and a VLM's free-text output over arbitrary
+      receipt photos is hard to evaluate without a second grader
+      or a human. So sending every receipt to the VLM means we
+      overpay on the 95 percent OCR would have handled for cents
+      and we simultaneously lose the ability to measure how
+      accurate extraction actually is, all for zero capability
+      gain on the standard case. What I want decided before
+      launch is the explicit shape classification, the fallback
+      confidence threshold together with its precision and recall
+      targets, and a measured cost-per-image at the resolution we
+      will really send rather than the provider default.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p017
+    label: All three met, structured PM-doc written as flowing prose
+    answer: |
+      My recommendation is to not sign off until the task shape
+      is diagnosed, because the deciding factor here is the shape
+      of the visual task and not which model is most capable. The
+      context is that eng wants to send each receipt photo to the
+      vision model and parse the output.
+
+      The options are three. Raw image to a vision model fits
+      open-ended visual understanding over unbounded input.
+      Extract-first with OCR or classical CV fits stable,
+      well-defined extraction. A hybrid of a cheap extractor with
+      a VLM fallback on low confidence fits high-volume tasks
+      that are mostly stable with a long tail.
+
+      The decision is that receipt auto-fill is a high-volume,
+      mostly-stable-with-a-tail extraction task, so the hybrid is
+      the right approach, chosen because of that shape. The risk
+      in the eng plan is the mechanism of an approach/shape
+      mismatch: image tokens are billed proportional to
+      resolution, so a high-detail receipt is a distinct and
+      often dominant cost line, and the VLM's free-text output is
+      hard to eval over arbitrary receipt photos, so we would
+      overpay and surrender evaluability for no capability gain
+      over OCR on the standard receipts. The underlying mistake
+      is defaulting to the most capable model rather than
+      diagnosing the shape. The asks before launch are an
+      explicit shape classification, an agreed fallback threshold
+      with precision and recall, and a measured cost-per-image at
+      our real resolution.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p018
+    label: All three met, short-form
+    answer: |
+      Diagnose the shape before picking, do not default to the
+      strongest model. Three approaches: raw image to a VLM for
+      open-ended understanding, extract-first with OCR or
+      classical CV for stable bounded extraction, hybrid
+      extractor with VLM fallback for high-volume
+      mostly-stable-with-a-tail.
+
+      Receipt auto-fill is the last shape, so it is the hybrid,
+      because the shape says so. Sending every receipt to the VLM
+      fails on mechanism: image tokens scale with resolution so
+      each receipt is a dominant cost line, and free-text output
+      is hard to eval, so we overpay and lose evaluability for no
+      gain over OCR on the 95 percent. The error is reaching for
+      the most capable model instead of diagnosing the shape.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p006
+    label: c1 + c2 met, c3 missing — names the three and the shape-first frame, explains the mismatch mechanism and cost/eval, but never maps the receipt to an approach or names the PM error
+    answer: |
+      The first thing I would push back on is the framing. The
+      question is not whether the model can read a receipt, every
+      frontier model can see images. The question is the shape of
+      the visual task, and that has to be diagnosed before an
+      approach is chosen rather than just using the most capable
+      model.
+
+      There are three approaches to be clear about. One is
+      sending the raw image to a vision model. One is extracting
+      a structured signal first with OCR or classical CV. One is
+      a hybrid where a cheap extractor handles most inputs and a
+      VLM is a low-confidence fallback.
+
+      What worries me about the eng plan is the mechanism of a
+      mismatch between the approach and the task. Image input is
+      billed in tokens proportional to resolution and detail, so
+      a high-detail image is a distinct and often dominant cost
+      line, and a vision model's free-text output over arbitrary
+      images is hard to evaluate without a second model or a
+      human. So putting a VLM on a task a structured extractor
+      could handle means you overpay per call and lose
+      evaluability for zero capability gain, while the opposite
+      mismatch, a brittle classical pipeline on genuinely
+      open-ended understanding, does not degrade gracefully, it
+      simply fails on anything outside its training distribution.
+      Those are the failure modes I want the team to understand
+      before we go further.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p007
+    label: c1 + c3 met, c2 missing — names the three and shape-first, maps receipt to hybrid by shape and names the PM error, but the mismatch mechanism is only asserted with no overpay/eval/cost-line why
+    answer: |
+      The model being able to read a receipt is not the
+      question. The question is the shape of this visual task,
+      and we should diagnose that first instead of reaching for
+      the most capable model by default, which is the usual PM
+      mistake here.
+
+      There are three approaches: the raw image to a vision
+      model, extracting a structured signal first with OCR or
+      classical CV, and a hybrid of a cheap extractor with a VLM
+      fallback on low confidence.
+
+      Receipt auto-fill is a high-volume task that is mostly
+      stable with a long tail, since most receipts are standard
+      and a few are crumpled or angled. That shape is what
+      selects the approach, and the shape points at the hybrid:
+      OCR the common case, fall back to the VLM on the awkward
+      tail. Just sending everything to the VLM would be the wrong
+      call and wasteful, so the shape, not the model's strength,
+      should drive the decision. Before launch I want the team to
+      agree on the shape classification and the fallback routing.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p008
+    label: c2 + c3 met, c1 missing — explains the mismatch mechanism and cost/eval and maps by shape and names the PM error, but only two approaches are named cleanly, the hybrid is left implicit
+    answer: |
+      The deciding factor is the shape of the visual task, not
+      which model is strongest, and the common mistake is
+      defaulting to the most capable model instead of diagnosing
+      that shape.
+
+      Broadly you either send the raw image to a vision model or
+      you extract a structured signal first with OCR or classical
+      CV. The mechanism that makes the wrong pairing hurt is
+      concrete. Image input is billed in tokens proportional to
+      resolution and detail, so a high-detail receipt photo is a
+      distinct and often dominant cost line, and a vision model's
+      free-text output over arbitrary receipts is hard to
+      evaluate without a second grader. So putting a VLM on a
+      stable extraction task means you overpay per receipt and
+      lose evaluability for zero capability gain over OCR, while
+      the opposite, a rigid CV pipeline on genuinely open-ended
+      understanding, does not degrade gracefully, it just fails
+      outside its training distribution.
+
+      Receipt auto-fill is a stable, high-volume extraction task
+      with a small awkward tail, and that shape is what should
+      drive the decision toward extracting first and only
+      escalating the hard cases — the shape, not the appeal of
+      the strongest model.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p011
+    label: c1 + c3 met, c2 missing — names the three and maps by shape and names the PM error, but explicitly dismisses cost/eval
+    answer: |
+      The question is the shape of this visual task, and it
+      should be diagnosed before an approach is chosen rather
+      than just defaulting to the most capable model, which is
+      the error teams usually make here.
+
+      The three approaches are the raw image to a vision model
+      for open-ended understanding, extracting a structured
+      signal first with OCR or classical CV for stable bounded
+      extraction, and a hybrid of a cheap extractor with a VLM
+      fallback for high-volume work that is mostly stable with a
+      long tail.
+
+      Receipt auto-fill is that last shape, mostly-stable
+      receipts with a long tail of bad photos, so the shape
+      points at the hybrid and that is why I would pick it.
+      Honestly I would not overthink the cost or the evaluation
+      side of this; tokens are cheap at our scale and we can spot
+      check a few outputs by eye, so the only real decision is
+      matching the approach to the shape and agreeing the
+      fallback routing before launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p021
+    label: c1 + c3 met, c2 missing — names the three and maps by shape and names the PM error, but the mismatch is hand-waved with no concrete mechanism
+    answer: |
+      We should diagnose the shape of the visual task first
+      instead of reaching for the most capable model by default,
+      which is the standard trap.
+
+      There are three approaches in play: the raw image to a
+      vision model, extracting a structured signal first with OCR
+      or classical CV, and a hybrid of a cheap extractor with a
+      VLM fallback on low confidence.
+
+      Receipt auto-fill is a high-volume, mostly-stable
+      extraction task with a long tail of awkward photos. That
+      shape is what should drive the choice, and it drives it to
+      the hybrid: cheap extraction for the standard receipts, VLM
+      only for the hard tail. If you pick the wrong approach for
+      this shape it just performs worse and you will feel it
+      eventually, so the discipline is to let the shape pick the
+      approach rather than the model's strength. Before launch I
+      want the shape classification and the fallback routing
+      agreed.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: true
+      flagged: false
+
+  - id: p009
+    label: c1 only — cleanly names the three approaches and the diagnose-shape-first frame, then stops
+    answer: |
+      The thing to get right before signing off is that this is
+      not a question of whether the model can see a receipt. It
+      can. It is a question of the shape of the visual task, and
+      that shape should be diagnosed before any approach is
+      picked rather than reaching for the most capable model by
+      default.
+
+      There are three approaches available. One is sending the
+      raw image to a vision model. One is extracting a structured
+      signal first with OCR or classical CV. One is a hybrid,
+      where a cheap extractor handles most inputs and a vision
+      model is a fallback on low-confidence cases. Naming those
+      three and insisting we classify the task before choosing
+      among them is the discipline I want the team to adopt here.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p010
+    label: c2 only — explains the mismatch mechanism and cost/eval consequence with no three-approach framework, no mapping, no PM error
+    answer: |
+      My concern with the plan is the economics and the
+      measurability, not the model's ability. Image input is
+      billed in tokens roughly proportional to resolution and
+      detail, so a high-detail receipt photo is a distinct and
+      often dominant cost line per transaction, not a rounding
+      error. On top of that, a vision model's output here is free
+      text over arbitrary receipt photos, which is hard to
+      evaluate without a second model or a human in the loop, so
+      you do not actually know how often it is wrong.
+
+      Put those together and the mechanism of the mismatch is
+      clear: running a heavy vision model on something a cheap
+      deterministic extractor could handle means you overpay on
+      every call and you lose evaluability, for no capability you
+      actually needed. And the inverse mismatch is just as real:
+      a rigid extraction pipeline pointed at genuinely open-ended
+      visual input does not degrade gracefully, it simply fails
+      on anything outside the distribution it was built for.
+      Those two failure mechanisms are what I want understood
+      before we commit.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: true
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p004
+    label: All missed on-topic — "send every image to the VLM, frontier models are smart enough, skip the pipeline"
+    answer: |
+      Honestly I think eng's plan is the right one and we are
+      overcomplicating this. Frontier vision models are smart
+      enough now that you do not need a pipeline in front of
+      them. Just send the receipt image to the model, ask for the
+      fields back as JSON, and parse it. Building OCR or any kind
+      of preprocessing is the sort of thing we did years ago
+      because the models were weak; that is not the world we are
+      in anymore. We should sign off, ship the simple version,
+      and only revisit it if something actually breaks.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p012
+    label: All missed on-topic — "OCR is legacy, modern VLMs replaced it, always use the VLM"
+    answer: |
+      OCR is legacy technology at this point. Modern
+      vision-language models have effectively replaced it; a good
+      VLM reads a receipt better than Tesseract ever did and it
+      handles handwriting and bad lighting that classical OCR
+      chokes on. The right default in 2026 is to always use the
+      VLM for any image task, full stop, and treat anything
+      classical as technical debt we should be removing, not
+      adding. So eng's plan is correct and I would not introduce
+      an extraction stage at all.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p014
+    label: All missed on-topic — "build one general CV pipeline that handles every image type"
+    answer: |
+      I would not use the model for this at all. The right move
+      is to build one general computer-vision pipeline that we
+      own and that handles every image type the product will ever
+      throw at it — receipts today, but also screenshots,
+      product photos, charts, whatever comes next. Build it once,
+      make it general enough to cover all of them, and we never
+      have to think about per-feature image handling again. Eng
+      should invest in that one robust pipeline rather than
+      calling a model per feature.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p015
+    label: All missed on-topic — "image-token cost is negligible at our scale, ignore it"
+    answer: |
+      I looked at the plan and I think it is fine to ship as is.
+      The only thing people worry about with vision is cost, and
+      at our scale image-token cost is negligible — we are
+      talking fractions of a cent per receipt against a
+      transaction worth far more. So there is no real reason to
+      build extraction or a fallback path; that engineering would
+      cost more than the tokens ever will. Send the image to the
+      model, parse the result, move on. Cost is simply not a
+      factor here.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p019
+    label: All missed on-topic — "eval by eyeballing a few samples, vision quality is subjective anyway"
+    answer: |
+      Sign-off seems straightforward. Send the receipt to the
+      vision model, get the fields back, ship it. For quality, we
+      just have someone eyeball a few sample outputs before
+      release and spot-check occasionally afterwards. Vision
+      quality is fairly subjective anyway, so there is not much
+      point trying to put hard numbers on it; a human glancing at
+      a handful of receipts tells you everything you need to
+      know. No special pipeline, no formal evaluation, just a
+      sanity check and go.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p020
+    label: All missed on-topic — "hybrid is premature optimization, pick one and move on"
+    answer: |
+      I think the team is at risk of over-engineering this.
+      Hybrid approaches and fallback routing are premature
+      optimization for a v1 feature — that is the kind of thing
+      you build after you have a scale problem, not before. Just
+      pick one thing, the vision model, since eng already wants
+      it, and move on. We can always add complexity later if the
+      numbers force us to. For now the simplest possible path is
+      the correct one and we should not be debating task shapes
+      and pipelines this early.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p003
+    label: Off-topic, all missed, gradable, NOT flagged — pivots to PII/privacy/retention governance, off-topic for the *how*
+    answer: |
+      Before we talk about the feature at all, my real concern is
+      that we are about to start collecting photographs of
+      people's receipts. That is personal financial data and
+      possibly images of payment cards. The questions I want
+      answered are how long we retain the uploaded images, where
+      they are stored and whether that is region-appropriate,
+      whether they are encrypted at rest, what our deletion
+      policy is, whether this triggers any regulatory obligation,
+      and whether legal has reviewed the consent flow. Until the
+      privacy and data-governance story is clear I do not think
+      we should be discussing implementation. The technical
+      approach matters far less than getting the data-handling
+      and compliance posture right first.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
+
+  - id: p013
+    label: Off-topic, all missed, gradable, NOT flagged — pivots to image *generation*, a different capability than image understanding
+    answer: |
+      I think the more interesting opportunity here is generating
+      images, not just reading them. If we already have vision
+      models in the stack, we should look at using them to
+      produce a clean, branded visual summary of the expense for
+      the user — a generated receipt-style card they can share or
+      attach to a report. We could let users prompt for different
+      layouts and styles, and the model renders the image. That
+      would be a real differentiator. I would scope the
+      text-to-image generation work and the prompt controls for
+      the visual output rather than spending our time on the
+      ingestion side.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false
