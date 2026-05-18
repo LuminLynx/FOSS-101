@@ -210,6 +210,69 @@ def test_end_to_end_flow_against_real_db(
     assert repeat.json()["data"]["alreadyCompleted"] is True
 
 
+def test_end_to_end_review_lifecycle_against_real_db(
+    client: TestClient, gated_db, auth_header
+) -> None:
+    """F5 step 4 — EXECUTION.md:167 backend half: a completion seeds
+    a spaced review that surfaces on schedule, advances when done,
+    and is gated against early ticks — exercised through the real
+    HTTP stack + real DB in one flow.
+    """
+    seed = seed_path_with_units(gated_db)
+    auth_header = {"Authorization": f"Bearer {create_access_token(seed['user_id'])}"}
+
+    # 1. Completing a unit seeds its first review (D3).
+    assert client.post(
+        "/api/v1/completions", json={"unitId": "unit-a"}, headers=auth_header
+    ).status_code == 201
+
+    # 2. Nothing is due yet — first review is +1 day out (D3).
+    due_resp = client.get("/api/v1/review-schedule", headers=auth_header)
+    assert due_resp.status_code == 200
+    assert due_resp.json()["data"] == []
+
+    # 3. Make it due (backdate due_at), then it surfaces (D5).
+    with gated_db() as conn:
+        conn.execute(
+            "UPDATE review_schedule SET due_at = NOW() - make_interval(secs => 1) "
+            "WHERE user_id = %s AND unit_id = %s",
+            (seed["user_id"], "unit-a"),
+        )
+        conn.commit()
+    due_resp = client.get("/api/v1/review-schedule", headers=auth_header)
+    body = due_resp.json()["data"]
+    assert [r["unitId"] for r in body] == ["unit-a"]
+    assert body[0]["slug"] == "tokenization"
+    assert body[0]["title"] == "Tokenization"
+    assert body[0]["intervalDays"] == 1
+
+    # 4. Marking it reviewed advances the ladder 1 -> 3 (D6).
+    reviewed = client.post(
+        "/api/v1/review-schedule/unit-a/reviewed", headers=auth_header
+    )
+    assert reviewed.status_code == 200
+    assert reviewed.json()["data"]["intervalDays"] == 3
+
+    # 5. It drops off the due list — due_at advanced ~3 days out.
+    assert client.get(
+        "/api/v1/review-schedule", headers=auth_header
+    ).json()["data"] == []
+
+    # 6. Ticking again now is gated: not due -> 409 (D6 amendment).
+    early = client.post(
+        "/api/v1/review-schedule/unit-a/reviewed", headers=auth_header
+    )
+    assert early.status_code == 409
+    assert early.json()["error"]["code"] == "REVIEW_NOT_DUE"
+
+    # 7. A never-completed unit has no schedule -> 404.
+    missing = client.post(
+        "/api/v1/review-schedule/unit-b/reviewed", headers=auth_header
+    )
+    assert missing.status_code == 404
+    assert missing.json()["error"]["code"] == "REVIEW_NOT_SCHEDULED"
+
+
 # ----- F5 spaced review endpoints -----
 
 
