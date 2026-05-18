@@ -2,43 +2,63 @@ package com.example.foss101.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary = Color(0xFF3559E0)
-val OnPrimary = Color(0xFFFFFFFF)
-val PrimaryContainer = Color(0xFFDDE1FF)
-val OnPrimaryContainer = Color(0xFF0A1A5A)
+// Editorial / reference-document palette. Values transcribed 1:1 from the
+// design system token source (design handoff colors_and_type.css) and
+// docs/DESIGN_BRIEF.md. Warm paper + warm ink, hairline rules in warm taupe,
+// restrained marginal-ink accents (oxblood / sage / mineral). Completion is
+// oxblood, not green — the brief is explicit that nothing uses a "success green".
 
-val Secondary = Color(0xFF4D5D8A)
-val OnSecondary = Color(0xFFFFFFFF)
-val SecondaryContainer = Color(0xFFDFE4FF)
-val OnSecondaryContainer = Color(0xFF111B3D)
+// --- Light (the canonical mode) ---
+val Primary = Color(0xFF7D2A1A)              // oxblood — primary action
+val OnPrimary = Color(0xFFFAF7F0)            // paper on oxblood
+val PrimaryContainer = Color(0xFFF1E2DC)     // oxblood-tint — reviews-due / focused row
+val OnPrimaryContainer = Color(0xFF5A1E13)   // deep oxblood on tint
 
-val Tertiary = Color(0xFF006A66)
-val OnTertiary = Color(0xFFFFFFFF)
+val Secondary = Color(0xFF5C6B5D)            // sage — "settled"
+val OnSecondary = Color(0xFFFAF7F0)
+val SecondaryContainer = Color(0xFFE6E8E0)   // sage-tint
+val OnSecondaryContainer = Color(0xFF2F362F)
 
-val Background = Color(0xFFF1F4FB)
-val OnBackground = Color(0xFF131827)
-val Surface = Color(0xFFFFFFFF)
-val SurfaceVariant = Color(0xFFE5E9F4)
-val OnSurface = Color(0xFF1A1C1E)
-val OnSurfaceVariant = Color(0xFF424A60)
+val Tertiary = Color(0xFF46556B)             // mineral — mono / chrome accent
+val OnTertiary = Color(0xFFFAF7F0)
 
-val Outline = Color(0xFF727A92)
-val OutlineVariant = Color(0xFFC5CCDC)
-val Error = Color(0xFFBA1A1A)
-val OnError = Color(0xFFFFFFFF)
+val Background = Color(0xFFF5F1E8)           // paper-0 — page
+val OnBackground = Color(0xFF1C1815)         // ink-1 — body
+val Surface = Color(0xFFFFFFFF)              // paper-2 — card / sheet
+val SurfaceVariant = Color(0xFFEDE7D8)       // paper-3 — pull-quote / callout
+val OnSurface = Color(0xFF1C1815)            // ink-1
+val OnSurfaceVariant = Color(0xFF4A433C)     // ink-2 — meta / secondary
 
-val ColorDarkBackground = Color(0xFF10131C)
-val ColorDarkOnBackground = Color(0xFFE2E8F6)
-val ColorDarkSurface = Color(0xFF161B27)
-val ColorDarkSurfaceVariant = Color(0xFF2A3040)
-val ColorDarkOnSurface = Color(0xFFE2E8F6)
-val ColorDarkOnSurfaceVariant = Color(0xFFC1C8DB)
-val ColorDarkOutline = Color(0xFF8A92A8)
-val ColorDarkOutlineVariant = Color(0xFF3A4256)
+val Outline = Color(0xFFC8BFAE)              // hair-1 — row / section dividers
+val OutlineVariant = Color(0xFFE0D9C8)       // hair-2 — sub-dividers
+val Error = Color(0xFF8C2017)
+val OnError = Color(0xFFFAF7F0)
 
-// Custom semantic accent for "successful completion" — Material3 has no built-in success role.
-// Tuned for legibility in both light and dark mode.
-val SuccessContainerLight = Color(0xFFD1F1D8)
-val OnSuccessContainerLight = Color(0xFF0F3D1A)
-val SuccessContainerDark = Color(0xFF1F4F2C)
-val OnSuccessContainerDark = Color(0xFFC8EFD1)
+// --- Dark (mirror of warm-paper, inverted weight) ---
+val ColorDarkPrimary = Color(0xFFD6816A)            // oxblood dark
+val ColorDarkOnPrimary = Color(0xFF2A1812)
+val ColorDarkPrimaryContainer = Color(0xFF3A1F18)   // oxblood-tint dark
+val ColorDarkOnPrimaryContainer = Color(0xFFE8C4B8)
+val ColorDarkSecondary = Color(0xFFA2AB94)          // sage dark
+val ColorDarkOnSecondary = Color(0xFF1F231C)
+val ColorDarkSecondaryContainer = Color(0xFF232722) // sage-tint dark
+val ColorDarkOnSecondaryContainer = Color(0xFFD7DBCE)
+val ColorDarkTertiary = Color(0xFF9DAFC2)           // mineral dark
+val ColorDarkOnTertiary = Color(0xFF1A2128)
+
+val ColorDarkBackground = Color(0xFF15130F)         // paper-0 dark
+val ColorDarkOnBackground = Color(0xFFE8E2D5)       // ink-1 dark
+val ColorDarkSurface = Color(0xFF221E18)            // paper-2 dark
+val ColorDarkSurfaceVariant = Color(0xFF2A251D)     // paper-3 dark
+val ColorDarkOnSurface = Color(0xFFE8E2D5)
+val ColorDarkOnSurfaceVariant = Color(0xFFB5AC9C)   // ink-2 dark
+val ColorDarkOutline = Color(0xFF3A352C)            // hair-1 dark
+val ColorDarkOutlineVariant = Color(0xFF2A251D)     // hair-2 dark
+val ColorDarkError = Color(0xFFE4856E)
+
+// "Completed" is oxblood, not green (DESIGN_BRIEF.md). These retain their
+// names so existing components compile, but now resolve to the oxblood family.
+val SuccessContainerLight = Color(0xFFF1E2DC)       // oxblood-tint
+val OnSuccessContainerLight = Color(0xFF5A1E13)
+val SuccessContainerDark = Color(0xFF3A1F18)
+val OnSuccessContainerDark = Color(0xFFE8C4B8)
