@@ -19,12 +19,13 @@ Migration 020 created `review_schedule` as shape-only; this is
 the first application code to touch it. No new migration (D1 fits
 the existing columns exactly).
 
-list_due (the read endpoint's query) is intentionally NOT here
-yet — it lands with F5 implementation step 2 (the read endpoint)
-per the sequenced plan in the design doc.
+list_due is the read endpoint's query (D5), added in F5
+implementation step 2 alongside the GET /api/v1/review-schedule
+endpoint.
 """
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from ..db import get_connection
@@ -145,3 +146,43 @@ def mark_reviewed(user_id: str, unit_id: str) -> dict[str, Any]:
         connection.commit()
 
     return _map_review_row(row)
+
+
+def _map_due_row(row: Any) -> dict[str, Any]:
+    return {
+        "unitId": row["unit_id"],
+        "slug": row["slug"],
+        "title": row["title"],
+        "dueAt": row["due_at"],
+        "intervalDays": row["interval_days"],
+        "lastReviewedAt": row["last_reviewed_at"],
+    }
+
+
+def list_due(user_id: str, due_before: datetime | None = None) -> list[dict[str, Any]]:
+    """Reviews due for `user_id` at or before `due_before`. (D5)
+
+    `due_before` defaults to NOW() (server-side) when None — the
+    common case "what's due right now". Joins `units` for the
+    slug/title the client needs to render the review entry. Ordered
+    by due_at then unit position (D5), so the oldest-due unit and,
+    within a tie, the earliest path position surfaces first.
+    """
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT rs.unit_id,
+                   u.slug,
+                   u.title,
+                   rs.due_at,
+                   rs.interval_days,
+                   rs.last_reviewed_at
+            FROM review_schedule rs
+            JOIN units u ON u.id = rs.unit_id
+            WHERE rs.user_id = %s
+              AND rs.due_at <= COALESCE(%s, NOW())
+            ORDER BY rs.due_at ASC, u.position ASC
+            """,
+            (user_id, due_before),
+        ).fetchall()
+    return [_map_due_row(row) for row in rows]

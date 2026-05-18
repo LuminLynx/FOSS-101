@@ -16,6 +16,7 @@ from app.main import app
 from app.repositories import (
     completion_repository,
     path_repository,
+    review_repository,
     unit_repository,
 )
 
@@ -207,3 +208,101 @@ def test_end_to_end_flow_against_real_db(
     )
     assert repeat.status_code == 200
     assert repeat.json()["data"]["alreadyCompleted"] is True
+
+
+# ----- F5 spaced review endpoints -----
+
+
+def test_review_schedule_endpoint_requires_auth(client: TestClient) -> None:
+    response = client.get("/api/v1/review-schedule")
+    assert response.status_code == 401
+    assert response.json()["detail"]["code"] == "AUTH_REQUIRED"
+
+
+def test_post_reviewed_endpoint_requires_auth(client: TestClient) -> None:
+    response = client.post("/api/v1/review-schedule/any-unit/reviewed")
+    assert response.status_code == 401
+    assert response.json()["detail"]["code"] == "AUTH_REQUIRED"
+
+
+def test_review_schedule_returns_due_list(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def _list_due(user_id: str, due_before: Any = None) -> list[dict[str, Any]]:
+        captured["user_id"] = user_id
+        captured["due_before"] = due_before
+        return [
+            {
+                "unitId": "unit-a",
+                "slug": "tokenization",
+                "title": "Tokenization",
+                "dueAt": None,
+                "intervalDays": 1,
+                "lastReviewedAt": None,
+            }
+        ]
+
+    monkeypatch.setattr(review_repository, "list_due", _list_due)
+
+    response = client.get("/api/v1/review-schedule", headers=auth_header)
+    assert response.status_code == 200
+    body = response.json()
+    assert [row["unitId"] for row in body["data"]] == ["unit-a"]
+    assert captured["user_id"] == "u-endpoint-test"
+    assert captured["due_before"] is None
+
+
+def test_review_schedule_invalid_due_before_returns_400(
+    client: TestClient, auth_header: dict[str, str]
+) -> None:
+    response = client.get(
+        "/api/v1/review-schedule",
+        params={"due_before": "not-a-timestamp"},
+        headers=auth_header,
+    )
+    assert response.status_code == 400
+    assert response.json()["error"]["code"] == "INVALID_DUE_BEFORE"
+
+
+def test_post_reviewed_returns_404_when_not_scheduled(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
+) -> None:
+    def _raise(user_id: str, unit_id: str) -> dict[str, Any]:
+        raise review_repository.ReviewNotScheduledError(f"{user_id}/{unit_id}")
+
+    monkeypatch.setattr(review_repository, "mark_reviewed", _raise)
+
+    response = client.post(
+        "/api/v1/review-schedule/unit-x/reviewed", headers=auth_header
+    )
+    assert response.status_code == 404
+    assert response.json()["error"]["code"] == "REVIEW_NOT_SCHEDULED"
+
+
+def test_post_reviewed_returns_advanced_row(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def _mark(user_id: str, unit_id: str) -> dict[str, Any]:
+        captured["user_id"] = user_id
+        captured["unit_id"] = unit_id
+        return {
+            "id": 7,
+            "userId": user_id,
+            "unitId": unit_id,
+            "dueAt": None,
+            "intervalDays": 3,
+            "lastReviewedAt": None,
+        }
+
+    monkeypatch.setattr(review_repository, "mark_reviewed", _mark)
+
+    response = client.post(
+        "/api/v1/review-schedule/unit-a/reviewed", headers=auth_header
+    )
+    assert response.status_code == 200
+    assert response.json()["data"]["intervalDays"] == 3
+    assert captured == {"user_id": "u-endpoint-test", "unit_id": "unit-a"}
