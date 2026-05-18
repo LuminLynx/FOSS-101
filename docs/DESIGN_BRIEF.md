@@ -35,12 +35,14 @@ A mockup that violates one of these is unbuildable.
    This is a deliberate α-PM-audience differentiator, not an
    omission to "fix".
 3. **A unit is one scrolling reader, not a 5-stage stepper.** The
-   Bite → Depth → Decide → Calibrate → Sources sequence is the
-   *content order within one screen* (and a deliberate priming
-   guard — see Unit Reader), **not** five separately-navigable
-   stages with their own progress. The Logo-Lab-era "5-stage
-   stepper" mockup is a visual reinterpretation the data doesn't
-   support.
+   real sequence (definition → 90-second bite → Trade-off framing
+   → Depth → Decision prompt → Calibration → Sources, the last
+   two after the prompt as a priming guard — see Unit Reader for
+   the verbatim list) is *content order within one screen*, with
+   Trade-off framing and Depth as collapse-by-default
+   disclosures. It is **not** separately-navigable stages with
+   their own progress. The Logo-Lab-era "5-stage stepper" mockup
+   is a visual reinterpretation the data doesn't support.
 4. **The 6-step loop is UX flow, not persisted state.**
    Continue → Bite → Decide → Calibrate → Progress → Return
    (`STRATEGY.md:106-113`) describes a session's shape; only
@@ -83,28 +85,43 @@ The heavy screen — the actual learning loop. **One vertical
 scroll, fixed order, for a load-bearing reason.**
 
 - **Loop:** steps 2 (Bite), 3 (Decide), 4 (Calibrate).
-- **Real content, in this exact order (do not reorder in any
+- **Real content, in this exact order (verbatim from
+  `UnitReaderScreen.kt` `LoadedBody`; do not reorder in any
   redesign):**
-  1. Title + "Unit {position}".
-  2. **Bite** (`biteMd`) — the 90-second take.
-  3. **Depth** (`depthMd`) — fuller mental model (P4 "bite
-     first, depth on tap").
-  4. **Decision prompt** (`decisionPrompt.promptMd`) + an
-     open-ended answer text field + submit.
-  5. **Grade output** (after submit) — per-criterion
+  1. App-bar title = unit title, subtitle = "Unit {position}".
+  2. **Definition** (`unit.definition`) — a single
+     plain-text sentence at the very top of the scroll, before
+     the bite. Always shown.
+  3. **"90-second bite"** section (`biteMd`).
+  4. **"Trade-off framing"** — a *labeled, tap-to-expand
+     disclosure* (`tradeOffFraming`), collapsed by default,
+     between bite and depth. It is its own discrete element, not
+     buried inside bite or depth.
+  5. **"Depth"** — also a *labeled, tap-to-expand disclosure*
+     (`depthMd`), collapsed by default (P4 "bite first, depth
+     on tap"). Same treatment as Trade-off framing.
+  6. **"Decision prompt"** section (`decisionPrompt.promptMd`),
+     present only if the unit has one, + an open-ended answer
+     text field + submit.
+  7. **Grade output** (after submit) — per-criterion
      met/confidence/rationale against the rubric criteria.
-  6. **Calibration tags** (settled / contested) and **Sources**
-     — rendered **after** the prompt *on purpose*: showing
-     consensus/sources before the user answers would prime the
-     answer (P2/P4). **A redesign must preserve this ordering.**
-  7. If completed in a prior session, a quiet "completed"
-     confirmation (grades are not re-fetched on open — known,
-     acceptable).
+  8. **"Calibration"** section (settled / contested tags) then
+     **"Sources"** section — rendered **after** the prompt *on
+     purpose*: showing consensus/sources before the user answers
+     would prime the answer (P2/P4). **A redesign must preserve
+     this after-the-prompt ordering.**
+  9. If completed in a prior session (and no fresh grade
+     loaded), a quiet "completed" confirmation row (grades are
+     not re-fetched on open — known, acceptable).
 - **Drift to avoid:** a tab/stepper that lets the user jump to
-  "Calibrate"/"Sources" before answering (breaks the priming
-  guard); per-stage completion ticks; a "Trade-offs/Tags"
-  separate stage — trade-off framing and tags are *content
-  within* bite/depth/calibration, not navigable stages.
+  "Calibration"/"Sources" before answering (breaks the priming
+  guard); per-stage completion ticks / per-stage progress. Note
+  the screen *does* have discrete labeled sections (definition,
+  90-second bite, Trade-off framing [collapsible], Depth
+  [collapsible], Decision prompt, Calibration, Sources) in **one
+  scroll** — a redesign may restyle these sections, but they are
+  not a navigable multi-stage stepper with their own progress,
+  and the two collapsibles must stay collapsed-by-default.
 
 ### 3. Auth — routes `auth_login` / `auth_signup` (`AuthScreen.kt`)
 
