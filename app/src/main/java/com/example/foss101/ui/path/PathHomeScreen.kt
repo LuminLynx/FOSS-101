@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Card
@@ -30,6 +31,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foss101.data.repository.CompletionCache
 import com.example.foss101.data.repository.PathRepository
+import com.example.foss101.model.ReviewDue
 import com.example.foss101.model.UnitManifestEntry
 import com.example.foss101.ui.components.AppScreenScaffold
 import com.example.foss101.ui.components.PrimaryActionButton
@@ -96,6 +98,13 @@ fun PathHomeScreen(
             is PathHomeUiState.Loaded -> LoadedBody(
                 state = current,
                 onOpenUnit = onOpenUnit,
+                onReviewTap = { unitId ->
+                    // F5: D6 — tapping a due review marks it reviewed
+                    // (ladder advances, best-effort). D2 — a review is
+                    // a re-surface, so reuse the existing unit route.
+                    viewModel.markReviewed(unitId)
+                    onOpenUnit(unitId)
+                },
                 modifier = Modifier.screenContentPadding(contentPadding)
             )
         }
@@ -106,6 +115,7 @@ fun PathHomeScreen(
 private fun LoadedBody(
     state: PathHomeUiState.Loaded,
     onOpenUnit: (String) -> Unit,
+    onReviewTap: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -132,6 +142,27 @@ private fun LoadedBody(
                     completed = unit.id in state.completedUnitIds,
                     onClick = { onOpenUnit(unit.id) }
                 )
+            }
+        }
+
+        // F5 / D4: reviews due surface ALONGSIDE the next unit —
+        // optional, never a gate. Rendered only when non-empty, so
+        // a learner with nothing due (or a failed best-effort fetch)
+        // sees the screen exactly as before.
+        if (state.reviewsDue.isNotEmpty()) {
+            SectionHeader(title = "Reviews due")
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                state.reviewsDue.forEach { review ->
+                    ReviewRow(
+                        review = review,
+                        onClick = { onReviewTap(review.unitId) }
+                    )
+                }
             }
         }
 
@@ -198,6 +229,50 @@ private fun UnitRow(
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
                 contentDescription = "Open"
+            )
+        }
+    }
+}
+
+@Composable
+private fun ReviewRow(
+    review: ReviewDue,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Refresh,
+                contentDescription = "Spaced review",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = review.title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "Spaced review",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "Open review"
             )
         }
     }

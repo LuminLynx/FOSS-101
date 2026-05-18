@@ -10,6 +10,7 @@ import com.example.foss101.data.remote.api.PathApiException
 import com.example.foss101.data.repository.CompletionCache
 import com.example.foss101.data.repository.PathRepository
 import com.example.foss101.model.Path
+import com.example.foss101.model.ReviewDue
 import com.example.foss101.model.UnitManifestEntry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,13 @@ sealed interface PathHomeUiState {
     data class Loaded(
         val path: Path,
         val completedUnitIds: Set<String>,
-        val nextUnit: UnitManifestEntry?
+        val nextUnit: UnitManifestEntry?,
+        /**
+         * F5 / D4 — spaced reviews due, surfaced *alongside* the next
+         * new unit. Optional and never a gate: a failed review fetch
+         * leaves this empty and never blocks `nextUnit` or `Loaded`.
+         */
+        val reviewsDue: List<ReviewDue> = emptyList()
     ) : PathHomeUiState
 }
 
@@ -58,10 +65,17 @@ class PathHomeViewModel(
 
                 val path = pathRepository.getPath(pathId)
                 val completed = completionCache.completedUnitIds()
+                // F5 / D4: reviews are alongside, never a gate. Fetched
+                // best-effort *after* the path/completed state that the
+                // screen actually depends on; a failure here yields an
+                // empty list and never degrades Loaded or nextUnit.
+                val reviewsDue = runCatching { pathRepository.listDueReviews() }
+                    .getOrDefault(emptyList())
                 PathHomeUiState.Loaded(
                     path = path,
                     completedUnitIds = completed,
-                    nextUnit = path.units.firstOrNull { it.id !in completed }
+                    nextUnit = path.units.firstOrNull { it.id !in completed },
+                    reviewsDue = reviewsDue
                 )
             } catch (error: PathApiException) {
                 if (error.statusCode == 401) {
@@ -74,6 +88,28 @@ class PathHomeViewModel(
             } catch (error: Exception) {
                 PathHomeUiState.Error(message = "Network error. Pull to retry.")
             }
+        }
+    }
+
+    /**
+     * F5 / D6 — the user tapped a due review. Mark it reviewed
+     * server-side (best-effort: the server gates 404/409 and we
+     * swallow failures) and optimistically drop it from the
+     * surfaced list so it disappears immediately; it would also
+     * fall off the next load() since due_at advances. Navigation
+     * to the unit reader (D2 — a review is a re-surface, not a
+     * re-grade, so it reuses the existing unit route) is handled
+     * by the screen.
+     */
+    fun markReviewed(unitId: String) {
+        val current = uiState
+        if (current is PathHomeUiState.Loaded) {
+            uiState = current.copy(
+                reviewsDue = current.reviewsDue.filterNot { it.unitId == unitId }
+            )
+        }
+        viewModelScope.launch {
+            runCatching { pathRepository.markReviewed(unitId) }
         }
     }
 

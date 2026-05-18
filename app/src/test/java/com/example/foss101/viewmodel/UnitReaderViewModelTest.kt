@@ -278,6 +278,11 @@ private class FakeRepo(
     }
 
     override suspend fun syncCompletedUnits() { /* no-op for these tests */ }
+
+    override suspend fun listDueReviews(): List<com.example.foss101.model.ReviewDue> =
+        emptyList()
+
+    override suspend fun markReviewed(unitId: String) { /* no-op for these tests */ }
 }
 
 private class FakeCache(initial: Set<String> = emptySet()) : CompletionCache {
