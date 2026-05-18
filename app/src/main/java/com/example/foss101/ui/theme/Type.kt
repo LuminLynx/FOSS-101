@@ -2,22 +2,32 @@ package com.example.foss101.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.foss101.R
 
 // Type scale transcribed from the design system token source
 // (colors_and_type.css). Editorial direction: serif display + serif body
 // (Source Serif 4), sans UI labels (IBM Plex Sans). Serif display reads at
 // Normal weight, not Bold — per the token notes.
 //
-// FONT FOLLOW-UP (flagged by the token source itself): the brand fonts
-// Source Serif 4 / IBM Plex Sans / JetBrains Mono are not yet vendored in
-// app res/font. Until they are, display & body roles use FontFamily.Serif
-// and UI/label roles use FontFamily.SansSerif as the closest built-ins that
-// still carry the editorial serif identity. Swapping in the real font
-// resources is a separate, isolated change.
-private val Display = FontFamily.Serif
+// Source Serif 4 is vendored (OFL) in res/font and carries display + body.
+// Medium (500) is intentionally not vendored — Compose resolves FontWeight
+// .Medium to the nearest available weight (Regular/SemiBold), which is fine
+// for the single role that uses it.
+// FONT FOLLOW-UP: IBM Plex Sans (UI labels) and JetBrains Mono (token
+// counts / code) are not yet vendored; UI/label roles stay on
+// FontFamily.SansSerif until those OFL files are added — an isolated change.
+private val SourceSerif4 = FontFamily(
+    Font(R.font.sourceserif4_regular, FontWeight.Normal),
+    Font(R.font.sourceserif4_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.sourceserif4_semibold, FontWeight.SemiBold),
+    Font(R.font.sourceserif4_bold, FontWeight.Bold)
+)
+private val Display = SourceSerif4
 private val Ui = FontFamily.SansSerif
 
 val AppTypography = Typography(
