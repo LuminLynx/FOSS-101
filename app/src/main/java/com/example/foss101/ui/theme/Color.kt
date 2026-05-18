@@ -62,3 +62,54 @@ val SuccessContainerLight = Color(0xFFF1E2DC)       // oxblood-tint
 val OnSuccessContainerLight = Color(0xFF5A1E13)
 val SuccessContainerDark = Color(0xFF3A1F18)
 val OnSuccessContainerDark = Color(0xFFE8C4B8)
+
+// --- Extended editorial tokens (no Material3 role covers these) ---
+// ink-3 tertiary text, raised paper, accent chip tints with their own ink,
+// the review-needed banner, error tint. Values 1:1 from colors_and_type.css.
+data class LibellaColors(
+    val inkTertiary: Color,       // ink-3 — meta / placeholder / eyebrow
+    val paperRaised: Color,       // paper-1 — up-next row, pressed card
+    val hairline: Color,          // hair-1 — primary divider
+    val hairlineSub: Color,       // hair-2 — sub-divider
+    val settledTint: Color,       // sage-tint
+    val onSettledTint: Color,
+    val contestedTint: Color,     // ochre-tint
+    val onContestedTint: Color,
+    val unsettledTint: Color,     // mineral-tint
+    val onUnsettledTint: Color,
+    val bannerTint: Color,        // review-needed banner bg (ochre-tint)
+    val onBannerTint: Color,
+    val errorTint: Color
+)
+
+val LibellaLight = LibellaColors(
+    inkTertiary = Color(0xFF8A8175),
+    paperRaised = Color(0xFFFAF7F0),
+    hairline = Color(0xFFC8BFAE),
+    hairlineSub = Color(0xFFE0D9C8),
+    settledTint = Color(0xFFE6E8E0),
+    onSettledTint = Color(0xFF3F4B3F),
+    contestedTint = Color(0xFFF1E8D0),
+    onContestedTint = Color(0xFF6A5012),
+    unsettledTint = Color(0xFFE2E6EC),
+    onUnsettledTint = Color(0xFF384654),
+    bannerTint = Color(0xFFF1E8D0),
+    onBannerTint = Color(0xFF6A5012),
+    errorTint = Color(0xFFF2DEDB)
+)
+
+val LibellaDark = LibellaColors(
+    inkTertiary = Color(0xFF7C7466),
+    paperRaised = Color(0xFF1B1814),
+    hairline = Color(0xFF3A352C),
+    hairlineSub = Color(0xFF2A251D),
+    settledTint = Color(0xFF232722),
+    onSettledTint = Color(0xFFC9D0BE),
+    contestedTint = Color(0xFF2E2718),
+    onContestedTint = Color(0xFFD7B673),
+    unsettledTint = Color(0xFF1E242C),
+    onUnsettledTint = Color(0xFF9DAFC2),
+    bannerTint = Color(0xFF2E2718),
+    onBannerTint = Color(0xFFD7B673),
+    errorTint = Color(0xFF381914)
+)

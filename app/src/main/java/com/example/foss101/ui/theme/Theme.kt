@@ -5,6 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 
 private val LightColors = lightColorScheme(
     primary = Primary,
@@ -52,15 +55,26 @@ private val DarkColors = darkColorScheme(
     onError = ColorDarkOnPrimary
 )
 
+private val LocalLibellaColors = staticCompositionLocalOf { LibellaLight }
+
+object LibellaTheme {
+    val colors: LibellaColors
+        @Composable @ReadOnlyComposable get() = LocalLibellaColors.current
+}
+
 @Composable
 fun Foss101Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
-        typography = AppTypography,
-        shapes = AppShapes,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalLibellaColors provides if (darkTheme) LibellaDark else LibellaLight
+    ) {
+        MaterialTheme(
+            colorScheme = if (darkTheme) DarkColors else LightColors,
+            typography = AppTypography,
+            shapes = AppShapes,
+            content = content
+        )
+    }
 }
