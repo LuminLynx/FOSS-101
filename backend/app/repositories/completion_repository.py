@@ -16,10 +16,13 @@ durably committed and is idempotent, so it cannot lose a completion.
 """
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from . import review_repository
 from ..db import get_connection
+
+LOGGER = logging.getLogger(__name__)
 
 
 class UnitNotFoundError(Exception):
@@ -91,11 +94,25 @@ def record_completion(user_id: str, unit_id: str) -> dict[str, Any]:
     # F5 / D3: a NEW completion seeds the first spaced review (the
     # alreadyCompleted=True path returned early above, so this only
     # runs once per (user, unit) — re-completion never reseeds).
-    # seed_review is its own transaction; the completion is already
-    # durably committed above, and seed_review is idempotent
-    # (ON CONFLICT DO NOTHING), so a retry after a seed failure is
-    # safe and does not lose the completion.
-    review_repository.seed_review(user_id, unit_id)
+    #
+    # Best-effort, isolated side effect. The completion is already
+    # durably committed above; seed_review runs in its own
+    # transaction. record_completion is called from the grade
+    # endpoint *before* grades are upserted, so letting a transient
+    # seed_review failure propagate would abort the grade flow and
+    # report a successful, persisted completion as a failed request.
+    # A missing review row is recoverable (idempotent re-seed /
+    # backfill); a failed graded completion is not. So we log and
+    # swallow rather than propagate.
+    try:
+        review_repository.seed_review(user_id, unit_id)
+    except Exception:  # noqa: BLE001 — deliberate side-effect isolation
+        LOGGER.exception(
+            "seed_review failed for user=%s unit=%s; completion persisted, "
+            "review schedule not seeded (recoverable via re-seed/backfill)",
+            user_id,
+            unit_id,
+        )
 
     return {
         "completion": _map_completion_row(row),

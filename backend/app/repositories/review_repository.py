@@ -107,11 +107,21 @@ def mark_reviewed(user_id: str, unit_id: str) -> dict[str, Any]:
     due_at = NOW() + interval_days. Monotonic: no quality signal,
     no reset path. Raises ReviewNotScheduledError if the pair has
     no schedule row (the unit was never completed/seeded).
+
+    Concurrency: the row is SELECT ... FOR UPDATE locked before the
+    read-compute-write so two concurrent reviews of the same pair
+    serialize instead of both reading the same interval and writing
+    the same next step (a lost tick that would under-advance the
+    schedule). The lock is held until the transaction commits at the
+    end of this block. Keeping the ladder in Python (_next_interval)
+    rather than a SQL CASE keeps _LADDER the single normative source
+    (D6) without reintroducing a race.
     """
     with get_connection() as connection:
         current = connection.execute(
             "SELECT interval_days FROM review_schedule "
-            "WHERE user_id = %s AND unit_id = %s",
+            "WHERE user_id = %s AND unit_id = %s "
+            "FOR UPDATE",
             (user_id, unit_id),
         ).fetchone()
         if current is None:
