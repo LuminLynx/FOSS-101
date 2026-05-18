@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from fastapi import Depends, FastAPI, Query
@@ -22,6 +23,7 @@ from .repositories import (
     completion_repository,
     grade_repository,
     path_repository,
+    review_repository,
     unit_repository,
 )
 from .repository import (
@@ -254,6 +256,71 @@ def list_completions(
     """
     completions = completion_repository.list_completions(user_id=current_user_id)
     return _envelope_response(data=completions)
+
+
+@app.get("/api/v1/review-schedule")
+def get_review_schedule(
+    due_before: str | None = Query(default=None),
+    current_user_id: str = Depends(required_user_id),
+) -> JSONResponse:
+    """F5 / D5 — spaced reviews due for the authenticated user.
+
+    `due_before` is an optional ISO-8601 timestamp; omitted means
+    "due right now" (server NOW()). Ordered by due_at then unit
+    position. Malformed `due_before` is a 400 (a request-boundary
+    input, so it is validated here, not deeper).
+    """
+    parsed_due_before: datetime | None = None
+    if due_before is not None:
+        try:
+            parsed_due_before = datetime.fromisoformat(due_before)
+        except ValueError:
+            return _envelope_response(
+                status_code=400,
+                data=None,
+                error={
+                    "code": "INVALID_DUE_BEFORE",
+                    "message": (
+                        f"due_before '{due_before}' is not a valid ISO-8601 "
+                        "timestamp."
+                    ),
+                },
+            )
+    due = review_repository.list_due(
+        user_id=current_user_id,
+        due_before=parsed_due_before,
+    )
+    return _envelope_response(data=due)
+
+
+@app.post("/api/v1/review-schedule/{unit_id}/reviewed")
+def post_review_reviewed(
+    unit_id: str,
+    current_user_id: str = Depends(required_user_id),
+) -> JSONResponse:
+    """F5 / D6 — mark a due review done; advance it one ladder step.
+
+    404 if the (user, unit) pair was never completed (so never
+    seeded) — there is nothing to advance.
+    """
+    try:
+        result = review_repository.mark_reviewed(
+            user_id=current_user_id,
+            unit_id=unit_id,
+        )
+    except review_repository.ReviewNotScheduledError:
+        return _envelope_response(
+            status_code=404,
+            data=None,
+            error={
+                "code": "REVIEW_NOT_SCHEDULED",
+                "message": (
+                    f"No review scheduled for unit '{unit_id}' — it was "
+                    "never completed."
+                ),
+            },
+        )
+    return _envelope_response(data=result)
 
 
 @app.post("/api/v1/units/{unit_id}/grade")

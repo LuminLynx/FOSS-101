@@ -130,3 +130,34 @@ def test_duplicate_completion_does_not_reseed(gated_db) -> None:
             (seed["user_id"], "unit-a"),
         ).fetchone()
     assert row["interval_days"] == 3  # still advanced, not reset to 1
+
+
+def test_list_due_returns_due_units_joined_and_ordered(gated_db) -> None:
+    seed = seed_path_with_units(gated_db)
+    from datetime import datetime, timedelta, timezone
+
+    from app.repositories import review_repository
+
+    review_repository.seed_review(seed["user_id"], "unit-a")
+    review_repository.seed_review(seed["user_id"], "unit-b")
+    # Seeded due = now + 1 day, so nothing is due "now".
+    assert review_repository.list_due(seed["user_id"]) == []
+
+    # With due_before in 2 days, both are due; ordered by due_at then
+    # unit position -> unit-a (position 1) before unit-b (position 2).
+    horizon = datetime.now(timezone.utc) + timedelta(days=2)
+    due = review_repository.list_due(seed["user_id"], due_before=horizon)
+    assert [r["unitId"] for r in due] == ["unit-a", "unit-b"]
+    assert due[0]["slug"] == "tokenization"
+    assert due[0]["title"] == "Tokenization"
+    assert due[0]["intervalDays"] == 1
+    assert due[0]["lastReviewedAt"] is None
+
+
+def test_list_due_excludes_not_yet_due(gated_db) -> None:
+    seed = seed_path_with_units(gated_db)
+    from app.repositories import review_repository
+
+    review_repository.seed_review(seed["user_id"], "unit-a")
+    # Default due_before = NOW(); seeded review is +1 day out.
+    assert review_repository.list_due(seed["user_id"]) == []
