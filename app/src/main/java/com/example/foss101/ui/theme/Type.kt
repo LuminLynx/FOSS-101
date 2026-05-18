@@ -18,17 +18,21 @@ import com.example.foss101.R
 // Medium (500) is intentionally not vendored — Compose resolves FontWeight
 // .Medium to the nearest available weight (Regular/SemiBold), which is fine
 // for the single role that uses it.
-// FONT FOLLOW-UP: IBM Plex Sans (UI labels) and JetBrains Mono (token
-// counts / code) are not yet vendored; UI/label roles stay on
-// FontFamily.SansSerif until those OFL files are added — an isolated change.
+// FONT FOLLOW-UP: JetBrains Mono (token counts / code) is not yet vendored;
+// mono usage stays on FontFamily.Monospace until those OFL files are added.
 private val SourceSerif4 = FontFamily(
     Font(R.font.sourceserif4_regular, FontWeight.Normal),
     Font(R.font.sourceserif4_italic, FontWeight.Normal, FontStyle.Italic),
     Font(R.font.sourceserif4_semibold, FontWeight.SemiBold),
     Font(R.font.sourceserif4_bold, FontWeight.Bold)
 )
+private val IBMPlexSans = FontFamily(
+    Font(R.font.ibmplexsans_regular, FontWeight.Normal),
+    Font(R.font.ibmplexsans_medium, FontWeight.Medium),
+    Font(R.font.ibmplexsans_semibold, FontWeight.SemiBold)
+)
 private val Display = SourceSerif4
-private val Ui = FontFamily.SansSerif
+private val Ui = IBMPlexSans
 
 val AppTypography = Typography(
     headlineLarge = TextStyle(
