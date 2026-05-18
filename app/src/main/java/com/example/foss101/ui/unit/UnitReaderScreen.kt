@@ -381,10 +381,12 @@ private fun GradeRow(
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            StatusGlyph(met = grade.met)
+            Box(modifier = Modifier.padding(top = 2.dp)) {
+                StatusGlyph(met = grade.met)
+            }
             Text(
                 text = criterionText,
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 15.sp),
@@ -398,6 +400,7 @@ private fun GradeRow(
                     fontSize = 11.sp
                 ),
                 modifier = Modifier
+                    .padding(top = 1.dp)
                     .clip(RoundedCornerShape(2.dp))
                     .background(badgeBg)
                     .padding(horizontal = 8.dp, vertical = 3.dp)
