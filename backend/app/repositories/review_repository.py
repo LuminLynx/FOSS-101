@@ -42,6 +42,12 @@ class ReviewNotScheduledError(Exception):
     completed, so it was never seeded)."""
 
 
+class ReviewNotDueError(Exception):
+    """Raised when mark_reviewed is called for a scheduled review
+    that is not yet due (due_at > NOW()). D6 amendment: only a due
+    review advances the ladder — strict, no grace window."""
+
+
 def _next_interval(current: int) -> int:
     """Smallest ladder value strictly greater than `current`.
 
@@ -107,26 +113,40 @@ def mark_reviewed(user_id: str, unit_id: str) -> dict[str, Any]:
     interval_days -> next ladder value, last_reviewed_at = NOW(),
     due_at = NOW() + interval_days. Monotonic: no quality signal,
     no reset path. Raises ReviewNotScheduledError if the pair has
-    no schedule row (the unit was never completed/seeded).
+    no schedule row (the unit was never completed/seeded). Raises
+    ReviewNotDueError if the row exists but is not yet due
+    (due_at > NOW()) — D6 amendment, strict, no grace window.
 
     Concurrency: the row is SELECT ... FOR UPDATE locked before the
     read-compute-write so two concurrent reviews of the same pair
     serialize instead of both reading the same interval and writing
     the same next step (a lost tick that would under-advance the
     schedule). The lock is held until the transaction commits at the
-    end of this block. Keeping the ladder in Python (_next_interval)
-    rather than a SQL CASE keeps _LADDER the single normative source
-    (D6) without reintroducing a race.
+    end of this block. The due check uses a DB-side clock so it is
+    immune to app/DB clock skew, and specifically clock_timestamp()
+    (real wall time at evaluation) NOT NOW(): NOW() is the
+    transaction-start timestamp, fixed for the whole tx, so if this
+    SELECT waits on a FOR UPDATE lock held by a concurrent tick, a
+    request that started just before due_at but acquired the lock
+    after due_at would wrongly evaluate "not due" against the stale
+    tx time and return a false 409. The advance below keeps NOW() —
+    the sub-second difference is irrelevant over day-scale intervals
+    and matches D6's "now()". Keeping the ladder in Python
+    (_next_interval) rather than a SQL CASE keeps _LADDER the single
+    normative source (D6) without reintroducing a race.
     """
     with get_connection() as connection:
         current = connection.execute(
-            "SELECT interval_days FROM review_schedule "
+            "SELECT interval_days, (due_at <= clock_timestamp()) AS is_due "
+            "FROM review_schedule "
             "WHERE user_id = %s AND unit_id = %s "
             "FOR UPDATE",
             (user_id, unit_id),
         ).fetchone()
         if current is None:
             raise ReviewNotScheduledError(f"{user_id}/{unit_id}")
+        if not current["is_due"]:
+            raise ReviewNotDueError(f"{user_id}/{unit_id}")
 
         next_interval = _next_interval(current["interval_days"])
 

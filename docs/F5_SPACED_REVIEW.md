@@ -147,6 +147,38 @@ self-grade). A unit, once on the ladder, advances monotonically;
 it never falls back. (Reset-on-failure is an SM-2/FSRS behavior
 explicitly deferred.)
 
+#### D6 amendment — due-gate on the tick (added 2026-05-18)
+
+The original D6 was silent on what happens if `/reviewed` is
+called *before* `due_at`. Surfaced by Codex review on PR #131
+(post-merge): without a gate, a double-submit or a script can
+advance `1→3→7→…` ahead of schedule and push the next review
+far into the future, defeating the cadence the feature exists to
+enforce. Founder-approved 2026-05-18.
+
+**Rule:** a tick is **rejected** if the unit is not yet due
+(`due_at > clock_timestamp()`, evaluated DB-side inside the same
+`FOR UPDATE`-locked SELECT as the advance). Only a due review
+advances the ladder. The gate uses `clock_timestamp()` (real
+wall time at evaluation), **not** `NOW()`: `NOW()` is the
+transaction-start timestamp and would go stale while the SELECT
+waits on the row lock under contention, yielding a false 409 for
+a request that became due during the wait (Codex review, PR
+#132).
+
+- **Error, not silent no-op** — a no-op would hide client bugs.
+- **HTTP `409 Conflict`, code `REVIEW_NOT_DUE`** — the resource
+  state does not permit the action. (`425 Too Early` was
+  considered and rejected: niche, poorly supported.)
+- **No grace window.** Ladder intervals are in days; sub-second
+  clock skew is irrelevant and a tolerance knob is a tunable
+  nobody asked for (YAGNI). Strict `due_at > clock_timestamp()`.
+
+This composes with the existing not-scheduled case: a missing
+schedule row is still `404 REVIEW_NOT_SCHEDULED` (nothing to
+advance); a present-but-early row is `409 REVIEW_NOT_DUE`
+(something to advance, just not yet).
+
 ---
 
 ## Implementation plan (PRs, only after this doc is approved)
