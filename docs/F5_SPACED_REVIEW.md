@@ -135,13 +135,14 @@ endpoint. Auth: same JWT middleware as `/api/v1/completions`.
 
 A review is marked done via `POST
 /api/v1/review-schedule/{unit_id}/reviewed`. Effect:
-`interval_days = min(interval_days * 3, 60)` for the
-1→3→7→21→60 ladder (×3 from 1→3, then the published ladder; the
-ladder is the spec, the formula approximates it — implementation
-uses an explicit ladder array, not a multiply, to match D1's
-stated sequence exactly), `last_reviewed_at = now()`, `due_at =
-now() + interval_days`. **No quality signal, no reset path** —
-pure time-based progression, consistent with D1/D2 (no
+`interval_days` advances to the **next value in the explicit
+ladder `[1, 3, 7, 21, 60]`** (the D1 sequence verbatim), staying
+at `60` once reached; `last_reviewed_at = now()`; `due_at = now()
++ interval_days`. The ladder is normative — there is **no
+multiply formula** (a `×3` rule would produce `1→3→9→27→60` and
+contradict D1; implementations use the ladder array directly, in
+SQL and app logic). **No quality signal, no reset path** — pure
+time-based progression, consistent with D1/D2 (no
 self-grade). A unit, once on the ladder, advances monotonically;
 it never falls back. (Reset-on-failure is an SM-2/FSRS behavior
 explicitly deferred.)
