@@ -18,8 +18,6 @@ import com.example.foss101.R
 // Medium (500) is intentionally not vendored — Compose resolves FontWeight
 // .Medium to the nearest available weight (Regular/SemiBold), which is fine
 // for the single role that uses it.
-// FONT FOLLOW-UP: JetBrains Mono (token counts / code) is not yet vendored;
-// mono usage stays on FontFamily.Monospace until those OFL files are added.
 private val SourceSerif4 = FontFamily(
     Font(R.font.sourceserif4_regular, FontWeight.Normal),
     Font(R.font.sourceserif4_italic, FontWeight.Normal, FontStyle.Italic),
@@ -30,6 +28,13 @@ private val IBMPlexSans = FontFamily(
     Font(R.font.ibmplexsans_regular, FontWeight.Normal),
     Font(R.font.ibmplexsans_medium, FontWeight.Medium),
     Font(R.font.ibmplexsans_semibold, FontWeight.SemiBold)
+)
+// Code / token counts / inline measurements. Material's Typography has no
+// monospace role, so this is exposed for components (markdown code, token
+// readouts) to apply directly during the component restyle.
+val JetBrainsMono = FontFamily(
+    Font(R.font.jetbrainsmono_regular, FontWeight.Normal),
+    Font(R.font.jetbrainsmono_medium, FontWeight.Medium)
 )
 private val Display = SourceSerif4
 private val Ui = IBMPlexSans
