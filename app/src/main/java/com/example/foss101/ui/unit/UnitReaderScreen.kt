@@ -3,6 +3,8 @@ package com.example.foss101.ui.unit
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,44 +14,52 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.OpenInNew
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foss101.data.repository.CompletionCache
 import com.example.foss101.data.repository.PathRepository
 import com.example.foss101.model.CalibrationTag
 import com.example.foss101.model.Grade
 import com.example.foss101.model.RubricCriterion
-import com.example.foss101.model.UnitDetail
 import com.example.foss101.model.UnitSource
 import com.example.foss101.ui.components.AppScreenScaffold
+import com.example.foss101.ui.components.CalibrationTier
 import com.example.foss101.ui.components.MarkdownText
 import com.example.foss101.ui.components.PrimaryActionButton
 import com.example.foss101.ui.components.SectionHeader
+import com.example.foss101.ui.components.TagChip
 import com.example.foss101.ui.components.screenContentPadding
+import com.example.foss101.ui.theme.JetBrainsMono
+import com.example.foss101.ui.theme.LibellaTheme
 import com.example.foss101.viewmodel.UnitReaderEvent
 import com.example.foss101.viewmodel.UnitReaderUiState
 import com.example.foss101.viewmodel.UnitReaderViewModel
@@ -195,14 +205,10 @@ private fun LoadedBody(
             // (we don't fetch grades on unit open today), so just confirm.
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                StatusGlyph(met = true)
                 Text(
                     text = "You completed this unit in a previous session.",
                     style = MaterialTheme.typography.bodyMedium
@@ -220,6 +226,29 @@ private fun Section(title: String, body: @Composable () -> Unit) {
     }
 }
 
+// la-check: 18dp ring; met = filled oxblood with paper check,
+// not-met = error ring with an error cross.
+@Composable
+private fun StatusGlyph(met: Boolean) {
+    val oxblood = MaterialTheme.colorScheme.primary
+    val error = MaterialTheme.colorScheme.error
+    Box(
+        modifier = Modifier
+            .size(18.dp)
+            .clip(CircleShape)
+            .background(if (met) oxblood else Color.Transparent)
+            .border(1.5.dp, if (met) oxblood else error, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = if (met) Icons.Filled.Check else Icons.Filled.Close,
+            contentDescription = if (met) "Met" else "Not met",
+            tint = if (met) MaterialTheme.colorScheme.onPrimary else error,
+            modifier = Modifier.size(12.dp)
+        )
+    }
+}
+
 @Composable
 private fun DecisionAnswerSection(
     state: UnitReaderUiState.Loaded,
@@ -233,16 +262,27 @@ private fun DecisionAnswerSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 120.dp),
-            label = { Text("Your answer") },
+            label = { Text("YOUR ANSWER", style = MaterialTheme.typography.titleSmall) },
             placeholder = {
                 Text(
                     "Be specific about what you'd measure, what you'd ignore, " +
-                        "and where your estimate might still be wrong."
+                        "and where your estimate might still be wrong.",
+                    color = LibellaTheme.colors.inkTertiary
                 )
             },
             enabled = !state.submitInProgress,
             minLines = 4,
-            maxLines = 12
+            maxLines = 12,
+            shape = RoundedCornerShape(2.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = LibellaTheme.colors.hairline,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedLabelColor = LibellaTheme.colors.inkTertiary,
+                unfocusedLabelColor = LibellaTheme.colors.inkTertiary,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
         )
 
         val canSubmit = state.answerDraft.trim().isNotEmpty() && !state.submitInProgress
@@ -288,23 +328,25 @@ private fun GradeOutputSection(
             // so the banner points the user at the calibration tags +
             // sources below as the surrogate. Adding canonical-answer
             // content is tracked as Phase-2 polish.
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(LibellaTheme.colors.bannerTint)
+                    .border(1.dp, LibellaTheme.colors.hairline, RoundedCornerShape(2.dp))
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = "Review needed",
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                    Text(
-                        text = "We're not confident enough to grade this fairly. " +
-                            "Compare your answer to the calibration tags and sources below, then try again.",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+                Text(
+                    text = "Review needed".uppercase(),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = LibellaTheme.colors.onBannerTint
+                )
+                Text(
+                    text = "We're not confident enough to grade this fairly. " +
+                        "Compare your answer to the calibration tags and sources below, then try again.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
             return@Column
         }
@@ -325,45 +367,68 @@ private fun GradeRow(
     grade: Grade,
     criterionText: String
 ) {
-    val tint = if (grade.met) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    val pct = (grade.confidence * 100).toInt()
+    val highConfidence = pct >= 80
+    val badgeBg = if (highConfidence) LibellaTheme.colors.unsettledTint else LibellaTheme.colors.contestedTint
+    val badgeInk = if (highConfidence) LibellaTheme.colors.onUnsettledTint else LibellaTheme.colors.onContestedTint
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(2.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, LibellaTheme.colors.hairline, RoundedCornerShape(2.dp))
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Icon(
-                    imageVector = if (grade.met) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
-                    contentDescription = if (grade.met) "Met" else "Not met",
-                    tint = tint
-                )
-                Text(
-                    text = criterionText,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
-                )
-                AssistChip(
-                    onClick = {},
-                    label = { Text("${(grade.confidence * 100).toInt()}%") }
-                )
-            }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            StatusGlyph(met = grade.met)
             Text(
-                text = grade.rationale,
-                style = MaterialTheme.typography.bodyMedium
+                text = criterionText,
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 15.sp),
+                modifier = Modifier.weight(1f)
             )
-            if (grade.answerQuote.isNotBlank()) {
-                Text(
-                    text = "“${grade.answerQuote}”",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            Text(
+                text = "$pct%",
+                color = badgeInk,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontFamily = JetBrainsMono,
+                    fontSize = 11.sp
+                ),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(badgeBg)
+                    .padding(horizontal = 8.dp, vertical = 3.dp)
+            )
+        }
+        Text(
+            text = grade.rationale,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        if (grade.answerQuote.isNotBlank()) {
+            Text(
+                text = "“${grade.answerQuote}”",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .drawLeftRule(LibellaTheme.colors.hairline)
+                    .padding(start = 10.dp)
+            )
         }
     }
+}
+
+private fun Modifier.drawLeftRule(color: Color): Modifier = this.drawBehind {
+    drawLine(
+        color = color,
+        start = Offset(0f, 0f),
+        end = Offset(0f, size.height),
+        strokeWidth = 1.dp.toPx()
+    )
 }
 
 @Composable
@@ -375,24 +440,38 @@ private fun MarkdownDisclosure(
 ) {
     if (markdown.isBlank()) return
     Column {
+        HorizontalDivider(thickness = 1.dp, color = LibellaTheme.colors.hairline)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onToggle)
-                .padding(vertical = 8.dp),
+                .padding(vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(text = label, style = MaterialTheme.typography.titleSmall)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                ),
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = if (expanded) "OPEN" else "TAP TO EXPAND",
+                style = MaterialTheme.typography.titleSmall,
+                color = LibellaTheme.colors.inkTertiary
+            )
             Icon(
                 imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                contentDescription = if (expanded) "Hide $label" else "Show $label"
+                contentDescription = if (expanded) "Hide $label" else "Show $label",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         AnimatedVisibility(visible = expanded) {
             MarkdownText(
                 markdown = markdown,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp, bottom = 14.dp)
             )
         }
     }
@@ -400,18 +479,17 @@ private fun MarkdownDisclosure(
 
 @Composable
 private fun CalibrationTagRow(tag: CalibrationTag) {
+    val tier = when (tag.tier.lowercase()) {
+        "settled" -> CalibrationTier.Settled
+        "contested" -> CalibrationTier.Contested
+        else -> CalibrationTier.Unsettled
+    }
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        AssistChip(
-            onClick = {},
-            label = { Text(tag.tier) },
-            colors = AssistChipDefaults.assistChipColors(
-                containerColor = tierColor(tag.tier)
-            )
-        )
+        TagChip(label = tag.tier, tier = tier)
         Text(
             text = tag.claim,
             style = MaterialTheme.typography.bodyMedium,
@@ -421,59 +499,48 @@ private fun CalibrationTagRow(tag: CalibrationTag) {
 }
 
 @Composable
-private fun tierColor(tier: String): Color {
-    val scheme = MaterialTheme.colorScheme
-    return when (tier.lowercase()) {
-        "settled" -> scheme.primaryContainer
-        "contested" -> scheme.tertiaryContainer
-        else -> scheme.surfaceVariant
-    }
-}
-
-@Composable
 private fun SourceRow(source: UnitSource) {
     val context = LocalContext.current
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(2.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, LibellaTheme.colors.hairline, RoundedCornerShape(2.dp))
             .clickable {
                 runCatching {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(source.url))
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
                 }
-            },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = source.title, style = MaterialTheme.typography.titleSmall)
-                Text(
-                    text = "${if (source.primarySource) "Primary · " else ""}${source.date}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
-            Icon(
-                imageVector = Icons.Filled.OpenInNew,
-                contentDescription = "Open in browser"
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = source.title,
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 15.sp)
+            )
+            Text(
+                text = "${if (source.primarySource) "Primary · " else ""}${source.date}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+            contentDescription = "Open in browser",
+            tint = LibellaTheme.colors.inkTertiary
+        )
     }
 }
 
 @Composable
 private fun LoadingBox(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
     }
 }
 
