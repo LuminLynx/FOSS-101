@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -266,7 +268,8 @@ private fun DecisionAnswerSection(
             onValueChange = onAnswerChanged,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 120.dp),
+                .heightIn(min = 120.dp)
+                .semantics { contentDescription = "Your answer" },
             placeholder = {
                 Text(
                     "Be specific about what you'd measure, what you'd ignore, " +
