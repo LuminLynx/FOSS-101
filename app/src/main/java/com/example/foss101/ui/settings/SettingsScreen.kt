@@ -1,15 +1,18 @@
 package com.example.foss101.ui.settings
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.BrightnessMedium
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
@@ -28,16 +31,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.example.foss101.BuildConfig
+import com.example.foss101.R
 import com.example.foss101.data.repository.AuthRepository
 import com.example.foss101.model.User
 import com.example.foss101.ui.components.AppScreenScaffold
 import com.example.foss101.ui.components.SecondaryActionButton
 import com.example.foss101.ui.components.SectionHeader
-import com.example.foss101.ui.components.TertiaryActionButton
 import com.example.foss101.ui.components.screenContentPadding
+import com.example.foss101.ui.theme.LibellaTheme
 
 @Composable
 fun SettingsScreen(
@@ -56,7 +61,9 @@ fun SettingsScreen(
         subtitle = "App preferences and product info"
     ) { contentPadding ->
         Column(
-            modifier = Modifier.screenContentPadding(contentPadding),
+            modifier = Modifier
+                .screenContentPadding(contentPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             SectionHeader(title = "Account")
@@ -94,7 +101,7 @@ fun SettingsScreen(
             SectionHeader(title = "About")
             SettingsCard {
                 SettingsRow(
-                    icon = Icons.Filled.AutoAwesome,
+                    icon = ImageVector.vectorResource(R.drawable.ic_libella_mark),
                     title = "Libella",
                     description = "AI-fluent enough to lead the decisions their teams now have to make"
                 )
@@ -123,23 +130,12 @@ private fun AccountSection(
             description = user.email
         )
         Divider()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Logout,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            TertiaryActionButton(
-                text = "Sign out",
-                onClick = onSignOut
-            )
-        }
+        SettingsRow(
+            icon = Icons.AutoMirrored.Filled.Logout,
+            title = "Sign out",
+            description = "End this session on this device",
+            onClick = onSignOut
+        )
     } else {
         SettingsRow(
             icon = Icons.Filled.PersonOutline,
@@ -171,10 +167,13 @@ private fun AccountSection(
 private fun SettingsCard(content: @Composable () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             content()
