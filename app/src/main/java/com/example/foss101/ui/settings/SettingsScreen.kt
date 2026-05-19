@@ -96,7 +96,7 @@ fun SettingsScreen(
                 SettingsRow(
                     icon = Icons.Filled.AutoAwesome,
                     title = "Libella",
-                    description = "A path to AI fluency for the decisions product teams own"
+                    description = "AI-fluent enough to lead the decisions their teams now have to make"
                 )
                 Divider()
                 SettingsRow(
