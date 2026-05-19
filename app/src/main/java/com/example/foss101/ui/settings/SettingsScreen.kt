@@ -64,7 +64,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .screenContentPadding(contentPadding)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             SectionHeader(title = "Account")
             SettingsCard {
@@ -191,7 +191,7 @@ private fun SettingsRow(
     val rowModifier = Modifier
         .fillMaxWidth()
         .let { if (onClick != null) it.clickable(onClick = onClick) else it }
-        .padding(horizontal = 14.dp, vertical = 12.dp)
+        .padding(horizontal = 14.dp, vertical = 10.dp)
     Row(
         modifier = rowModifier,
         verticalAlignment = Alignment.CenterVertically,
