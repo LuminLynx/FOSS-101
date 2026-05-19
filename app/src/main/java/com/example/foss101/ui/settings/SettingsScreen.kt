@@ -95,8 +95,8 @@ fun SettingsScreen(
             SettingsCard {
                 SettingsRow(
                     icon = Icons.Filled.AutoAwesome,
-                    title = "AI-101",
-                    description = "AI Terms Glossary — beginner-friendly learning"
+                    title = "Libella",
+                    description = "A path to AI fluency for the decisions product teams own"
                 )
                 Divider()
                 SettingsRow(

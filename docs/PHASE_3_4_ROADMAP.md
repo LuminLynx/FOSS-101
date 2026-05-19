@@ -24,8 +24,9 @@
 
 - **Phase 1 complete** (Foundation — spine of the loop).
 - **Phase 2 complete** (Unit-1 pilot — grader proven, gate passed).
-- **Phase 3 in progress** — 9 of 20 units published. F5 / F6 not
-  started. Authoring is the pacing constraint per STRATEGY.md T1.
+- **Phase 3 in progress** — 12 of 20 units published. F5
+  implemented; F6 not started. Authoring is the pacing constraint
+  per STRATEGY.md T1.
 
 Published units:
 
@@ -40,7 +41,11 @@ Published units:
 | 7 | hallucination | ✅ |
 | 8 | cost-dynamics | ✅ |
 | 9 | customization-trilemma | ✅ |
-| 10–20 | (locked per `v1-path-outline.md`, not yet authored) | — |
+| 10 | vector-search-rag | ✅ |
+| 11 | streaming-ux | ✅ |
+| 12 | tool-use | ✅ |
+| 13 | multimodal | authored, gate pending |
+| 14–20 | (locked per `v1-path-outline.md`, not yet authored) | — |
 
 ---
 
