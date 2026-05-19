@@ -1,7 +1,7 @@
 # Libella
 
 ![Status](https://img.shields.io/badge/status-Phase%203%20in%20progress-blue)
-![Units](https://img.shields.io/badge/units-9%20of%2020%20published-purple)
+![Units](https://img.shields.io/badge/units-12%20of%2020%20published-purple)
 ![Platform](https://img.shields.io/badge/platform-Android-green)
 ![Backend](https://img.shields.io/badge/backend-FastAPI-teal)
 ![Database](https://img.shields.io/badge/database-PostgreSQL-blue)
@@ -49,9 +49,9 @@ In progress:
 
 Current state, per the project docs:
 
-- 9 of 20 units are published.
-- Units 10–20 remain to be authored.
-- F5 Spaced Review is not started.
+- 12 of 20 units are published.
+- Unit 13 is authored; units 14–20 remain to be authored.
+- F5 Spaced Review is implemented (review schedule, endpoints, Continue-surface integration).
 - F6 Path Overview is not started.
 - Authoring is the pacing constraint.
 - Phase 4 public-launch readiness has not started.
@@ -101,13 +101,13 @@ Published units:
 7. Hallucination + reliability
 8. Cost dynamics at scale
 9. Fine-tuning vs. prompting vs. RAG
-
-Locked / planned units include:
-
 10. Vector search / RAG fundamentals
 11. Streaming UX
 12. Tool use / function calling
-13. Multimodal basics
+
+Locked / planned units include:
+
+13. Multimodal basics (authored, gate pending)
 14. Agents / multi-step reasoning
 15. Safety + content moderation
 16–20. Operating-phase units, to be locked from real-user signal

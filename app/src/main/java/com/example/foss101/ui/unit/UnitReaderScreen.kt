@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -256,13 +258,18 @@ private fun DecisionAnswerSection(
     onSubmit: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = "YOUR ANSWER",
+            style = MaterialTheme.typography.titleSmall,
+            color = LibellaTheme.colors.inkTertiary
+        )
         OutlinedTextField(
             value = state.answerDraft,
             onValueChange = onAnswerChanged,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 120.dp),
-            label = { Text("YOUR ANSWER", style = MaterialTheme.typography.titleSmall) },
+                .heightIn(min = 120.dp)
+                .semantics { contentDescription = "Your answer" },
             placeholder = {
                 Text(
                     "Be specific about what you'd measure, what you'd ignore, " +
@@ -279,8 +286,6 @@ private fun DecisionAnswerSection(
                 unfocusedBorderColor = LibellaTheme.colors.hairline,
                 focusedContainerColor = MaterialTheme.colorScheme.surface,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                focusedLabelColor = LibellaTheme.colors.inkTertiary,
-                unfocusedLabelColor = LibellaTheme.colors.inkTertiary,
                 cursorColor = MaterialTheme.colorScheme.primary
             )
         )

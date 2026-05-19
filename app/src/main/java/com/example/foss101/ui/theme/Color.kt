@@ -24,7 +24,7 @@ val OnTertiary = Color(0xFFFAF7F0)
 
 val Background = Color(0xFFF5F1E8)           // paper-0 — page
 val OnBackground = Color(0xFF1C1815)         // ink-1 — body
-val Surface = Color(0xFFFFFFFF)              // paper-2 — card / sheet
+val Surface = Color(0xFFFAF7F0)              // paper-1 — card / sheet (warm; not pure white)
 val SurfaceVariant = Color(0xFFEDE7D8)       // paper-3 — pull-quote / callout
 val OnSurface = Color(0xFF1C1815)            // ink-1
 val OnSurfaceVariant = Color(0xFF4A433C)     // ink-2 — meta / secondary
