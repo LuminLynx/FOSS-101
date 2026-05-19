@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.BrightnessMedium
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Card
@@ -34,7 +33,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import com.example.foss101.BuildConfig
 import com.example.foss101.R
 import com.example.foss101.data.repository.AuthRepository
 import com.example.foss101.model.User
@@ -104,12 +102,6 @@ fun SettingsScreen(
                     icon = ImageVector.vectorResource(R.drawable.ic_libella_mark),
                     title = "Libella",
                     description = "AI-fluent enough to lead the decisions their teams now have to make"
-                )
-                Divider()
-                SettingsRow(
-                    icon = Icons.Filled.Info,
-                    title = "Version",
-                    description = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
                 )
             }
         }
