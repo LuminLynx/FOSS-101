@@ -54,6 +54,22 @@ class RegressionPair:
 
 
 @dataclass
+class CriterionOutcome:
+    """Per-criterion expected-vs-actual detail for one pair.
+
+    actual_met is None when the grader returned no verdict for that
+    position (rare; usually indicates the unit's rubric was re-authored
+    between ingest and grading). Otherwise it's the boolean the grader
+    returned. `matched` is the comparison result the agreement number
+    is summed from.
+    """
+    position: int
+    expected_met: bool
+    actual_met: bool | None
+    matched: bool
+
+
+@dataclass
 class PairOutcome:
     pair_id: str
     label: str
@@ -66,6 +82,7 @@ class PairOutcome:
     input_tokens: int = 0
     output_tokens: int = 0
     cache_read_tokens: int = 0
+    criterion_details: list[CriterionOutcome] = dataclasses.field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -225,10 +242,21 @@ def score_pair(
 
     actual_by_id: dict[int, bool] = {int(g["criterion_id"]): bool(g["met"]) for g in output.grades}
     matched = 0
+    details: list[CriterionOutcome] = []
     for expected in pair.expected_criteria:
         cid = pos_to_id[expected.position]
-        if cid in actual_by_id and actual_by_id[cid] == expected.met:
+        actual = actual_by_id.get(cid)
+        is_match = actual is not None and actual == expected.met
+        if is_match:
             matched += 1
+        details.append(
+            CriterionOutcome(
+                position=expected.position,
+                expected_met=expected.met,
+                actual_met=actual,
+                matched=is_match,
+            )
+        )
 
     flagged_match = output.flagged == pair.expected_flagged
 
@@ -244,6 +272,7 @@ def score_pair(
         input_tokens=int(usage.get("input_tokens", 0)),
         output_tokens=int(usage.get("output_tokens", 0)),
         cache_read_tokens=int(usage.get("cache_read_input_tokens", 0)),
+        criterion_details=details,
     )
 
 
@@ -263,7 +292,7 @@ def evaluate_threshold(
     return pct, pct >= threshold
 
 
-def render_report(outcomes: list[PairOutcome]) -> str:
+def render_report(outcomes: list[PairOutcome], show_criteria: bool = False) -> str:
     total_pairs = len(outcomes)
     if total_pairs == 0:
         return "No pairs scored."
@@ -305,6 +334,14 @@ def render_report(outcomes: list[PairOutcome]) -> str:
         flag_status = "ok" if o.flagged_match else f"want={o.expected_flagged} got={o.actual_flagged}"
         verdict = "PASS" if o.matched_criteria == o.total_criteria and o.flagged_match else "FAIL"
         lines.append(f"  [{verdict}] {o.pair_id} crit={crit_status} flagged={flag_status} — {o.label}")
+        if show_criteria and verdict == "FAIL" and o.criterion_details:
+            for c in o.criterion_details:
+                actual_str = "<missing>" if c.actual_met is None else str(c.actual_met).lower()
+                glyph = "ok" if c.matched else "MISS"
+                lines.append(
+                    f"          c{c.position}: expected={str(c.expected_met).lower():<5}  "
+                    f"actual={actual_str:<9}  [{glyph}]"
+                )
 
     return "\n".join(lines)
 
@@ -326,6 +363,15 @@ def main(argv: list[str]) -> int:
             "fail (exit 1) if per-criterion agreement is strictly below PCT "
             "(0-100). Per docs/PHASE_2_GATE.md the recommended gate bar is "
             "80. Ignored under --check. The report is still printed."
+        ),
+    )
+    parser.add_argument(
+        "--show-criteria",
+        action="store_true",
+        help=(
+            "for every FAILed pair, print a per-criterion expected-vs-actual "
+            "detail block. Useful for diagnosing which criterion the grader "
+            "disagreed on during gate triage. No effect on PASS pairs."
         ),
     )
     args = parser.parse_args(argv[1:])
@@ -359,7 +405,7 @@ def main(argv: list[str]) -> int:
         return 1
 
     outcomes = [score_pair(p, unit, grade_decision_answer) for p in pairs]
-    print(render_report(outcomes))
+    print(render_report(outcomes, show_criteria=args.show_criteria))
 
     if args.threshold is not None:
         pct, passed = evaluate_threshold(outcomes, args.threshold)

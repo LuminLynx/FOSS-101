@@ -14,6 +14,7 @@ from typing import Any
 import pytest
 
 from scripts.run_regression_set import (
+    CriterionOutcome,
     PairOutcome,
     RegressionPair,
     RegressionSetError,
@@ -175,6 +176,12 @@ def test_score_pair_full_match() -> None:
     assert outcome.total_criteria == 2
     assert outcome.flagged_match is True
     assert outcome.error is None
+    # criterion_details mirrors expected_criteria order and records the
+    # per-criterion comparison the agreement number is summed from.
+    assert outcome.criterion_details == [
+        CriterionOutcome(position=1, expected_met=True, actual_met=True, matched=True),
+        CriterionOutcome(position=2, expected_met=False, actual_met=False, matched=True),
+    ]
 
 
 def test_score_pair_partial_match() -> None:
@@ -192,6 +199,10 @@ def test_score_pair_partial_match() -> None:
     outcome = score_pair(_pair([(1, True), (2, False)]), unit, grader)
     assert outcome.matched_criteria == 1, "criterion 2 expected false but grader said true"
     assert outcome.total_criteria == 2
+    # The mismatched criterion shows up in the per-criterion detail.
+    assert [c.matched for c in outcome.criterion_details] == [True, False]
+    assert outcome.criterion_details[1].expected_met is False
+    assert outcome.criterion_details[1].actual_met is True
 
 
 def test_score_pair_grader_error_does_not_propagate() -> None:
@@ -204,6 +215,8 @@ def test_score_pair_grader_error_does_not_propagate() -> None:
     assert outcome.error is not None
     assert "rate limit" in outcome.error
     assert outcome.matched_criteria == 0
+    # On grader error we never reach the comparison loop — no detail.
+    assert outcome.criterion_details == []
 
 
 def test_score_pair_propagates_provider_usage() -> None:
@@ -265,6 +278,43 @@ def test_render_report_summarizes_runs() -> None:
     assert "p003" in report and "[ERROR]" in report
     assert "p001" in report and "PASS" in report
     assert "p002" in report and "FAIL" in report
+
+
+def test_render_report_show_criteria_emits_fail_detail() -> None:
+    fail_details = [
+        CriterionOutcome(position=1, expected_met=True, actual_met=True, matched=True),
+        CriterionOutcome(position=2, expected_met=False, actual_met=True, matched=False),
+        CriterionOutcome(position=3, expected_met=True, actual_met=None, matched=False),
+    ]
+    pass_details = [
+        CriterionOutcome(position=1, expected_met=True, actual_met=True, matched=True),
+    ]
+    outcomes = [
+        PairOutcome("p001", "ok", 1, 1, True, False, False, criterion_details=pass_details),
+        PairOutcome("p002", "fail", 1, 3, True, False, False, criterion_details=fail_details),
+    ]
+    report = render_report(outcomes, show_criteria=True)
+    # PASS pair has no per-criterion detail printed.
+    assert "p001" in report
+    assert "c1: expected=true" not in report.split("p001")[1].split("p002")[0]
+    # FAIL pair has the per-criterion block.
+    fail_section = report.split("p002")[1]
+    assert "c1: expected=true" in fail_section and "[ok]" in fail_section
+    assert "c2: expected=false" in fail_section and "actual=true" in fail_section and "[MISS]" in fail_section
+    # Missing actual surfaces as "<missing>" so triage knows the grader skipped it.
+    assert "c3: expected=true" in fail_section and "<missing>" in fail_section
+
+
+def test_render_report_show_criteria_off_by_default() -> None:
+    fail_details = [
+        CriterionOutcome(position=1, expected_met=False, actual_met=True, matched=False),
+    ]
+    outcomes = [
+        PairOutcome("p001", "fail", 0, 1, True, False, False, criterion_details=fail_details),
+    ]
+    report = render_report(outcomes)  # default show_criteria=False
+    assert "p001" in report and "FAIL" in report
+    assert "expected=" not in report  # no per-criterion block
 
 
 # ---------------------------------------------------------------------------
