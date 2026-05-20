@@ -247,6 +247,22 @@ def score_pair(
     )
 
 
+def evaluate_threshold(
+    outcomes: list[PairOutcome], threshold: float
+) -> tuple[float, bool]:
+    """Return (per-criterion agreement percentage, passed-threshold).
+
+    Empty outcomes degenerate to 100.0% (no data to disagree on). This keeps
+    the gate intent — "the grader doesn't materially disagree with the
+    pairs" — well-defined when a set has zero scoreable pairs. The CLI
+    treats this as PASS so empty / unreachable sets don't false-positive.
+    """
+    total = sum(o.total_criteria for o in outcomes)
+    matched = sum(o.matched_criteria for o in outcomes)
+    pct = (matched / total * 100) if total else 100.0
+    return pct, pct >= threshold
+
+
 def render_report(outcomes: list[PairOutcome]) -> str:
     total_pairs = len(outcomes)
     if total_pairs == 0:
@@ -301,6 +317,17 @@ def main(argv: list[str]) -> int:
         action="store_true",
         help="parse + validate the YAML schema only; do not call the grader.",
     )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        metavar="PCT",
+        help=(
+            "fail (exit 1) if per-criterion agreement is strictly below PCT "
+            "(0-100). Per docs/PHASE_2_GATE.md the recommended gate bar is "
+            "80. Ignored under --check. The report is still printed."
+        ),
+    )
     args = parser.parse_args(argv[1:])
 
     path = Path(args.yaml_path)
@@ -333,6 +360,20 @@ def main(argv: list[str]) -> int:
 
     outcomes = [score_pair(p, unit, grade_decision_answer) for p in pairs]
     print(render_report(outcomes))
+
+    if args.threshold is not None:
+        pct, passed = evaluate_threshold(outcomes, args.threshold)
+        if not passed:
+            print(
+                f"\nFAIL: per-criterion agreement {pct:.1f}% is below "
+                f"--threshold {args.threshold}%",
+                file=sys.stderr,
+            )
+            return 1
+        print(
+            f"\nPASS: per-criterion agreement {pct:.1f}% meets "
+            f"--threshold {args.threshold}%"
+        )
     return 0
 
 
