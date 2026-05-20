@@ -1,9 +1,16 @@
 # Rubric Audit — Criterion-2 AND-Clause Bundling
 
-**Status:** Draft (proposal, no rubric changes executed)
+**Status:** Approved 2026-05-20 — execution pending
 **Date:** 2026-05-20
 **Scope:** All 13 published / authored units in `content/units/`
-**Owner:** Founder sign-off required before any rubric version bump
+**Owner:** Founder sign-off captured (see Decisions locked, below); execution proceeds unit-by-unit on PR cadence
+
+## Decisions locked (2026-05-20)
+
+- **Approach:** SPLIT. Every flagged criterion in this audit is split into two criteria. Rubrics for Units 2–9 grow from 3 → 4 criteria. Units 10–13 use SPLIT as well (Option A — new criterion) rather than the Option B "move meta-claim into existing c3" path, for cross-unit consistency.
+- **Regression backfill:** every unit's regression set is re-run end-to-end before its PR merges. No spot-checks.
+- **PR cadence:** one PR per unit (pilot first, then batched if the pilot is clean). Each PR includes the rubric edit, `ingest_units` re-run, regression-set updates, and a regression-run report.
+- **C1 / c3 follow-up:** deferred. Separate audit doc after this sweep lands, not folded into per-unit PRs.
 
 ---
 
@@ -231,25 +238,23 @@ Recommended sequencing once approach is approved:
 
 ---
 
-## Open questions
+## Open questions — resolved
 
-1. **Rubric growth tolerance.** Are we willing to grow the rubric from 3 → 4 criteria for the MEDIUM-severity units, or should we instead TIGHTEN the wording (drop the AND, keep one substantive check, push the other into the unit's "Depth" prose as a teaching point but not a graded criterion)? Tightening is lower-touch but trades some pedagogical signal.
+1. ~~Rubric growth tolerance.~~ **Resolved 2026-05-20: SPLIT.** Units 2–9 grow from 3 → 4 criteria. Units 10–13 also split (Option A) rather than fold the meta-claim into existing c3, for cross-unit consistency.
+2. ~~Backfill stance.~~ **Resolved 2026-05-20: full re-runs.** Every regression set runs end-to-end before its PR merges.
+3. ~~C1 / c3 follow-up.~~ **Resolved 2026-05-20: separate audit doc later.** Not folded into the c2 PRs.
 
-2. **Backfill stance.** Do we re-run *all 13* regression sets against the new rubric versions before merging, or only the units whose criterion text changed? Mixed answer: MEDIUM splits change pair structures, so re-runs are necessary; HIGH splits via Option B may not change grader behavior much, so a spot-check may suffice.
+## Open questions — still open
 
-3. **Criterion 1 and 3 follow-up.** This audit defers c1 and c3 AND-clause review. Should I produce a parallel audit doc next, or fold the c1/c3 fixes into the same unit PRs to minimize regression-set churn? (My recommendation: separate doc, single batch later — keeps reviewability tractable.)
-
-4. **Rubric metadata signal.** Should we add a `criterion_kind: failure_mode | mechanism | meta_claim | classification` field to the criterion schema so future authoring lints can flag bundled-kind criteria automatically? (Out of scope here; raising for memory.)
+4. **Rubric metadata signal.** Should we add a `criterion_kind: failure_mode | mechanism | meta_claim | classification` field to the criterion schema so future authoring lints can flag bundled-kind criteria automatically? (Out of scope for the c2 sweep; raising for memory.)
 
 ---
 
 ## Sign-off
 
-This is a proposal, not an executed change. Before any unit's rubric is edited:
+- [x] Approach approved — SPLIT across the board (2026-05-20).
+- [x] Rollout order confirmed — Unit 10 pilot, then Units 11–13 batch, then Units 2–9 batch.
+- [x] Regression-set re-run budget acknowledged — full sweep, ~$1.50.
+- [x] C1 / c3 follow-up scope answered — separate audit doc, after this sweep.
 
-- [ ] Approach approved (split vs. tighten; Option A vs. B for Unit 10).
-- [ ] Rollout order confirmed.
-- [ ] Regression-set re-run budget acknowledged (LLM call cost: ~$0.009 × ~160 pairs ≈ $1.50 for the full sweep; trivial).
-- [ ] Open question #3 (c1/c3 follow-up) answered.
-
-Once signed off, work proceeds on the dev branch unit-by-unit with PRs per unit (or per batch), CI green required, and a final consolidated PR refresh.
+Execution proceeds on the dev branch with one PR per unit (pilot first; subsequent units batched if the pilot is clean). CI green required per PR.
