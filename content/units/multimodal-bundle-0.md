@@ -47,7 +47,8 @@ sources:
     primary_source: true
 rubric:
   - text: "Names the three approaches — raw image to a vision model, extract structured signal first with OCR or classical CV, and a hybrid of a cheap extractor with a VLM fallback — AND frames the decision as diagnosing the shape of the visual task first, not picking by which model is most capable."
-  - text: "Explains the mechanism behind an approach/shape mismatch — a VLM on a barcode or a fixed-format form overpays and loses evaluability for zero capability gain, while a brittle classical-CV pipeline on open-ended understanding does not degrade gracefully, it simply fails outside its training distribution — AND identifies the cost/eval consequence, that image tokens are a distinct and often dominant cost line and that free-text output over arbitrary images is hard to evaluate."
+  - text: "Explains the mechanism behind an approach/shape mismatch — a VLM on a barcode or a fixed-format form overpays and loses evaluability for zero capability gain, while a brittle classical-CV pipeline on open-ended understanding does not degrade gracefully, it simply fails outside its training distribution."
+  - text: "Identifies the cost/eval consequence that makes evaluability a load-bearing axis of multimodal approach selection — image tokens are a distinct and often dominant cost line (billed proportional to resolution / detail), AND free-text output over arbitrary images is hard to evaluate without a second grader or a human."
   - text: "Maps an approach to a task shape correctly — open-ended understanding to a VLM, stable bounded extraction to extract-first, high-volume mostly-stable-with-a-tail to hybrid — and explains why the shape drives the choice AND names the common PM error of reaching for the most capable model by default instead of diagnosing the task shape."
 ---
 

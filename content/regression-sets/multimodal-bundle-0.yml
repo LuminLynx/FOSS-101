@@ -24,8 +24,25 @@
 #     Unit 9/10/11/12 c2/c3-strict lesson applied at authoring
 #     time to minimize realignment churn.
 #
-# Position-to-criterion mapping (from
-# content/units/multimodal-bundle-0.md rubric):
+# RUBRIC SPLIT (2026-05-20, per docs/RUBRIC_AUDIT.md):
+# Criterion 2 was previously a HIGH-severity AND-clause bundling
+# "approach/shape mismatch mechanism" with the cost/eval-consequence
+# meta-claim. Per the audit's locked SPLIT decision, c2 is now
+# mechanism-only and the cost/eval meta-claim is its own criterion
+# at position 3; the old mapping + PM-error criterion (was c3) is
+# renumbered to position 4. Pair expected values were re-judged
+# under strict-AND reading; every pair now has four position
+# entries. Notably, because this set was authored under the
+# strict-AND authoring discipline from the start (per
+# docs/UNIT_12_GATE.md lesson), the split surfaces ZERO latent-credit
+# shifts — every pair's per-conjunct credit was already explicit in
+# the original labels. The new c2 and new c3 met-values follow the
+# original AND-conjunct status, not a re-interpretation. This is
+# the cleanest split-pilot input in the path; the gate run will
+# reveal whether the grader behaves consistently when the AND is
+# de-bundled into separate criteria.
+#
+# Position-to-criterion mapping (after 2026-05-20 c2 split):
 #
 #   1. "Names the three approaches — raw image to a VLM,
 #      extract-first with OCR/classical CV, hybrid extractor +
@@ -35,15 +52,20 @@
 #      a barcode/fixed form overpays and loses evaluability for
 #      zero capability gain; a brittle CV pipeline on open-ended
 #      understanding just fails outside its training
-#      distribution — AND identifies the cost/eval consequence
-#      (image tokens a distinct/dominant cost line; free text
-#      over arbitrary images hard to eval)."
-#   3. "Maps an approach to a task shape correctly (open-ended
+#      distribution." (mechanism only)
+#   3. "Identifies the cost/eval consequence that makes
+#      evaluability a load-bearing axis of multimodal approach
+#      selection — image tokens are a distinct and often
+#      dominant cost line (billed proportional to resolution /
+#      detail), AND free-text output over arbitrary images is
+#      hard to evaluate without a second grader or a human."
+#      (NEW — split from old c2)
+#   4. "Maps an approach to a task shape correctly (open-ended
 #      -> VLM; stable bounded -> extract-first; high-volume
 #      mostly-stable-with-a-tail -> hybrid) and why the shape
 #      drives it AND names the common PM error (reaching for the
 #      most capable model by default instead of diagnosing the
-#      task shape)."
+#      task shape)." (was position 3)
 #
 # Scenario the decision prompt makes explicit: a feature that
 # auto-fills an expense from a user-uploaded receipt photo — a
@@ -51,7 +73,7 @@
 # three approach traps natural.
 #
 # Authoring distribution (21 pairs; Unit 12's gate-passing
-# shape — the cleanest in the path, 95% -> 100%):
+# shape — preserved as historical record before the c2 split):
 #   * 6 all-three-met, varied English voices
 #       p001 (balanced prose), p002 (terse engineering),
 #       p005 (been-bitten), p016 (long-narrative),
@@ -73,6 +95,33 @@
 #   * 0 flagged-expected — retired per UNIT_11_GATE.md
 #
 # Check: 6 + 5 + 2 + 6 + 2 = 21.
+#
+# Authoring distribution (21 pairs; post-c2-split, 2026-05-20,
+# four-criterion shape — current):
+#   * 6 all-four-met
+#       p001, p002, p005, p016, p017, p018 (the "all three met"
+#       voices; both new c2 mechanism and new c3 cost/eval are
+#       present, the old AND-c2 was both-conjuncts-T)
+#   * 2 partial credit (3 of 4)
+#       p006 (T,T,T,F) — mechanism + cost/eval, no mapping/PM
+#       p008 (F,T,T,T) — mechanism + cost/eval + mapping/PM,
+#       only 2 of 3 approaches named cleanly
+#   * 4 partial credit (2 of 4)
+#       p007 (T,F,F,T), p011 (T,F,F,T), p021 (T,F,F,T) —
+#       c1 + mapping/PM only; under strict reading both new c2
+#       and new c3 fail (mechanism thin/hand-waved, no cost/eval
+#       claim — p011 even explicitly dismisses cost/eval)
+#       p010 (F,T,T,F) — mechanism + cost/eval only; no
+#       three-approach frame, no mapping
+#   * 1 partial credit (1 of 4)
+#       p009 (T,F,F,F) — c1 only
+#   * 6 all-missed on-topic
+#       p004, p012, p014, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable (NOT flagged)
+#       p003, p013
+#   * 0 flagged-expected
+#
+# Check: 6 + 2 + 4 + 1 + 6 + 2 = 21.
 
 unit_id: multimodal-bundle-0
 
@@ -86,6 +135,16 @@ description: |
   AND; borderline pairs authored so the expected value matches
   the grader's strict both-conjuncts reading from the start).
   21 pairs in Unit 12's proven 6/5/2/6/2 gate-passing shape.
+
+  2026-05-20 c2 split (per docs/RUBRIC_AUDIT.md): criterion 2
+  was split into c2 (mechanism only) and a new c3 (cost/eval
+  consequence meta-claim); old c3 (mapping + PM-error)
+  renumbered to position 4. Because the original authoring used
+  strict-AND discipline, the split surfaces zero latent-credit
+  shifts in expected values — per-conjunct credit was already
+  explicit in pair labels. New distribution: 6 × 4-of-4, 2 ×
+  3-of-4, 4 × 2-of-4, 1 × 1-of-4, 6 × on-topic-all-missed,
+  2 × off-topic-all-missed = 21. Live grader gate run pending.
 
 pairs:
   - id: p001
@@ -131,6 +190,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p002
@@ -162,6 +223,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -201,6 +264,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -259,6 +324,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p017
@@ -300,6 +367,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p018
@@ -326,6 +395,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -366,6 +437,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -399,6 +472,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -437,6 +512,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p011
@@ -469,6 +546,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -501,6 +580,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -528,6 +609,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -561,6 +644,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -584,6 +669,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p012
@@ -605,6 +692,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -628,6 +717,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p015
@@ -649,6 +740,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -672,6 +765,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p020
@@ -693,6 +788,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -720,6 +817,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -743,5 +842,7 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
