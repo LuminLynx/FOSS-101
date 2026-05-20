@@ -37,7 +37,8 @@ Before merge, the rubric-change PR description (or a PR comment) carries at mini
 - Any `[FAIL]` per-pair rows.
 - Any `[ERROR]` per-pair rows (payload-level failures, distinct from grader disagreement).
 
-If agreement is below 80% or there are open ERRORs, triage before merge:
+If agreement is below 80%, there are open ERRORs, or any FAIL row deserves inspection, triage before merge:
+- Re-run with `--show-criteria` to surface which specific criterion the grader disagreed on for each FAIL pair. The flag adds a per-criterion `expected=… actual=… [ok|MISS]` block under each FAIL row; PASS pairs are unaffected.
 - Realign per-pair `expected` values where the grader's strict reading is correct, then re-run.
 - Document any preserved disagreements in the matching `docs/UNIT_*_GATE.md` (one new entry per realigned pair), per the precedent set by Units 2, 9, 10.
 - Investigate ERROR rows against the known payload-bug patterns (markdown headers, emoji density, parenthetical option-lists per `docs/UNIT_*_GATE.md` lessons).
