@@ -3,7 +3,9 @@ package com.example.foss101.ui.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -43,10 +45,15 @@ fun AppScreenScaffold(
                                     fontWeight = FontWeight.Medium
                                 )
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = subtitle.uppercase(),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = LibellaTheme.colors.inkTertiary
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    fontSize = 12.sp,
+                                    lineHeight = 16.sp,
+                                    letterSpacing = 1.2.sp
+                                ),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     },
