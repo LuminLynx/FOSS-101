@@ -7,8 +7,34 @@
 # passing reference) including English-only authoring per the
 # discipline locked in docs/curriculum/v1-path-outline.md.
 #
+# RUBRIC SPLIT (2026-05-20, per docs/RUBRIC_AUDIT.md):
+# Criterion 2 was previously a HIGH-severity AND-clause bundling
+# "mechanism explanation" with the meta-claim "the three failure
+# modes need different fixes." Per the audit's locked SPLIT
+# decision, c2 is now mechanism-only and the different-fixes
+# meta-claim is its own criterion at position 3; the old signals
+# criterion (was c3) is renumbered to position 4. Pair expected
+# values were re-judged under strict-AND reading; every pair now
+# has four position entries. Surfaced shifts vs. the pre-split
+# expectations:
+#   * p010 c2 F → T — explains groundedness mechanism in depth;
+#     under old AND-c2 the missing different-fixes conjunct hid
+#     the mechanism credit.
+#   * p021 c2 F → T — explains a single upstream-cause mechanism;
+#     under old AND-c2 the SAME-fix framing failed the conjunct.
+#   * p002, p006 c3 T — explicit pipeline-side / prompt-side /
+#     audit-side fix naming, previously rolled into c2's AND.
+#   * p009 c3 T — "each dimension has its own set of fixes" line,
+#     previously unrewarded.
+#   * p011 c3 T — "because the fixes are different" line,
+#     previously rolled into c2's AND.
+# Live grader behavior will be re-validated by re-running this set
+# end-to-end against the new rubric version (per docs/RUBRIC_AUDIT.md
+# § Decisions locked, full regression re-run is the backfill stance).
+#
 # Position-to-criterion mapping (from
-# content/units/vector-search-rag-bundle-0.md slot 8 rubric):
+# content/units/vector-search-rag-bundle-0.md slot 8 rubric, after
+# 2026-05-20 c2 split):
 #
 #   1. "Names all three independent quality dimensions — recall
 #      (retrieval), groundedness (anchoring), and citation
@@ -19,16 +45,22 @@
 #      the three dimensions — e.g., recall failure as chunks not
 #      retrieved; groundedness failure as model not anchoring on
 #      context; citation-faithfulness failure as cited passage not
-#      supporting the claim — AND identifies that the three failure
-#      modes need different fixes."
-#   3. "Names a concrete signal per dimension that distinguishes
+#      supporting the claim."
+#   3. "Identifies that the three failure modes require different
+#      fixes — recall fails are pipeline-side; groundedness fails
+#      are prompt-side; citation-faithfulness fails are audit-side
+#      — and treats them as non-substitutable interventions, not a
+#      single 'improve the RAG' lever." (NEW — split from old c2)
+#   4. "Names a concrete signal per dimension that distinguishes
 #      them — recall@K / MRR; RAGAS faithfulness / answer-context
 #      alignment; span-level source-quote validation — AND
 #      recognizes the common PM error of treating any single
 #      signal as a sufficient proxy for overall RAG quality."
+#      (was position 3)
 #
 # Authoring distribution (21 pairs; post-Unit-10-gate realignment
-# per docs/UNIT_10_GATE.md, 2026-05-15):
+# per docs/UNIT_10_GATE.md, 2026-05-15) — three-criterion shape,
+# preserved as historical record of the Unit 10 gate decision:
 #   * 6 pairs all-three-met (varied English voices)
 #       p001 (balanced prose), p002 (terse engineering),
 #       p005 (been-bitten voice), p016 (long-narrative),
@@ -49,6 +81,29 @@
 #   * 0 pairs flagged-expected — was 1 pre-realignment (p014
 #       flag realigned per T2-B; matches Unit 2 p015 + Unit 9
 #       p015 cross-unit drift pattern, see UNIT_10_GATE.md)
+#
+# Authoring distribution (21 pairs; post-c2-split, 2026-05-20,
+# four-criterion shape — current):
+#   * 1 pair all-four-met
+#       p002 (terse engineering; explicitly names pipeline/prompt/
+#       audit-side fixes, hits all four)
+#   * 6 pairs partial credit (3 of 4)
+#       p001 (T,T,F,T), p005 (T,T,F,T), p006 (T,T,T,F),
+#       p016 (T,T,F,T), p017 (T,T,F,T), p018 (T,T,F,T)
+#   * 5 pairs partial credit (2 of 4)
+#       p007 (T,F,F,T), p008 (T,F,F,T), p009 (T,F,T,F),
+#       p011 (F,T,T,F), p021 (T,T,F,T)
+#   * 7 pairs all-missed on-topic
+#       p004, p010, p012, p014, p015, p019, p020
+#   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
+#       p003, p013
+#   * 0 pairs flagged-expected (unchanged from prior gate)
+#
+# The "all-four-met" bar is intentionally rare under the split.
+# The HIGH-severity audit observation was that the old AND-bundled
+# c2 made it too easy to claim full credit; explicitly naming the
+# different-fixes meta-claim as its own criterion makes "all met"
+# a stronger pedagogical bar.
 #
 # T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
 # flagged = grader *uncertainty*, NOT "answer is bad." Off-topic
@@ -128,7 +183,13 @@ description: |
   held as a live YAML disagreement. English-only per locked
   discipline. Voice variations use flowing prose only (no
   markdown-style section headers inside answer text, per
-  docs/UNIT_9_GATE.md lesson). See header for full triage.
+  docs/UNIT_9_GATE.md lesson).
+
+  2026-05-20 c2 split (per docs/RUBRIC_AUDIT.md): criterion 2
+  was split into c2 (mechanism only) and a new c3 (different-fixes
+  meta-claim); old c3 (signals) renumbered to position 4. Every
+  pair re-judged under strict-AND reading; see header for the
+  surfaced shifts. Live grader re-run pending before merge.
 
 pairs:
   - id: p001
@@ -172,6 +233,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -207,6 +270,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p003
@@ -226,6 +291,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -247,6 +314,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -289,6 +358,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -318,6 +389,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -346,6 +419,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -375,6 +450,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -396,6 +473,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -419,8 +498,10 @@ pairs:
         - position: 1
           met: false
         - position: 2
-          met: false
+          met: true
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -448,6 +529,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -471,6 +554,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -493,6 +578,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p014
@@ -509,6 +596,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -530,6 +619,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -583,6 +674,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -626,6 +719,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -657,6 +752,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -680,6 +777,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p020
@@ -701,6 +800,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -730,7 +831,9 @@ pairs:
         - position: 1
           met: true
         - position: 2
-          met: false
+          met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
