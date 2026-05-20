@@ -17,6 +17,7 @@ from scripts.run_regression_set import (
     PairOutcome,
     RegressionPair,
     RegressionSetError,
+    evaluate_threshold,
     parse_regression_set,
     render_report,
     score_pair,
@@ -264,3 +265,58 @@ def test_render_report_summarizes_runs() -> None:
     assert "p003" in report and "[ERROR]" in report
     assert "p001" in report and "PASS" in report
     assert "p002" in report and "FAIL" in report
+
+
+# ---------------------------------------------------------------------------
+# evaluate_threshold
+# ---------------------------------------------------------------------------
+
+
+def test_evaluate_threshold_passes_when_all_matched() -> None:
+    outcomes = [
+        PairOutcome("p001", "ok", 3, 3, True, False, False),
+        PairOutcome("p002", "ok", 4, 4, True, False, False),
+    ]
+    pct, passed = evaluate_threshold(outcomes, threshold=80.0)
+    assert pct == 100.0
+    assert passed is True
+
+
+def test_evaluate_threshold_fails_below_bar() -> None:
+    # 5 of 10 matched = 50% < 80%
+    outcomes = [
+        PairOutcome("p001", "partial", 2, 5, True, False, False),
+        PairOutcome("p002", "partial", 3, 5, True, False, False),
+    ]
+    pct, passed = evaluate_threshold(outcomes, threshold=80.0)
+    assert pct == 50.0
+    assert passed is False
+
+
+def test_evaluate_threshold_exactly_at_bar_passes() -> None:
+    # 8 of 10 matched = 80% == 80% bar (non-strict)
+    outcomes = [PairOutcome("p001", "borderline", 8, 10, True, False, False)]
+    pct, passed = evaluate_threshold(outcomes, threshold=80.0)
+    assert pct == 80.0
+    assert passed is True
+
+
+def test_evaluate_threshold_empty_outcomes_passes() -> None:
+    # No data is not "the grader disagrees" — treat as 100% to avoid
+    # false-positive failures on empty / unreachable sets.
+    pct, passed = evaluate_threshold([], threshold=80.0)
+    assert pct == 100.0
+    assert passed is True
+
+
+def test_evaluate_threshold_errored_pairs_count_against_agreement() -> None:
+    # Errored pair contributes total_criteria=3, matched=0 — drops the rate.
+    outcomes = [
+        PairOutcome("p001", "ok", 3, 3, True, False, False),
+        PairOutcome("p002", "ok", 3, 3, True, False, False),
+        PairOutcome("p003", "errored", 0, 3, False, False, False, error="rate limit"),
+    ]
+    pct, passed = evaluate_threshold(outcomes, threshold=80.0)
+    # 6/9 = 66.67%, below 80%
+    assert pct == pytest.approx(66.6666, rel=1e-3)
+    assert passed is False
