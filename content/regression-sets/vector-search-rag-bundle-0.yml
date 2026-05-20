@@ -87,14 +87,19 @@
 #   * 1 pair all-four-met
 #       p002 (terse engineering; explicitly names pipeline/prompt/
 #       audit-side fixes, hits all four)
-#   * 6 pairs partial credit (3 of 4)
+#   * 7 pairs partial credit (3 of 4)
 #       p001 (T,T,F,T), p005 (T,T,F,T), p006 (T,T,T,F),
-#       p016 (T,T,F,T), p017 (T,T,F,T), p018 (T,T,F,T)
-#   * 5 pairs partial credit (2 of 4)
+#       p016 (T,T,F,T), p017 (T,T,F,T), p018 (T,T,F,T),
+#       p021 (T,T,F,T)
+#   * 4 pairs partial credit (2 of 4)
 #       p007 (T,F,F,T), p008 (T,F,F,T), p009 (T,F,T,F),
-#       p011 (F,T,T,F), p021 (T,T,F,T)
-#   * 7 pairs all-missed on-topic
-#       p004, p010, p012, p014, p015, p019, p020
+#       p011 (F,T,T,F)
+#   * 1 pair partial credit (1 of 4)
+#       p010 (F,T,F,F) — surfaced c2 mechanism credit under the
+#       split; old "all-missed on-topic" classification no longer
+#       applies because the meta-claim is now its own criterion
+#   * 6 pairs all-missed on-topic
+#       p004, p012, p014, p015, p019, p020
 #   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
 #       p003, p013
 #   * 0 pairs flagged-expected (unchanged from prior gate)
