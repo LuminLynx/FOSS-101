@@ -141,6 +141,10 @@ jobs:
                   content/regression-sets/*.yml)
                     base=$(basename "$path")
                     [[ "$base" == _* ]] && continue
+                    # Skip deleted/renamed-away paths — `git diff --name-only`
+                    # reports them too, and the runner would fail on a missing
+                    # file. Existence check matches the unit-md branch below.
+                    [[ -f "$path" ]] || continue
                     echo "$path" >> sets.txt
                     ;;
                   content/units/*.md)
