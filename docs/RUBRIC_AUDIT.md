@@ -14,6 +14,29 @@
 
 ---
 
+## Rollout findings (live, post-sign-off)
+
+The SPLIT decision is **validated per-unit at the gate, not assumed**. The audit's premise — that the two conjuncts of a flagged c2 are *independent* concepts — holds for some units and not others. Each split is confirmed against the live grader before merge; a unit whose conjuncts turn out to be genuinely coupled is exempted from the split rather than forced to fit.
+
+| Unit | Gate | Outcome |
+|------|------|---------|
+| **10 — vector-search-rag** | 96.4% per-criterion agreement (81/84), 18/21 fully passed | **Split kept** (PR #146, merged). Surfaced six expected-value shifts (latent credit previously hidden by the AND). Three borderline FAILs (p008/p009/p021) pending realign-or-preserve triage. |
+| **13 — multimodal** | 95% per-criterion agreement (80/84), still above bar | **Split reverted** (PR #149, closed unmerged). See below. |
+
+### Unit 13 — split reverted (the coupled-conjunct exception)
+
+Unit 13's c2 bundled "approach/shape mismatch mechanism" with the "cost/eval consequence." The audit classed the second as a separable meta-claim (like Unit 10's "the three failure modes need different fixes"). The gate evidence refuted that:
+
+- The split gate passed the 80% bar (95%), but the grader marked **c2 (mechanism) not-met on the gold-standard "all-met" answers** (p001, p005, p018), consistently across runs.
+- Reason, on reading the answers: their entire explanation of *why* the VLM-on-receipt mismatch is wrong **is** the cost/eval one — "image tokens are a dominant cost line, free-text is hard to eval, so we overpay and lose evaluability." Once that content is carved into c3, the grader looks for a distinct mechanism in c2 and finds nothing left. It is being internally consistent; the conjuncts are not independent.
+- The cost/eval consequence is **intrinsic to the mechanism** for the dominant answer pattern (VLM overpays), not an add-on. The bundled c2 was already well-calibrated — it passed its original gate 95% → 100% (per the regression-set header).
+
+**Conclusion:** not every AND is a bad AND. Some join genuinely-coupled concepts, and de-bundling them creates an artificial distinction the grader can't apply cleanly. Unit 13 keeps its original 3-criterion rubric.
+
+**Implication for the remaining HIGH-severity units (11 streaming-ux, 12 tool-use):** their c2 meta-claim is "the decisions constrain each other" — a separable structural insight closer to Unit 10's "different fixes" than to Unit 13's intrinsic cost/eval. They are expected to split cleanly, but each is gate-confirmed before merge, same as 10 and 13.
+
+---
+
 ## Context
 
 Every gate document since `UNIQUE_2_GATE.md` flags the same recurring grader failure: criterion 2 (and to a lesser extent c1, c3) bundles multiple substantive checks under a single "X AND Y" clause. The grader meets X, declares the criterion `met: true`, and reports high confidence — even when the learner missed Y. This produces the worst calibration shape we care about: **high confidence on wrong judgements**.
@@ -61,7 +84,7 @@ For each unit's `rubric.text[1]` (criterion 2):
 | 10 | vector-search-rag | 10 | HIGH | mechanism + meta-claim ("different fixes") | SPLIT (or move meta to c3) |
 | 11 | streaming-ux | 11 | HIGH | mechanism + meta-claim ("decisions constrain each other") | SPLIT |
 | 12 | tool-use | 12 | HIGH | mechanism + meta-claim ("decisions constrain each other") | SPLIT |
-| 13 | multimodal | 13 | HIGH | mechanism + meta-claim ("cost/eval consequence") | SPLIT |
+| 13 | multimodal | 13 | HIGH | mechanism + meta-claim ("cost/eval consequence") | SPLIT → **reverted at gate** (coupled conjuncts; see Rollout findings) |
 
 **Shape of the problem:** a two-tier picture — 8 units (positions 2–9) with the "failure-mode + mechanism" bundle, and 4 units (positions 10–13) with the more dangerous "mechanism + meta-claim" bundle. Unit 1 is clean. None of the criteria are critical-severity (no c2 has 3+ independent conjuncts).
 
@@ -210,7 +233,7 @@ Single-conjunct criterion. No change recommended.
 
 ---
 
-### Unit 13 — multimodal (position 13) — **HIGH**, SPLIT
+### Unit 13 — multimodal (position 13) — **HIGH**, SPLIT → reverted at gate
 
 > Explains the mechanism behind an approach/shape mismatch — a VLM on a barcode or a fixed-format form overpays and loses evaluability for zero capability gain, while a brittle classical-CV pipeline on open-ended understanding does not degrade gracefully — **AND identifies the cost/eval consequence**, that image tokens are a distinct and often dominant cost line and that free-text output over arbitrary images is hard to evaluate.
 
@@ -218,7 +241,9 @@ Single-conjunct criterion. No change recommended.
 - (a) Mechanism behind approach/shape mismatch.
 - (b) **Meta-claim:** cost/eval consequence (image tokens dominate; free-text output over arbitrary images is hard to evaluate).
 
-**Recommendation:** SPLIT. Same reasoning as Units 10–12. Multimodal was authored after the strict-AND pair-authoring lesson, but the rubric still bundles. Splitting now (before publish) is cheaper than splitting after.
+**Original recommendation:** SPLIT. Same reasoning as Units 10–12.
+
+**Reverted at gate (see § Rollout findings).** The split passed the 80% bar (95%) but the grader consistently failed the gold-standard answers on c2: their only explanation of *why* the VLM mismatch is wrong **is** the cost/eval one, so once c3 carves that out, c2 has no distinct mechanism left. Conjunct (b) is not separable from (a) for the dominant answer pattern — it is intrinsic to the mechanism, not a meta-claim like Unit 10's "different fixes." The bundled c2 was already well-calibrated (original gate 95% → 100%). Unit 13 keeps its 3-criterion rubric.
 
 ---
 
