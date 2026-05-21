@@ -27,6 +27,15 @@ This capability asymmetry has a hard consequence for gate triage:
 
 This principle was added 2026-05-21 after the c2-split batch surfaced the asymmetry: several early gate realignments flipped Opus-authored values to match Sonnet's stricter/looser reads, which was backwards.
 
+## When the pre-merge gate is required vs. optional
+
+`RUBRIC_AUDIT.md` § Decisions locked originally required a full pre-merge gate run for *every* rubric change. The grader/gold-standard principle above narrows that:
+
+- **Gate REQUIRED** for any change that *realigns* expected values, or any new authoring — i.e. anything where the grader's output could change a recorded value or where there's no locked value to fall back on.
+- **Gate OPTIONAL (informational only)** for a *faithful preserve-by-default split* — a structural c2-split that only redistributes a locked `old-c2=T` into `c2=T` + `c3=T` (and `old-c2=F` into a fair-read name/mechanism judgment), with **zero realignments**. These don't change any locked value's meaning, and since we don't act on grader output, a gate run can't change a single expected value — it would only produce a documented snapshot of Sonnet calibration gaps. Local validators (lint, `ingest_units --check`, `run_regression_set --check`, pytest) plus the faithful decomposition are sufficient to merge.
+
+Rationale: the original "always gate" rule predated this principle; its purpose was to catch grader miscalibration we'd *act on*. When we preserve by default, that purpose doesn't apply. Running the gate remains welcome as an informational snapshot, just not a merge gate. (Recorded 2026-05-21, during the MEDIUM-batch rollout, to avoid silent process drift.)
+
 ## Procedure (operator)
 
 For any PR that edits `content/units/**` (rubric text) or `content/regression-sets/**`:
