@@ -209,12 +209,14 @@ description: |
   2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md): criterion 2 split
   into c2 (mechanism only) and a new c3 (the "decisions constrain
   each other" meta-claim); old c3 (map + PM error) renumbered to
-  position 4. Pairs re-judged under strict-AND reading. Expected to
-  split cleanly like Unit 10 (separable meta-claim), unlike the
-  reverted Unit 13. Watch-pairs p009/p014/p021 (generic coupling
-  stated but not the specific mutual constraint) are paper-judged
-  c3=F; the gate confirms whether the grader agrees or reveals a
-  c1/c3 overlap. Live grader gate run pending before merge.
+  position 4. Pairs re-judged under strict-AND reading. GATE PASSED
+  2026-05-21 (docs/UNIT_11_C2_SPLIT_GATE.md): 92% per-criterion
+  agreement (97.5% excluding the known p011 payload ERROR); the
+  c1/c3-overlap watch-pairs p009/p014/p021 all confirmed c3=false,
+  so the split is clean like Unit 10, not fused like Unit 13. Two
+  preserved disagreements (no realignment): p021 c2 (grader lenient
+  on a borderline) and p014 c1 (the unsplit c1 AND-clause — deferred
+  c1/c3/c4 follow-up). Split kept.
 
 pairs:
   - id: p001
