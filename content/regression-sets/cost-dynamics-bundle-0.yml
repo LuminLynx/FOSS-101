@@ -30,7 +30,21 @@
 #      ($0.0225/ticket, $1,125/day, $410k/year, projected
 #      $655k/year, 50k→80k tickets/day).
 #
-# Position-to-criterion mapping:
+# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# batch): criterion 2 split into c2 (name the failure mode) and
+# a new c3 (explain the mechanism); old c3 (regime) renumbered
+# to position 4. Rubric grows 3 -> 4. Applied PRESERVE-BY-DEFAULT
+# (docs/REGRESSION_GATE.md): faithful decomposition of the locked
+# Opus values — every old-c2=T pair inherits c2=T AND c3=T. Of the
+# old-c2=F pairs: p007 NAMES single-axis failure modes ("caching
+# alone misses the batch discount") without the mechanism, so c2=T
+# / c3=F (the lone differential, though with c1=F); p009/p011 name
+# no failure mode, so c2=F / c3=F. No realignments. c4 (regime)
+# carries old-c3 unchanged. Gate-exempt (faithful split, zero
+# realignments). Sonnet disagreements would be documented
+# calibration gaps, not edits to the gold standard.
+#
+# Position-to-criterion mapping (after 2026-05-21 c2 split):
 #
 #   1. "Names cost-at-scale as a multi-axis production-
 #      optimization problem (caching vs batching vs
@@ -39,14 +53,17 @@
 #      cost at projected volume, not at current-pilot
 #      volume."
 #   2. "Identifies a concrete failure mode of single-axis
-#      cost optimization AND explains the mechanism — e.g.,
-#      enabling caching alone misses the batch-API
-#      discount on non-interactive workloads; batch-only
-#      without caching pays full input rate on every
-#      batched call; committed-use without volume
-#      forecasting commits to a higher floor than current
-#      usage warrants."
-#   3. "Distinguishes which lever is load-bearing in which
+#      cost optimization — caching-only, batch-only, or
+#      committed-use without volume forecasting." (name
+#      the failure mode only)
+#   3. "Explains the mechanism behind the named failure mode —
+#      why it happens — caching-only misses the batch discount
+#      because sync rates apply per-call regardless of urgency;
+#      batch-only pays full input rate because the batch discount
+#      applies after per-call cost so caching multiplies;
+#      committed-use without forecasting overcommits because it's
+#      a take-or-pay obligation." (NEW — from old c2)
+#   4. "Distinguishes which lever is load-bearing in which
 #      regime — caching for workloads with large stable
 #      prefixes; batching for latency-forgiving /
 #      asynchronous workloads; committed-use for sustained
@@ -54,10 +71,11 @@
 #      committed floor; AND recognizes that production-
 #      scale cost discipline almost always layers all
 #      three (caching + batching + committed-use sized to
-#      steady-state floor), not picking one."
+#      steady-state floor), not picking one." (was position 3)
 #
-# Authoring distribution (21 pairs, 8/2/4/5/2/0;
-# post-Unit-8-gate realignment per docs/UNIT_8_GATE.md):
+# Authoring distribution (21 pairs; pre-split three-criterion
+# shape, post-Unit-8-gate per docs/UNIT_8_GATE.md — preserved as
+# historical record):
 #   * 8 pairs all-three-met
 #       p001, p002, p005, p014, p016 (pt),
 #       p017 (pseudocode), p018 (emoji moderate),
@@ -72,6 +90,19 @@
 #       p004, p012, p015, p019, p020
 #   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
 #       p003, p013
+#
+# Authoring distribution (21 pairs; post-c2-split, 2026-05-21,
+# four-criterion shape — current; faithful preserve-by-default):
+#   * 8 all-four-met: p001, p002, p005, p014, p016, p017, p018, p021
+#   * 2 partial (3 of 4): p006 (T,T,T,F), p008 (F,T,T,T)
+#   * 2 partial (2 of 4): p007 (F,T,F,T — differential: names
+#       single-axis failures, no mechanism, c1 also missing),
+#       p010 (F,T,T,F)
+#   * 2 partial (1 of 4): p009 (T,F,F,F), p011 (F,F,F,T)
+#   * 5 all-missed on-topic: p004, p012, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable: p003, p013
+#   Check: 8 + 2 + 2 + 2 + 5 + 2 = 21.
+#   p007 is the lone c2=T/c3=F differential.
 #
 # UNIT_8_GATE realignment (2026-05-13): initial run hit
 # 92% per-criterion (58/63), zero ERRORs. Diagnostic
@@ -126,6 +157,16 @@ description: |
   p017, p018) cleared on diagnostic — held without
   realignment. Zero flagged-expected pairs. See header
   for full triage.
+
+  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  criterion 2 split into c2 (name the failure mode) and a new c3
+  (explain the mechanism); old c3 (regime) renumbered to position
+  4. Preserve-by-default: faithful decomposition of locked Opus
+  values (old-c2=T → c2=T,c3=T). p007 is the lone differential
+  (names single-axis failures without the mechanism → c2=T,c3=F,
+  with c1 also false); p009/p011 name no failure mode → c2=F,c3=F.
+  No realignments. Gate-exempt (faithful split, zero realignments
+  per docs/REGRESSION_GATE.md).
 
 pairs:
   - id: p001
@@ -193,6 +234,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p002
@@ -238,6 +281,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p003
@@ -264,6 +309,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p004
@@ -286,6 +333,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -331,6 +380,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p006
@@ -369,11 +420,13 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
   - id: p007
-    label: c3 only — names multi-axis but missing annualization anchor (c1's AND fails on the second clause); c2 borderline held strict (was c1+c3, c2 borderline; realigned per UNIT_8_GATE.md — c1 grader-strict on missing $/year anchor)
+    label: c2 + c4 met, c1/c3 missing — names single-axis failure modes ("caching alone misses the batch discount") without the mechanism, and maps regimes (c4), but c1 fails on the missing annualization anchor (the lone c2=T/c3=F differential under the 2026-05-21 split; was "c3 only" pre-split)
     answer: |
       Cost at scale is a three-axis problem — caching,
       batching, capacity — and picking one lever misses
@@ -403,8 +456,10 @@ pairs:
         - position: 1
           met: false
         - position: 2
-          met: false
+          met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -446,6 +501,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p009
@@ -470,6 +527,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -497,11 +556,13 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
   - id: p011
-    label: c3 only — per-lever regime mapping + layered-stacking recognition, no axis frame, no mechanism
+    label: c4 only — per-lever regime mapping + layered-stacking recognition, no axis frame, no failure mode named, no mechanism (was "c3 only" pre-split; old c3 regime → position 4)
     answer: |
       The right answer depends on which lever is load-
       bearing for which workload slice. Caching is load-
@@ -525,6 +586,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -551,6 +614,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -574,6 +639,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -617,6 +684,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p015
@@ -644,6 +713,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -696,6 +767,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -750,6 +823,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p018
@@ -796,6 +871,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p019
@@ -822,6 +899,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p020
@@ -846,6 +925,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -882,5 +963,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
