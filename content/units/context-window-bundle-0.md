@@ -49,7 +49,8 @@ sources:
     primary_source: true
 rubric:
   - text: "Names the three-way trade-off the unit is built around — fits-more vs. costs-more vs. recall-can-degrade-over-long-context — and treats the context window as a budget, not a capacity number to be filled."
-  - text: "Identifies a concrete failure mode of \"just use the long window\" beyond hitting the hard limit, AND identifies the mechanism behind it — e.g., per-call cost scales linearly because input tokens are priced linearly; effective recall can degrade mid-context, as documented in long-context recall evals; single-document architectures break under multi-document or growing-state load because retrieval and summarization weren't designed in."
+  - text: "Identifies a concrete failure mode of \"just use the long window\" beyond hitting the hard limit — e.g., per-call cost scaling, effective recall degrading mid-context, or a single-document architecture breaking under multi-document or growing-state load."
+  - text: "Explains the mechanism behind the named failure mode — why it happens, not just that it happens — e.g., per-call cost scales linearly because input tokens are priced linearly; recall degrades because attention dilutes over a long context, as documented in long-context recall evals; single-document architectures break because retrieval and summarization weren't designed in."
   - text: "Distinguishes a regime where \"use the long window\" is a reasonable default (single bounded document, query shape verified on representative input, cost acceptable for projected volume) from a regime that forces retrieval or summarization (growing corpora, growing agent state, query shapes that benefit from focused context)."
 ---
 
