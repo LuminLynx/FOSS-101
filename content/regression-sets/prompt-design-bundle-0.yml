@@ -29,8 +29,22 @@
 #      (78%/88%/85% catch + 8%/3%/4% hallucination from
 #      scenario).
 #
-# Position-to-criterion mapping (from
-# content/units/prompt-design-bundle-0.md slot 8 rubric):
+# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# batch): criterion 2 split into c2 (name the failure mode) and
+# a new c3 (explain the mechanism); old c3 (regime) renumbered
+# to position 4. Rubric grows 3 -> 4.
+#
+# Applied PRESERVE-BY-DEFAULT (docs/REGRESSION_GATE.md): faithful
+# decomposition of the locked Opus values — every old-c2=T pair
+# inherits c2=T AND c3=T. Of the old-c2=F pairs: p007 NAMES a
+# failure mode ("instructions miss edge cases") without explaining
+# the mechanism, so c2=T / c3=F (the one differential pair, per its
+# own authored label); p009 and p011 name no failure mode, so
+# c2=F / c3=F. No judgment-flips. c4 (regime) carries old-c3
+# unchanged. Grader is Sonnet 4.6; gate disagreements are
+# documented calibration gaps, not edits to the gold standard.
+#
+# Position-to-criterion mapping (after 2026-05-21 c2 split):
 #
 #   1. "Names prompt design as a multi-axis trade-off
 #      (system-vs-user prompt, instructions-vs-examples)
@@ -38,14 +52,16 @@
 #      decision anchored to the feature's specification
 #      needs — not as a writing-quality exercise."
 #   2. "Identifies a concrete failure mode of single-axis
-#      prompt design AND explains the mechanism — e.g.,
-#      instruction-only misses edge cases that examples
-#      catch; few-shot-only stales when data distribution
-#      shifts; putting per-query variability in the system
-#      prompt breaks prompt caching (each unique system
-#      prompt is a separate cache entry; prefix-reuse
-#      optimization, not session-immutability)."
-#   3. "Distinguishes which approach is load-bearing in
+#      prompt design — instruction-only missing edge cases;
+#      few-shot-only staling on distribution shift; or
+#      per-query variability in the system prompt breaking
+#      prompt caching." (name the failure mode only)
+#   3. "Explains the mechanism behind the named failure mode —
+#      why it happens — rules can't fully specify ambiguous
+#      criteria; the example set locks in a data distribution
+#      that drifts; prompt caching is prefix-reuse so per-call
+#      system-prompt variability loses cache hits." (NEW — from old c2)
+#   4. "Distinguishes which approach is load-bearing in
 #      which regime — system prompt for stable behavior
 #      contracts; user prompt for per-call variability;
 #      zero-shot instructions for cleanly-specifiable
@@ -53,10 +69,11 @@
 #      edge-heavy tasks; and recognizes that the PM-default
 #      is usually a hybrid (instructions for rule-shaped
 #      part + 3-5 boundary examples) rather than picking
-#      one extreme."
+#      one extreme." (was position 3)
 #
-# Authoring distribution (21 pairs, 8/4/2/5/2/0;
-# post-Unit-6-gate-second-realignment per docs/UNIT_6_GATE.md):
+# Authoring distribution (21 pairs; pre-split three-criterion
+# shape, post-Unit-6-gate per docs/UNIT_6_GATE.md — preserved as
+# historical record):
 #   * 8 pairs all-three-met (varied voices)
 #       p001, p002, p005, p014, p016 (pt),
 #       p017 (pseudocode), p018 (emoji moderate),
@@ -70,6 +87,18 @@
 #       p004, p012, p015, p019, p020
 #   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
 #       p003, p013
+#
+# Authoring distribution (21 pairs; post-c2-split, 2026-05-21,
+# four-criterion shape — current; faithful preserve-by-default):
+#   * 8 all-four-met: p001, p002, p005, p014, p016, p017, p018, p021
+#   * 3 partial (3 of 4): p006 (T,T,T,F), p007 (T,T,F,T —
+#       differential: names failure, no mechanism), p008 (F,T,T,T)
+#   * 2 partial (2 of 4): p010 (F,T,T,F), p011 (T,F,F,T)
+#   * 1 partial (1 of 4): p009 (T,F,F,F)
+#   * 5 all-missed on-topic: p004, p012, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable: p003, p013
+#   Check: 8 + 3 + 2 + 1 + 5 + 2 = 21.
+#   p007 is the lone c2=T/c3=F differential.
 #   * 0 pairs flagged-expected (skip per Units 2-4)
 #
 # UNIT_6_GATE realignment (2026-05-12): the initial run
@@ -164,6 +193,19 @@ description: |
   reproducibly problematic 3/4 ERROR rate). See header
   for full triage.
 
+  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  criterion 2 split into c2 (name the failure mode) and a new c3
+  (explain the mechanism); old c3 (regime) renumbered to position
+  4. Applied preserve-by-default: faithful decomposition of the
+  locked Opus values (old-c2=T → c2=T,c3=T). p007 is the one
+  differential (names "instructions miss edge cases" without the
+  ambiguous-criteria mechanism → c2=T,c3=F, per its authored
+  label); p009/p011 name no failure mode → c2=F,c3=F. No
+  realignments. Sonnet gate disagreements are documented
+  calibration gaps, not edits to the gold standard. The known-bad
+  p018 ERROR pair is unaffected by the split. Live grader gate
+  pending.
+
 pairs:
   - id: p001
     label: All three met, balanced hybrid recommendation
@@ -213,6 +255,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p002
@@ -258,6 +302,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p003
@@ -281,6 +327,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -306,6 +354,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -339,6 +389,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -375,11 +427,13 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
   - id: p007
-    label: c1 + c3 met, c2 missing — gestures at "instructions miss edge cases" without naming the ambiguous-criteria mechanism (deliberate borderline)
+    label: c1 + c2 + c4 met, c3 missing — names the instruction-only failure mode ("instructions miss edge cases") but doesn't explain the ambiguous-criteria mechanism (the lone c2=T/c3=F differential pair under the 2026-05-21 split)
     answer: |
       Prompt design is a two-axis decision: where the
       contract lives (system vs user prompt) and how it's
@@ -409,8 +463,10 @@ pairs:
         - position: 1
           met: true
         - position: 2
-          met: false
+          met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -447,6 +503,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p009
@@ -472,6 +530,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p010
@@ -496,11 +556,13 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
   - id: p011
-    label: c1 + c3 met, c2 missing — names both axes implicitly via regime content (was c3-only single-criterion; realigned per UNIT_6_GATE.md — grader-lenient on c1 when both axes are named via specific regime examples, same shape as Unit 5 p008/p014)
+    label: c1 + c4 met, c2/c3 missing — names both axes implicitly via regime content and maps regimes (c4), but names no single-axis failure mode so c2=c3=false (under the 2026-05-21 split; c1 grader-lenient per UNIT_6_GATE.md)
     answer: |
       The right pick depends on what's being specified.
       For stable behavior contracts — output schema, role
@@ -524,6 +586,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -549,6 +613,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -570,6 +636,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -609,6 +677,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p015
@@ -635,6 +705,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -683,6 +755,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -737,6 +811,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p018
@@ -776,6 +852,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p019
@@ -799,6 +877,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -824,6 +904,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -856,5 +938,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
