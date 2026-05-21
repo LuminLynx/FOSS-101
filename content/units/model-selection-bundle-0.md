@@ -40,7 +40,8 @@ sources:
     primary_source: true
 rubric:
   - text: "Names model selection as a multi-axis trade-off (capability vs cost vs latency) AND treats it as a measurement decision anchored to performance on the load-bearing task at projected scale — not a spec-sheet pick."
-  - text: "Identifies a concrete failure mode of single-axis model selection AND explains the mechanism — e.g., picking by cost alone misses capability-tier breakpoints where the load-bearing-task quality collapses; picking by capability alone hits cost-at-volume cliffs because per-call cost scales linearly with production volume and PMs systematically under-anticipate projected scale; picking by vendor benchmark misses regressions on the load-bearing task that only show up in your own eval."
+  - text: "Identifies a concrete failure mode of single-axis model selection — e.g., picking by cost alone, picking by capability alone, or picking by vendor benchmark."
+  - text: "Explains the mechanism behind the named failure mode — why it happens, not just that it happens — e.g., cost-only misses capability-tier breakpoints where the load-bearing-task quality collapses; capability-only hits cost-at-volume cliffs because per-call cost scales linearly with production volume and PMs systematically under-anticipate projected scale; vendor-benchmark-only misses regressions on the load-bearing task that only show up in your own eval."
   - text: "Distinguishes which model class is load-bearing in which regime — Opus-class for hard reasoning and high-stakes single-shot decisions; Sonnet-class as the quality-at-acceptable-cost default; Haiku-class for high-volume / latency-critical / first-pass-triage workloads; and recognizes the cross-tier hybrid pattern (route by query difficulty — e.g., small model on the bulk, escalate to larger model on specific signals) when no single tier fits the full cost/quality envelope."
 ---
 
