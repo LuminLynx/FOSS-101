@@ -17,34 +17,17 @@ explicitly deferred — the same pattern in **c1** ("9 of 13 units") and the
 
 **Numbering note.** The c2 split renumbered the split units' rubrics 3 → 4. The
 "regime / mapping" criterion the original audit called *c3* is now **c4** in
-every split unit, and remains **c3** in the units that were never split
-(tokenization, cost-dynamics, customization-trilemma, multimodal). Throughout
-this doc, "regime criterion" means that criterion regardless of its index.
+every split unit (positions 2–12), and remains **c3** in the two 3-criterion
+units: tokenization (position 1, clean — never had a bundled c2) and multimodal
+(position 13, split reverted at gate — coupled conjuncts, see
+`RUBRIC_AUDIT.md:26`). Throughout this doc, "regime criterion" means that
+criterion regardless of its index.
 
----
-
-## Discovered during inventory — the c2 sweep is incomplete
-
-While extracting rubrics I found that **units 8 (cost-dynamics) and 9
-(customization-trilemma) were never split** — both still carry the bundled c2
-("identifies a concrete failure mode … AND explains/names the mechanism") and
-have 3 criteria, confirmed against their regression sets (no `position: 4`).
-The original audit table (`RUBRIC_AUDIT.md:82-83`) marked both `SPLIT`, and the
-prior summary described the sweep as covering "2–9".
-
-Actual c2-split coverage:
-
-| Range | Status |
-|-------|--------|
-| 2, 3, 4, 5, 6, 7 | split, merged |
-| 10, 11, 12 | split, merged |
-| 13 | split **reverted** at gate (coupled conjuncts — intentional) |
-| **8, 9** | **never split — bundled c2 still live** |
-
-Unit 13 staying 3-criterion is by design. Units 8 and 9 are a **gap**, not a
-decision. This is a c2-rollout item, not part of the c1/c4 audit — flagged here
-for visibility; recommend a separate decision on whether to finish 8/9 before
-or after this c1/c4 work. **Not actioned in this doc.**
+**c2-sweep coverage (for reference).** The criterion-2 sweep is complete. Units
+2–7 and 10–12 split and merged; units 8 (cost-dynamics) and 9
+(customization-trilemma) split and merged in PRs #167 / #168; unit 13 split
+reverted at the gate (intentional). All of positions 2–12 are 4-criterion. No c2
+gap remains.
 
 ---
 
@@ -113,8 +96,8 @@ the whole criterion off the enumeration alone.
 | 5 | model-selection (c4) | map class → regime **AND** recognize the cross-tier hybrid pattern | **HIGH** |
 | 6 | prompt-design (c4) | map approach → regime **AND** recognize the hybrid PM-default | **HIGH** |
 | 7 | hallucination (c4) | map approach → regime **AND** recognize high-stakes needs all three layered | **HIGH** |
-| 8 | cost-dynamics (c3) | map lever → regime **AND** recognize production layers all three | **HIGH** |
-| 9 | customization-trilemma (c3) | map approach → problem-shape **AND** recognize layering **AND** eng-cost / reversal-cost sequencing | **HIGH (→ CRITICAL-leaning)** |
+| 8 | cost-dynamics (c4) | map lever → regime **AND** recognize production layers all three | **HIGH** |
+| 9 | customization-trilemma (c4) | map approach → problem-shape **AND** recognize layering **AND** eng-cost / reversal-cost sequencing | **HIGH (→ CRITICAL-leaning)** |
 | 10 | vector-search-rag (c4) | name a signal per dimension **AND** recognize the PM-error of single-signal-as-proxy | **HIGH** |
 | 11 | streaming-ux (c4) | map combination → surface + why **AND** recognize the "add streaming is one decision" PM-error | **HIGH** |
 | 12 | tool-use (c4) | map combination → surface by stakes + why **AND** recognize the "tool use is one decision" PM-error | **HIGH** |
