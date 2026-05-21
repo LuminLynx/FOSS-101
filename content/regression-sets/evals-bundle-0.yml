@@ -147,9 +147,12 @@ description: |
   nuance: the freshly-split c3 tracks the old c2's mechanism
   content (already grader-credited), so the strictness stays in
   c4 (regime), whose F values on p006/p016/p021 carry forward.
-  Only p007 is the c2=T/c3=F differential. p011 flagged
-  disagreement preserved. Live grader gate run pending before
-  merge.
+  Only p007 was the paper c2=T/c3=F differential. GATE PASSED
+  2026-05-21 (docs/UNIT_4_C2_SPLIT_GATE.md): 94% raw, ~98% after
+  realignment. p007 confirmed (PASS 4/4). Three realignments
+  (p017 c3->F, p021 c3->F + c4->T; p017/p021 join p007 as c2=T/c3=F
+  differentials) and two preserved grader-lenient disagreements
+  (p011 c2, p014 c1 — deferred c1/c3/c4 follow-up). Split kept.
 
 pairs:
   - id: p001
@@ -671,7 +674,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, all three met (comments name all four methods explicitly per Unit 3 lesson)
+    label: Edge case — pseudocode answer, c1+c2+c4 met, c3 missing — comments name all four methods and map them to regimes, but the mechanism comments ("Blind to unknown regressions by construction", "self-enhancement bias") are labels, not explanations (c3 realigned True→False at the 2026-05-21 c2-split gate, same pattern as Unit 3 p017)
     answer: |
       def eval_strategy(decision_window_hours, has_traffic, failure_known):
           # Four methods, layered: human_eval / llm_as_judge / golden_set / live_ab
@@ -714,7 +717,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
-          met: true
+          met: false
         - position: 4
           met: true
       flagged: false
@@ -810,7 +813,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: c1 + c2 met, c3 missing — concise (was all-three-met; realigned per UNIT_4_GATE.md — methods named with mechanisms but not explicitly mapped to regimes; grader-strict on c3)
+    label: Edge case — concise, c1+c2+c4 met, c3 missing — names methods and maps them to regimes (escalations→LLM-judge, hard cases→human eval), but the compact failure-mode phrasing doesn't explain the why (c3 realigned True→False, c4 False→True at the 2026-05-21 c2-split gate)
     answer: |
       Four methods, no single one answers this. Golden-set
       passes at 98% but is blind to unknown regressions.
@@ -833,7 +836,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
-          met: true
-        - position: 4
           met: false
+        - position: 4
+          met: true
       flagged: false
