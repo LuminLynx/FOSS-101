@@ -38,7 +38,8 @@ sources:
     primary_source: true
 rubric:
   - text: "Names evals as a multi-method choice (human eval / LLM-as-judge / golden-set / live A/B or live signal) AND treats the answer as a layered strategy, not a single-method pick — including the recognition that no single method answers the question alone."
-  - text: "Identifies a concrete failure mode of choosing one eval method exclusively AND explains the mechanism — e.g., golden-set passes don't catch unknown regressions (only known categories tested); LLM-as-judge shares blind spots with the model being evaluated (so a regression that looks fine to Sonnet 4.6 will be judged fine by Sonnet 4.6 as judge); CSAT lags real failures by days because users don't survey when they bounce; human eval is small-N and slow."
+  - text: "Identifies a concrete failure mode of choosing one eval method exclusively — e.g., golden-set passes that miss unknown regressions; LLM-as-judge agreeing with a model it shares blind spots with; CSAT that lags real failures; human eval that is too small-N and slow to gate on."
+  - text: "Explains the mechanism behind the named failure mode — why it happens, not just that it happens — e.g., a golden set only tests known categories so unknown regressions go uncaught; LLM-as-judge shares the evaluated model's blind spots, so a regression that looks fine to the model is judged fine by it; CSAT lags because users don't survey when they bounce; human eval is small-N because it doesn't scale to the volume a gate needs."
   - text: "Distinguishes which method is load-bearing in which regime — golden-set for CI gates and migration sanity checks; LLM-as-judge for scaled breadth-checking; human eval for ambiguous-quality and edge cases pre-launch; live A/B or live signal (escalation rate, retry rate, conversation length) for shipped-feature decisions and lagging metrics."
 ---
 

@@ -25,32 +25,52 @@
 #      at 4 emojis to stay safely below the T2-D structural-
 #      validation failure threshold.
 #
-# Position-to-criterion mapping (from
-# content/units/evals-bundle-0.md slot 8 rubric, in authored
-# order):
+# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# batch): criterion 2 split into c2 (name the failure mode) and
+# a new c3 (explain the mechanism); old c3 (regime distinction)
+# renumbered to position 4. Rubric grows 3 -> 4.
+#
+# Unit-4 nuance: unlike Units 2/3 where the grader held the
+# mechanism half strictly, Unit 4's STRICT criterion at its
+# original gate was the REGIME distinction (now c4) — the grader
+# required explicit method-to-regime mapping. So the freshly-split
+# c3 (mechanism) tracks the old c2's mechanism content (which the
+# grader already credited as part of the bundled c2=T), and the
+# strictness lives in c4, whose values carry forward unchanged.
+#
+# Differential pair (c2=T, c3=F — names a failure mode without
+# explaining the mechanism): p007 (gestures at LLM-judge bias
+# without naming the self-enhancement mechanism). Watch p017
+# (pseudocode mechanism comments judged c3=T; could go strict).
+# c3 (why a method fails) is distinct from c4 (which method for
+# which regime) — no fusion risk.
+#
+# Position-to-criterion mapping (after 2026-05-21 c2 split):
 #
 #   1. "Names evals as a multi-method choice (human eval /
 #      LLM-as-judge / golden-set / live A/B or live signal)
 #      AND treats the answer as a layered strategy, not a
-#      single-method pick — including the recognition that no
-#      single method answers the question alone."
+#      single-method pick."
 #   2. "Identifies a concrete failure mode of choosing one
-#      eval method exclusively AND explains the mechanism —
-#      e.g., golden-set passes don't catch unknown regressions;
-#      LLM-as-judge shares blind spots with the model being
-#      evaluated; CSAT lags real failures by days because
-#      users don't survey when they bounce; human eval is
-#      small-N and slow."
-#   3. "Distinguishes which method is load-bearing in which
-#      regime — golden-set for CI gates and migration sanity
-#      checks; LLM-as-judge for scaled breadth-checking;
-#      human eval for ambiguous-quality and edge cases pre-
-#      launch; live A/B or live signal (escalation rate,
-#      retry rate, conversation length) for shipped-feature
-#      decisions and lagging metrics."
+#      eval method exclusively — golden-set missing unknown
+#      regressions; LLM-as-judge sharing blind spots; CSAT
+#      lagging; human eval too small-N/slow to gate on."
+#      (name the failure mode only)
+#   3. "Explains the mechanism behind the named failure mode —
+#      why it happens — golden set only tests known categories;
+#      LLM-judge shares the model's blind spots; CSAT lags
+#      because escalating users don't survey; human eval
+#      doesn't scale to gate volume." (NEW — split from old c2)
+#   4. "Distinguishes which method is load-bearing in which
+#      regime — golden-set for CI gates; LLM-as-judge for
+#      scaled breadth-checking; human eval for ambiguous-quality
+#      and edge cases; live A/B or live signal for shipped-
+#      feature decisions and lagging metrics." (was position 3;
+#      the historically grader-strict criterion)
 #
-# Authoring distribution (21 pairs, 6/5/3/5/2/0; post-Unit-4-
-# gate realignment per docs/UNIT_4_GATE.md):
+# Authoring distribution (21 pairs; pre-split three-criterion
+# shape, post-Unit-4-gate realignment per docs/UNIT_4_GATE.md —
+# preserved as historical record):
 #   * 6 pairs all-three-met (varied voices)
 #       p001, p002, p005, p008, p017 (pseudocode),
 #       p018 (emoji moderate)
@@ -64,6 +84,21 @@
 #   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
 #       p003, p013
 #   * 0 pairs flagged-expected (design failed twice; skip)
+#
+# Authoring distribution (21 pairs; post-c2-split, 2026-05-21,
+# four-criterion shape — current; gate pending):
+#   * 6 all-four-met: p001, p002, p005, p008, p017, p018
+#   * 4 partial (3 of 4): p006 (T,T,T,F), p007 (T,T,F,T —
+#       differential), p016 (T,T,T,F), p021 (T,T,T,F)
+#   * 3 partial (2 of 4): p010 (F,T,T,F), p011 (T,F,F,T —
+#       flagged preserved disagreement), p014 (F,T,T,F)
+#   * 1 partial (1 of 4): p009 (T,F,F,F)
+#   * 5 all-missed on-topic: p004, p012, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable: p003, p013
+#   Check: 6 + 4 + 3 + 1 + 5 + 2 = 21.
+#   c4 (regime) carries the historical grader-strict F values on
+#   p006/p016/p021 (named methods, no explicit method-to-regime
+#   mapping). Only p007 is the c2=T/c3=F differential.
 #
 # Preserved disagreement:
 #
@@ -104,6 +139,17 @@ description: |
   c3 grader-strict realignments (p014, p016, p021). One
   preserved disagreement (p011 flagged — length heuristic).
   Zero flagged-expected pairs. See header for full triage.
+
+  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  criterion 2 split into c2 (name the failure mode) and a new c3
+  (explain the mechanism); old c3 (regime, the historically
+  grader-strict criterion) renumbered to position 4. Unit-4
+  nuance: the freshly-split c3 tracks the old c2's mechanism
+  content (already grader-credited), so the strictness stays in
+  c4 (regime), whose F values on p006/p016/p021 carry forward.
+  Only p007 is the c2=T/c3=F differential. p011 flagged
+  disagreement preserved. Live grader gate run pending before
+  merge.
 
 pairs:
   - id: p001
@@ -156,6 +202,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p002
@@ -199,6 +247,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p003
@@ -222,6 +272,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p004
@@ -243,6 +295,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -278,6 +332,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p006
@@ -310,6 +366,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -345,8 +403,10 @@ pairs:
         - position: 1
           met: true
         - position: 2
-          met: false
+          met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -382,6 +442,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p009
@@ -403,6 +465,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -426,6 +490,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -450,6 +516,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -474,6 +542,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -496,6 +566,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -527,6 +599,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -553,6 +627,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -589,6 +665,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -637,6 +715,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p018
@@ -674,6 +754,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p019
@@ -695,6 +777,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -720,6 +804,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -747,5 +833,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
