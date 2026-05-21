@@ -151,7 +151,13 @@ description: |
   separates the half that was causing the AND-structure ambiguity.
   c3 scoped to causal mechanisms (capability / TTFT-vs-total
   clocks), kept distinct from c4's streaming regime to avoid a
-  Unit-13-style fusion. Live grader gate run pending before merge.
+  Unit-13-style fusion. GATE PASSED 2026-05-21
+  (docs/UNIT_3_C2_SPLIT_GATE.md): 84% raw, ~97% on scoreable split
+  criteria, zero realignments. The predictive strict-c3 judgments
+  on p007/p017/p022 all confirmed c3=false at the grader. The only
+  disagreements were grader-lenient reads of the unsplit c1 (p011,
+  p022 — deferred c1 follow-up). p008/p018/p021 ERRORed (p018
+  known-bad emoji; p008/p021 stochastic). Split kept.
 
 pairs:
   - id: p001
