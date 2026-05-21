@@ -39,11 +39,14 @@
 # strictness lives in c4, whose values carry forward unchanged.
 #
 # Differential pair (c2=T, c3=F — names a failure mode without
-# explaining the mechanism): p007 (gestures at LLM-judge bias
-# without naming the self-enhancement mechanism). Watch p017
-# (pseudocode mechanism comments judged c3=T; could go strict).
-# c3 (why a method fails) is distinct from c4 (which method for
-# which regime) — no fusion risk.
+# explaining the mechanism): p007 (old-c2 was F; names LLM-judge
+# bias without the self-enhancement mechanism — a genuine fresh
+# split judgment, confirmed by the grader). p017/p021 were briefly
+# realigned c3->F at the gate but RESTORED to c3=T at the 2026-05-21
+# cleanup (their old-c2 was T → faithful c3=T; the Sonnet c3=F is a
+# documented calibration gap, not ground truth — see
+# docs/REGRESSION_GATE.md). c3 (why a method fails) is distinct from
+# c4 (which method for which regime) — no fusion risk.
 #
 # Position-to-criterion mapping (after 2026-05-21 c2 split):
 #
@@ -85,8 +88,9 @@
 #       p003, p013
 #   * 0 pairs flagged-expected (design failed twice; skip)
 #
-# Authoring distribution (21 pairs; post-c2-split, 2026-05-21,
-# four-criterion shape — current; gate pending):
+# Authoring distribution (21 pairs; post-2026-05-21-cleanup,
+# four-criterion shape — current; = faithful split, gate
+# realignments on p017/p021 reverted):
 #   * 6 all-four-met: p001, p002, p005, p008, p017, p018
 #   * 4 partial (3 of 4): p006 (T,T,T,F), p007 (T,T,F,T —
 #       differential), p016 (T,T,T,F), p021 (T,T,T,F)
@@ -97,8 +101,9 @@
 #   * 2 off-topic, all-missed, gradable: p003, p013
 #   Check: 6 + 4 + 3 + 1 + 5 + 2 = 21.
 #   c4 (regime) carries the historical grader-strict F values on
-#   p006/p016/p021 (named methods, no explicit method-to-regime
-#   mapping). Only p007 is the c2=T/c3=F differential.
+#   p006/p016/p021. Only p007 is a c2=T/c3=F differential. Sonnet
+#   reads c3=F on p017 and c4=T on p021 (documented calibration
+#   gaps); expected values hold the faithful-Opus state.
 #
 # Preserved disagreement:
 #
@@ -147,12 +152,16 @@ description: |
   nuance: the freshly-split c3 tracks the old c2's mechanism
   content (already grader-credited), so the strictness stays in
   c4 (regime), whose F values on p006/p016/p021 carry forward.
-  Only p007 was the paper c2=T/c3=F differential. GATE PASSED
-  2026-05-21 (docs/UNIT_4_C2_SPLIT_GATE.md): 94% raw, ~98% after
-  realignment. p007 confirmed (PASS 4/4). Three realignments
-  (p017 c3->F, p021 c3->F + c4->T; p017/p021 join p007 as c2=T/c3=F
-  differentials) and two preserved grader-lenient disagreements
-  (p011 c2, p014 c1 — deferred c1/c3/c4 follow-up). Split kept.
+  Only p007 is the c2=T/c3=F differential. GATE PASSED 2026-05-21
+  (docs/UNIT_4_C2_SPLIT_GATE.md): 94% raw. p007 confirmed (PASS
+  4/4). At the gate I realigned p017 c3->F, p021 c3->F + c4->T;
+  the 2026-05-21 CLEANUP RESTORED those (p017/p021 c3->T, p021
+  c4->F) per the grader/gold-standard principle
+  (docs/REGRESSION_GATE.md) — faithful Opus old-c2=T → c3=T, and the
+  locked regime value c4=F. The Sonnet c3=F (p017/p021) and c4=T
+  (p021) reads are documented calibration gaps. Two preserved
+  grader-lenient disagreements remain (p011 c2, p014 c1 — deferred
+  c1/c3/c4 follow-up). Split kept.
 
 pairs:
   - id: p001
@@ -674,7 +683,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, c1+c2+c4 met, c3 missing — comments name all four methods and map them to regimes, but the mechanism comments ("Blind to unknown regressions by construction", "self-enhancement bias") are labels, not explanations (c3 realigned True→False at the 2026-05-21 c2-split gate, same pattern as Unit 3 p017)
+    label: Edge case — pseudocode answer, all four met — comments name all four methods, map them to regimes, and give the mechanism ("Blind to unknown regressions by construction", "self-enhancement bias") (c3 restored to true at the 2026-05-21 cleanup; the Sonnet grader reads these comments as labels and marks c3=false — a documented calibration gap)
     answer: |
       def eval_strategy(decision_window_hours, has_traffic, failure_known):
           # Four methods, layered: human_eval / llm_as_judge / golden_set / live_ab
@@ -717,7 +726,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
-          met: false
+          met: true
         - position: 4
           met: true
       flagged: false
@@ -813,7 +822,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: Edge case — concise, c1+c2+c4 met, c3 missing — names methods and maps them to regimes (escalations→LLM-judge, hard cases→human eval), but the compact failure-mode phrasing doesn't explain the why (c3 realigned True→False, c4 False→True at the 2026-05-21 c2-split gate)
+    label: Edge case — concise, c1+c2+c3 met, c4 missing — names methods with their mechanisms but does not map them to regimes (c3 restored to true and c4 restored to false at the 2026-05-21 cleanup; the Sonnet grader reads c3=false and c4=true here — documented calibration gaps; faithful-Opus state holds)
     answer: |
       Four methods, no single one answers this. Golden-set
       passes at 98% but is blind to unknown regressions.
@@ -836,7 +845,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
-          met: false
-        - position: 4
           met: true
+        - position: 4
+          met: false
       flagged: false
