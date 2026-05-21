@@ -41,7 +41,8 @@ sources:
     primary_source: true
 rubric:
   - text: "Names latency as a multi-axis trade-off (model-size vs streaming vs total-completion) AND treats user-perceived speed as the load-bearing metric, not raw end-to-end seconds."
-  - text: "Identifies a concrete failure mode of treating latency as a single number AND explains the mechanism behind it — e.g., picking a fast model that costs accuracy on the load-bearing task; shipping streaming UX where the output is consumed atomically (so partial output is unusable); optimizing TTFT when total completion is what gates the user's next action."
+  - text: "Identifies a concrete failure mode of treating latency as a single number — e.g., picking a fast model that costs accuracy on the load-bearing task; shipping streaming UX where the output is consumed atomically so partial output is unusable; or optimizing TTFT when total completion is what gates the user's next action."
+  - text: "Explains the mechanism behind the named failure mode — why it happens, not just that it happens — e.g., a smaller/faster model trades capability for speed, so quality drops on the load-bearing task; or TTFT and total-completion are different clocks, so optimizing the wrong one does nothing for a user whose next action waits on the full response. (Distinct from the regime distinction in the next criterion: this is the causal 'why', not the when-to-stream call.)"
   - text: "Distinguishes a regime where streaming UX is the right default (output is read incrementally — chat, explanation, summary) from a regime where it isn't (output is consumed atomically — JSON for downstream code, function-calling, structured form-fill)."
 ---
 
