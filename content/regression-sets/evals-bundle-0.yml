@@ -165,7 +165,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced layered-strategy answer
+    label: All four met, balanced layered-strategy answer
     answer: |
       The CEO wants a 48-hour answer, and a single eval
       method can't give one honestly. We need a layered
@@ -219,7 +219,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, live-signal-led framing
+    label: All four met, live-signal-led framing
     answer: |
       Escalation rate up 12% w/w is the eval result we
       already have — we just need to read it correctly.
@@ -313,7 +313,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Four methods, four failure shapes. Layer them.
 
@@ -349,7 +349,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no regime distinction)
+    label: c1 + c2 + c3 met, c4 missing (no regime distinction)
     answer: |
       The eval question has four methods on the table —
       human eval, LLM-as-judge, golden-set, and live
@@ -384,7 +384,7 @@ pairs:
       flagged: false
 
   - id: p007
-    label: c1 + c3 met, c2 missing — gestures at LLM-judge bias without naming self-enhancement mechanism (deliberate borderline)
+    label: c1 + c2 + c4 met, c3 missing — gestures at LLM-judge bias without naming self-enhancement mechanism (deliberate borderline)
     answer: |
       The eval question has four methods — human, LLM-as-
       judge, golden-set, live signal — and each is right
@@ -423,7 +423,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: All three met — failure modes + regime distinction + layered multi-method strategy (was c2+c3 partial-credit; realigned per UNIT_4_GATE.md — answer enumerates all four methods and treats them as layered by decision regime)
+    label: All four met — failure modes + regime distinction + layered multi-method strategy (was c2+c3 partial-credit; realigned per UNIT_4_GATE.md — answer enumerates all four methods and treats them as layered by decision regime)
     answer: |
       Two failure modes are pointing the same way. CSAT is
       structurally lagged because users who escalate don't
@@ -483,7 +483,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — failure mode + mechanism, no methods enumerated, no regime
+    label: c2 + c3 met, c1/c4 missing — failure mode + mechanism, no methods enumerated, no regime
     answer: |
       The thing the team keeps missing is that CSAT lags
       real failures by days. The mechanism: users who
@@ -508,7 +508,7 @@ pairs:
       flagged: false
 
   - id: p011
-    label: c1 + c3 met, c2 missing — names all four methods + regime distinction without naming failure-mode mechanism (was c3-only; realigned per UNIT_4_GATE.md — answer references all four methods so c1 crosses; flagged preserved as documented disagreement on length heuristic)
+    label: c1 + c4 met, c2/c3 missing — names all four methods + regime distinction without naming failure-mode mechanism (was c3-only; realigned per UNIT_4_GATE.md — answer references all four methods so c1 crosses; flagged preserved as documented disagreement on length heuristic)
     answer: |
       The right call depends on the decision window.
       Within 48 hours, we'd lean on live signals (escalation
@@ -584,7 +584,7 @@ pairs:
       flagged: false
 
   - id: p014
-    label: c2 only — failure modes + mechanism without naming multi-method or distinguishing regimes-by-named-method (was c2+c3; realigned per UNIT_4_GATE.md — grader reads c3 strictly, requires explicit method-name-to-regime mapping)
+    label: c2 + c3 met, c1/c4 missing — failure modes + mechanism without naming multi-method or distinguishing regimes-by-named-method (was c2+c3; realigned per UNIT_4_GATE.md — grader reads c3 strictly, requires explicit method-name-to-regime mapping)
     answer: |
       We should use multiple eval approaches here — no
       single method gives a complete answer. The failure
@@ -732,7 +732,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice (4 emojis, moderate density per Unit 3 lesson), all three met
+    label: Edge case — emoji + informal voice (4 emojis, moderate density per Unit 3 lesson), all four met
     answer: |
       Four eval methods, no single one answers this 🧭:
 

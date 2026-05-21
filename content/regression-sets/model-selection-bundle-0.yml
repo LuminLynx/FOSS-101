@@ -170,7 +170,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced hybrid recommendation
+    label: All four met, balanced hybrid recommendation
     answer: |
       The three-tier prototype is a good start, but treating
       it as A vs B vs C misses the synthesis. Model selection
@@ -225,7 +225,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: c1 + c3 met, c2 missing — measurement-first framing without explicit single-axis failure mode (was all-three-met; realigned per UNIT_5_GATE.md — c2 content was implicit, grader-strict on AND)
+    label: c1 + c4 met, c2/c3 missing — measurement-first framing without explicit single-axis failure mode (was all-three-met; realigned per UNIT_5_GATE.md — c2 content was implicit, grader-strict on AND)
     answer: |
       The decision can't be made from the prototype numbers
       alone — those are point estimates on a 100-PR eval set.
@@ -319,7 +319,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Three axes, all measured against the task: capability
       per tier on bug-catch + security flag (Opus 85/92,
@@ -359,7 +359,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no tier-to-regime mapping)
+    label: c1 + c2 + c3 met, c4 missing (no tier-to-regime mapping)
     answer: |
       This is a multi-axis decision — capability, cost,
       latency — and you can't make it from spec sheets. The
@@ -397,7 +397,7 @@ pairs:
       flagged: false
 
   - id: p007
-    label: All three met — c2 borderline crossed grader-lenient (was c1+c3 partial; realigned per UNIT_5_GATE.md — mirror Units 2/3/4 c2-lenient pattern)
+    label: All four met — c2 borderline crossed grader-lenient (was c1+c3 partial; realigned per UNIT_5_GATE.md — mirror Units 2/3/4 c2-lenient pattern)
     answer: |
       Model selection is a three-axis decision — capability,
       cost, latency — and the right answer for a code-review
@@ -433,7 +433,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: All three met — multi-axis framing emerges implicitly via per-axis arithmetic + regime mapping (was c2+c3 partial; realigned per UNIT_5_GATE.md — grader-lenient on c1 AND structure, same pattern as Unit 4 p008/p011)
+    label: All four met — multi-axis framing emerges implicitly via per-axis arithmetic + regime mapping (was c2+c3 partial; realigned per UNIT_5_GATE.md — grader-lenient on c1 AND structure, same pattern as Unit 4 p008/p011)
     answer: |
       Two failure modes are pointing the same way. Picking
       Opus everywhere is a cost-at-volume failure: $0.08/PR
@@ -498,7 +498,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — failure mode + mechanism, no multi-axis frame, no regime
+    label: c2 + c3 met, c1/c4 missing — failure mode + mechanism, no multi-axis frame, no regime
     answer: |
       The failure mode in "just ship Opus" is sub-linear
       thinking on production volume. $0.08/PR sounds fine
@@ -526,7 +526,7 @@ pairs:
       flagged: false
 
   - id: p011
-    label: c3 only — explicit tier-to-regime mapping, no multi-axis frame, no mechanism
+    label: c4 only — explicit tier-to-regime mapping, no multi-axis frame, no mechanism
     answer: |
       The right pick depends on the workload shape. For
       hard reasoning and high-stakes decisions — security
@@ -600,7 +600,7 @@ pairs:
       flagged: false
 
   - id: p014
-    label: All three met — c1 borderline crossed grader-lenient (concrete per-axis arithmetic + "measurement decision" framing read as implicit multi-axis enumeration; was c2+c3 partial; realigned per UNIT_5_GATE.md)
+    label: All four met — c1 borderline crossed grader-lenient (concrete per-axis arithmetic + "measurement decision" framing read as implicit multi-axis enumeration; was c2+c3 partial; realigned per UNIT_5_GATE.md)
     answer: |
       The thing the team is missing is that this is a
       measurement decision, not a spec-sheet pick. The
@@ -668,7 +668,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: Edge case — Portuguese, all three met
+    label: Edge case — Portuguese, all four met
     answer: |
       A decisão de model selection é uma decisão de síntese
       — capability, cost, latency — e a resposta certa não
@@ -715,7 +715,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, all three met (comments name capability/cost/latency and Opus/Sonnet/Haiku explicitly per Unit 4 lesson)
+    label: Edge case — pseudocode answer, all four met (comments name capability/cost/latency and Opus/Sonnet/Haiku explicitly per Unit 4 lesson)
     answer: |
       def model_selection(workload_shape, load_bearing_task, projected_volume_per_day):
           # Three-axis decision: capability / cost / latency
@@ -765,7 +765,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice (4 emojis, moderate density per Unit 3-4 lesson), all three met
+    label: Edge case — emoji + informal voice (4 emojis, moderate density per Unit 3-4 lesson), all four met
     answer: |
       Three-axis decision 🎯: capability (bug catch), cost
       (at scale), latency (mostly forgiving for async code
@@ -864,7 +864,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: All three met, concise / punchy
+    label: All four met, concise / punchy
     answer: |
       Model selection is a multi-axis call — capability,
       cost, latency — anchored to measurement on the

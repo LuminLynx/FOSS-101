@@ -160,7 +160,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced detection-mitigation-containment recommendation
+    label: All four met, balanced detection-mitigation-containment recommendation
     answer: |
       Eng is right that 4% audit rate is industry-normal
       for RAG Q&A. But "industry standard" isn't the
@@ -225,7 +225,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, containment-led framing
+    label: All four met, containment-led framing
     answer: |
       The expense-policy case is the load-bearing fact
       here. CSAT being stable means employees aren't
@@ -332,7 +332,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Hallucination isn't bug, it's base rate. Three
       axes — detection, mitigation, containment — and
@@ -379,7 +379,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no regime mapping)
+    label: c1 + c2 + c3 met, c4 missing (no regime mapping)
     answer: |
       The team is treating hallucination as a model-
       quality problem when it's a structural base-rate
@@ -465,7 +465,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: All three met — multi-axis framing emerges implicitly via explicit regime-naming (was c2+c3 partial; realigned per UNIT_7_GATE.md — c1 grader-lenient pattern confirmed across 5 units now)
+    label: All four met — multi-axis framing emerges implicitly via explicit regime-naming (was c2+c3 partial; realigned per UNIT_7_GATE.md — c1 grader-lenient pattern confirmed across 5 units now)
     answer: |
       Two failure modes are pointing the same way. The
       mitigation-only path ("just improve the model")
@@ -535,7 +535,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — volume-compound failure mode + mechanism, no axis frame, no regime
+    label: c2 + c3 met, c1/c4 missing — volume-compound failure mode + mechanism, no axis frame, no regime
     answer: |
       The "4% is industry standard" framing misses the
       volume-compound failure mode. A rate that sounds
@@ -647,7 +647,7 @@ pairs:
       flagged: false
 
   - id: p014
-    label: c1 + c2 met, c3 missing — two-of-three axes crosses c1 grader-lenient (confirmed across 5 units) AND c3 grader-strict because containment is omitted (was c2+c3 partial; realigned per UNIT_7_GATE.md — both directions of realignment based on diagnostic)
+    label: c1 + c2 + c3 met, c4 missing — two-of-three axes crosses c1 grader-lenient (confirmed across 5 units) AND c3 grader-strict because containment is omitted (was c2+c3 partial; realigned per UNIT_7_GATE.md — both directions of realignment based on diagnostic)
     answer: |
       Hallucination is a base-rate problem; we can't
       drive it to zero. The reliability question is how
@@ -719,7 +719,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: Edge case — Portuguese, all three met
+    label: Edge case — Portuguese, all four met
     answer: |
       A equipa está a tratar hallucination como um bug
       a corrigir quando é uma propriedade estrutural
@@ -770,7 +770,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, all three met (comments name detection/mitigation/containment explicitly per Units 4-6 lesson)
+    label: Edge case — pseudocode answer, all four met (comments name detection/mitigation/containment explicitly per Units 4-6 lesson)
     answer: |
       def reliability_strategy(cost_of_one_hallucination, scaling_exposure, rate_acceptable):
           # Three-axis design: detection / mitigation / containment
@@ -831,7 +831,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice (4 emojis, moderate density), all three met
+    label: Edge case — emoji + informal voice (4 emojis, moderate density), all four met
     answer: |
       Hallucination is a base rate, not a bug 🎯. Three
       axes — detection, mitigation, containment — and
@@ -928,7 +928,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: All three met, concise / punchy
+    label: All four met, concise / punchy
     answer: |
       Hallucination is a base rate, not a bug. Three
       axes — detection, mitigation, containment — all

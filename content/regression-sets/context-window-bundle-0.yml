@@ -177,7 +177,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced two-phase answer
+    label: All four met, balanced two-phase answer
     answer: |
       The eng lead is right that "it fits" is true and that
       retrieval is real engineering work. He's wrong about
@@ -216,7 +216,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, cost-led framing
+    label: All four met, cost-led framing
     answer: |
       What the eng lead is missing is that the 1M-token context
       isn't a fixed-cost budget — it's a per-call multiplier.
@@ -300,7 +300,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering-flavored voice
+    label: All four met, terse engineering-flavored voice
     answer: |
       Three-axis problem: cost, recall, scale. The eng lead is
       right that for one bounded doc the math is fine — cache
@@ -333,7 +333,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no regime distinction)
+    label: c1 + c2 + c3 met, c4 missing (no regime distinction)
     answer: |
       Context window is a budget, not a capacity. Three things
       are happening at once: input cost scales linearly with
@@ -397,7 +397,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: c2 + c3 met, c1 missing — failure modes + regime distinction without naming trade-off
+    label: c2 + c3 + c4 met, c1 missing — failure modes + regime distinction without naming trade-off
     answer: |
       The pitch works for phase 1 and breaks for phase 2 for
       two specific reasons. First, per-call input cost is
@@ -454,7 +454,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — cost mechanism, no trade-off, no regime (deliberate borderline)
+    label: c2 + c3 met, c1/c4 missing — cost mechanism, no trade-off, no regime (deliberate borderline)
     answer: |
       The cost math is the part that breaks first. Each query
       that stuffs a 200-page document pays for ~150k input
@@ -477,7 +477,7 @@ pairs:
       flagged: false
 
   - id: p011
-    label: c3 only — regime distinction without trade-off framing or mechanism
+    label: c4 only — regime distinction without trade-off framing or mechanism
     answer: |
       This is a phase-dependent decision. For a single bounded
       document with well-targeted queries, the eng lead's
@@ -588,7 +588,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: Edge case — Portuguese, all three met
+    label: Edge case — Portuguese, all four met
     answer: |
       O eng lead está parcialmente certo: para a fase 1 (um
       único documento de 80-250 páginas com perguntas bem
@@ -657,7 +657,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice, all three met
+    label: Edge case — emoji + informal voice, all four met
     answer: |
       OK so the 1M context window is real but the eng lead is
       treating it like infinite RAM 🤦. It's a budget, not
