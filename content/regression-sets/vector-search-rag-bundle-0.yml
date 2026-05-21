@@ -32,6 +32,31 @@
 # end-to-end against the new rubric version (per docs/RUBRIC_AUDIT.md
 # § Decisions locked, full regression re-run is the backfill stance).
 #
+# GATE TRIAGE (2026-05-21, per docs/UNIT_10_C2_SPLIT_GATE.md):
+# Split gate ran end-to-end against the live grader: 94-96%
+# per-criterion agreement across two runs (well above the 80% bar),
+# 21/21 flagged-correct. Three of the paper "surfaced shifts" above
+# were over-lenient and have been realigned to match the grader's
+# correct strict reading:
+#   * p009 c3 T → F — "each dimension has its own set of fixes" is
+#     too generic to identify that the three failure modes need
+#     DIFFERENT fixes.
+#   * p011 c3 T → F — names only two dimensions (c1=false), so it
+#     cannot identify different fixes for three failure modes; the
+#     T was internally inconsistent with c1=false.
+#   * p021 c2 T → F — the single-upstream-cause framing ("get
+#     retrieval right and the rest follows") is the misconception
+#     the unit teaches against, not a valid per-dimension mechanism.
+# One PRESERVED disagreement (not realigned): p008 c4 — the grader
+# marks the unsplit signals criterion (signals AND single-signal
+# PM-error) not-met, but p008 names a clean signal per dimension and
+# recognizes the single-signal trap, so it genuinely meets c4. The
+# grader is over-strict on c4's own AND-clause — a data point for the
+# deferred c1/c3/c4 follow-up audit, not a c2-split issue. The c2
+# split itself is well-calibrated: c2/c3 agree with the grader on
+# every pair except the two c3 realignments above (both author error,
+# not split error).
+#
 # Position-to-criterion mapping (from
 # content/units/vector-search-rag-bundle-0.md slot 8 rubric, after
 # 2026-05-20 c2 split):
@@ -82,27 +107,27 @@
 #       flag realigned per T2-B; matches Unit 2 p015 + Unit 9
 #       p015 cross-unit drift pattern, see UNIT_10_GATE.md)
 #
-# Authoring distribution (21 pairs; post-c2-split, 2026-05-20,
+# Authoring distribution (21 pairs; post-gate-triage, 2026-05-21,
 # four-criterion shape — current):
 #   * 1 pair all-four-met
-#       p002 (terse engineering; explicitly names pipeline/prompt/
-#       audit-side fixes, hits all four)
-#   * 7 pairs partial credit (3 of 4)
+#       p002 (explicitly names pipeline/prompt/audit-side fixes)
+#   * 6 pairs partial credit (3 of 4)
 #       p001 (T,T,F,T), p005 (T,T,F,T), p006 (T,T,T,F),
-#       p016 (T,T,F,T), p017 (T,T,F,T), p018 (T,T,F,T),
-#       p021 (T,T,F,T)
-#   * 4 pairs partial credit (2 of 4)
-#       p007 (T,F,F,T), p008 (T,F,F,T), p009 (T,F,T,F),
-#       p011 (F,T,T,F)
-#   * 1 pair partial credit (1 of 4)
-#       p010 (F,T,F,F) — surfaced c2 mechanism credit under the
-#       split; old "all-missed on-topic" classification no longer
-#       applies because the meta-claim is now its own criterion
+#       p016 (T,T,F,T), p017 (T,T,F,T), p018 (T,T,F,T)
+#   * 3 pairs partial credit (2 of 4)
+#       p007 (T,F,F,T), p008 (T,F,F,T — c4 is a preserved
+#       disagreement; grader over-strict, see GATE TRIAGE above),
+#       p021 (T,F,F,T — c2 realigned to F at triage)
+#   * 3 pairs partial credit (1 of 4)
+#       p009 (T,F,F,F — c3 realigned to F), p010 (F,T,F,F),
+#       p011 (F,T,F,F — c3 realigned to F)
 #   * 6 pairs all-missed on-topic
 #       p004, p012, p014, p015, p019, p020
 #   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
 #       p003, p013
-#   * 0 pairs flagged-expected (unchanged from prior gate)
+#   * 0 pairs flagged-expected
+#
+# Check: 1 + 6 + 3 + 3 + 6 + 2 = 21.
 #
 # The "all-four-met" bar is intentionally rare under the split.
 # The HIGH-severity audit observation was that the old AND-bundled
@@ -478,7 +503,7 @@ pairs:
         - position: 2
           met: false
         - position: 3
-          met: true
+          met: false
         - position: 4
           met: false
       flagged: false
@@ -534,7 +559,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
-          met: true
+          met: false
         - position: 4
           met: false
       flagged: false
@@ -836,7 +861,7 @@ pairs:
         - position: 1
           met: true
         - position: 2
-          met: true
+          met: false
         - position: 3
           met: false
         - position: 4
