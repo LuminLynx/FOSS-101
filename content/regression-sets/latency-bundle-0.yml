@@ -28,29 +28,54 @@
 #      pairs author both clauses always met or deliberately
 #      separated, never half-and-half by accident.
 #
-# Position-to-criterion mapping (from
-# content/units/latency-bundle-0.md slot 8 rubric, in authored
-# order):
+# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# batch): criterion 2 split into c2 (name the failure mode) and
+# a new c3 (explain the mechanism); old c3 (regime distinction)
+# renumbered to position 4. Rubric grows 3 -> 4.
+#
+# Applied the Unit 2 lesson: the grader holds the mechanism half
+# (c3) STRICTLY — answers that STATE a failure with adjectives
+# but don't EXPLAIN the WHY fail c3. c3 here was deliberately
+# scoped to the CAUSAL mechanisms (capability-trade and
+# TTFT-vs-total-completion clocks) and kept distinct from c4's
+# streaming-regime distinction, to avoid the c3/c4 fusion that
+# reverted Unit 13.
+#
+# Watch-pairs for the gate (paper-judged c2=T, c3=F — they name
+# a failure mode without explaining its mechanism): p007
+# (gestures "faster but lower quality", no why), p017 (pseudocode
+# comments state conclusions), p022 (names B's action-item loss,
+# argues TTFT framing but no capability mechanism). p021 is the
+# inverse watch-pair (concise, but the "user reading by 500ms vs
+# 6s total" clocks mechanism is judged c3=T). If the grader
+# disagrees on these, triage with --show-criteria.
+#
+# Position-to-criterion mapping (after 2026-05-21 c2 split):
 #
 #   1. "Names latency as a multi-axis trade-off (model-size
 #      vs streaming vs total-completion) AND treats
 #      user-perceived speed as the load-bearing metric, not
 #      raw end-to-end seconds."
 #   2. "Identifies a concrete failure mode of treating latency
-#      as a single number AND explains the mechanism behind
-#      it — e.g., picking a fast model that costs accuracy on
-#      the load-bearing task; shipping streaming UX where the
-#      output is consumed atomically (so partial output is
-#      unusable); optimizing TTFT when total completion is
-#      what gates the user's next action."
-#   3. "Distinguishes a regime where streaming UX is the right
+#      as a single number — fast model costing accuracy on the
+#      load-bearing task; streaming UX where output is consumed
+#      atomically; or optimizing TTFT when total completion
+#      gates the next action." (name the failure mode only)
+#   3. "Explains the mechanism behind the named failure mode —
+#      why it happens — e.g., a smaller model trades capability
+#      for speed so quality drops; or TTFT and total-completion
+#      are different clocks. Distinct from c4's regime call."
+#      (NEW — split from old c2)
+#   4. "Distinguishes a regime where streaming UX is the right
 #      default (output is read incrementally — chat,
 #      explanation, summary) from a regime where it isn't
 #      (output is consumed atomically — JSON for downstream
 #      code, function-calling, structured form-fill)."
+#      (was position 3)
 #
-# Authoring distribution (22 pairs, 8/3/4/5/2/0; post-Unit-3-gate
-# realignment per docs/UNIT_3_GATE.md):
+# Authoring distribution (22 pairs; pre-split three-criterion
+# shape, post-Unit-3-gate realignment per docs/UNIT_3_GATE.md —
+# preserved as historical record):
 #   * 8 pairs all-three-met (varied voices, incl. edge-case voices)
 #       p001, p002, p005, p007, p016 (pt), p017 (pseudocode),
 #       p018 (emoji — known to error), p021 (concise)
@@ -62,10 +87,22 @@
 #       p004, p012, p015, p019, p020
 #   * 2 pairs off-topic, all-missed, gradable (NOT flagged)
 #       p003, p013
-#   * 0 pairs flagged-expected (the design experiment failed —
-#     see UNIT_3_GATE.md "p022 finding" for why; flagged
-#     coverage gap accepted for v1 unit and revisited in
-#     future rubric tightening)
+#   * 0 pairs flagged-expected
+#
+# Authoring distribution (22 pairs; post-c2-split, 2026-05-21,
+# four-criterion shape — current; gate pending):
+#   * 6 all-four-met: p001, p002, p005, p016, p018, p021
+#   * 5 partial (3 of 4): p006 (T,T,T,F), p007 (T,T,F,T — watch),
+#       p008 (F,T,T,T), p014 (F,T,T,T), p017 (T,T,F,T — watch)
+#   * 1 partial (2 of 4): p010 (F,T,T,F)
+#   * 3 partial (1 of 4): p009 (T,F,F,F), p011 (F,F,F,T),
+#       p022 (F,T,F,F — watch)
+#   * 5 all-missed on-topic: p004, p012, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable: p003, p013
+#   Check: 6 + 5 + 1 + 3 + 5 + 2 = 22.
+#   c2=T / c3=F differential pairs (name without explaining):
+#   p007, p017, p022 — see watch-pairs above. p018 still ERRORs
+#   (emoji payload bug, known-bad marker).
 #
 # T2-B locked interpretation (per docs/PHASE_2_GATE.md and
 # UNIT_2_GATE.md): flagged = grader *uncertainty*, NOT "answer
@@ -103,6 +140,18 @@ description: |
   direction). One known-bad pair (p018, emoji-heavy)
   reproducibly errors and is kept as a known-bad regression
   marker. See header for full triage.
+
+  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  criterion 2 split into c2 (name the failure mode) and a new c3
+  (explain the mechanism); old c3 (regime) renumbered to position
+  4. Notably, the three pairs flagged above as historical c2-AND
+  borderlines (p007, p017, p022) map exactly to the split's
+  watch-pairs: under the split they name a failure mode (c2=T) but
+  don't explain the mechanism (c3=F) — so the split cleanly
+  separates the half that was causing the AND-structure ambiguity.
+  c3 scoped to causal mechanisms (capability / TTFT-vs-total
+  clocks), kept distinct from c4's streaming regime to avoid a
+  Unit-13-style fusion. Live grader gate run pending before merge.
 
 pairs:
   - id: p001
@@ -145,6 +194,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p002
@@ -182,6 +233,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p003
@@ -206,6 +259,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p004
@@ -227,6 +282,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -258,6 +315,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p006
@@ -288,6 +347,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -320,6 +381,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -355,6 +418,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p009
@@ -377,6 +442,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -401,6 +468,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -425,6 +494,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -450,6 +521,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -472,6 +545,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -505,6 +580,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p015
@@ -527,6 +604,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -567,6 +646,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p017
@@ -600,6 +681,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -641,6 +724,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p019
@@ -662,6 +747,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -687,6 +774,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -714,6 +803,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: true
       flagged: false
 
@@ -743,5 +834,7 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
