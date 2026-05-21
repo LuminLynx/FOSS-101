@@ -14,27 +14,52 @@
 #     NO quote-led sentences (Unit 11 lesson).
 #   * English-only per docs/curriculum/v1-path-outline.md.
 #
-# Position-to-criterion mapping (from
-# content/units/tool-use-bundle-0.md slot 8 rubric):
+# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md):
+# Criterion 2 was a HIGH-severity AND-clause bundling the
+# "mismatched-combination failure mechanism" with the meta-claim
+# "the decisions constrain each other" — identical shape to Unit
+# 11, which split cleanly (docs/UNIT_11_C2_SPLIT_GATE.md). c2 is
+# now mechanism-only; the constrain-each-other meta-claim is its
+# own criterion at position 3; old map+PM (was c3) renumbered to
+# position 4. Rubric grows 3 -> 4. Pairs re-judged strict-AND.
+#
+# Surfaced latent-c3 credit (old bundled c2 was T because both
+# conjuncts held): p006, p008, p010 each explain the constraint,
+# so new c3=T.
+#
+# Watch-pairs for the gate (paper-judged c3=F): p009, p011, p021
+# state generic coupling at the c1 level ("coupled, decide
+# together") but do NOT identify the specific mutual constraint
+# (p011 actively dismisses recovery). If the grader credits c3=T
+# on these it signals a c1/c3 overlap (the Unit 13 failure mode);
+# triage at the gate with --show-criteria. On Unit 11's identical
+# split the grader confirmed c3=F on all three watch-pairs.
+#
+# Position-to-criterion mapping (after 2026-05-21 c2 split):
 #
 #   1. "Names the three coupled tool-use decisions — tool
 #      granularity, schema strictness, error-recovery locus —
 #      AND treats them as coupled, the combination sets the
 #      feel, not three independent toggles."
 #   2. "Explains the mechanism behind a mismatched-combination
-#      failure AND identifies that the decisions constrain each
-#      other (lenient schema implies model-side recovery; an
-#      open-ended tool surface cannot be deterministically
-#      wrapped)."
-#   3. "Maps a matched combination to a surface by its stakes
+#      failure (broad lenient + orchestrator-only lets errors
+#      fall through silently; strict narrow + model-side recovery
+#      on a destructive call lets the model retry something
+#      dangerous)." (mechanism only)
+#   3. "Identifies that the three decisions constrain each other
+#      — cannot be chosen independently; lenient schema implies
+#      model-side recovery; an open-ended tool surface cannot be
+#      deterministically wrapped." (NEW — split from old c2)
+#   4. "Maps a matched combination to a surface by its stakes
 #      (reliable-workflow for high-stakes mutations like a
 #      refund; agentic-exploration for open-ended assistants;
 #      guided-agent for semi-structured) AND names the common PM
 #      error (treating tool use as one decision, inheriting SDK
-#      defaults, skipping the recovery decision)."
+#      defaults, skipping the recovery decision)." (was position 3)
 #
-# Authoring distribution (21 pairs; post-Unit-12-gate
-# realignment per docs/UNIT_12_GATE.md, 2026-05-17):
+# Authoring distribution (21 pairs; pre-split three-criterion
+# shape, post-Unit-12-gate realignment per docs/UNIT_12_GATE.md,
+# 2026-05-17 — preserved as historical record):
 #   * 6 pairs all-three-met (varied English voices, no
 #     parenthetical option-lists)
 #       p001 (balanced prose), p002 (terse engineering),
@@ -54,6 +79,19 @@
 #     deliberately probe the Unit 14/15 boundary
 #       p003 (pivots to "should we let it act at all"),
 #       p013 (pivots to MCP / transport-protocol infra)
+#
+# Authoring distribution (21 pairs; post-c2-split, 2026-05-21,
+# four-criterion shape — current; gate pending):
+#   * 6 all-four-met: p001, p002, p005, p016, p017, p018
+#   * 3 partial (3 of 4): p006 (T,T,T,F), p008 (F,T,T,F),
+#       p010 (F,T,T,F) — c3 surfaced from the old bundled c2
+#   * 1 partial (2 of 4): p007 (T,F,F,T)
+#   * 3 partial (1 of 4): p009 (T,F,F,F), p011 (T,F,F,F),
+#       p021 (T,F,F,F) — the c1/c3-overlap watch-pairs
+#   * 6 all-missed on-topic: p004, p012, p014, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable: p003, p013
+#   * 0 flagged-expected
+#   Check: 6 + 3 + 1 + 3 + 6 + 2 = 21.
 #   * 0 pairs flagged-expected — retired per UNIT_11_GATE.md
 #
 # T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
@@ -116,6 +154,18 @@ description: |
   UNIT_12_GATE.md to a live authoring-checklist item. See header
   for full triage.
 
+  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md): criterion 2 split
+  into c2 (mechanism only) and a new c3 (the "decisions constrain
+  each other" meta-claim); old c3 (map + PM error) renumbered to
+  position 4. Identical shape to Unit 11, which split cleanly.
+  Pairs re-judged strict-AND; surfaced latent-c3 credit on
+  p006/p008/p010; watch-pairs p009/p011/p021 paper-judged c3=F.
+  GATE PASSED 2026-05-21 (docs/UNIT_12_C2_SPLIT_GATE.md): 100%
+  per-criterion agreement (84/84), 21/21 fully passed, zero errors,
+  zero disagreements — the cleanest run in the rollout. All three
+  watch-pairs confirmed c3=F (no c1/c3 overlap); all three surfaced
+  pairs confirmed c3=T. Zero realignments. Split kept.
+
 pairs:
   - id: p001
     label: All three met, balanced prose covering the three decisions and the refund stakes
@@ -154,6 +204,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p002
@@ -186,6 +238,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p003
@@ -208,6 +262,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p004
@@ -228,6 +284,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -266,6 +324,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p006
@@ -296,6 +356,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -324,6 +386,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: true
       flagged: false
 
@@ -354,6 +418,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -377,6 +443,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -402,6 +470,8 @@ pairs:
         - position: 2
           met: true
         - position: 3
+          met: true
+        - position: 4
           met: false
       flagged: false
 
@@ -433,6 +503,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p012
@@ -456,6 +528,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p013
@@ -477,6 +551,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -500,6 +576,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p015
@@ -521,6 +599,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -569,6 +649,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p017
@@ -610,6 +692,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p018
@@ -636,6 +720,8 @@ pairs:
           met: true
         - position: 3
           met: true
+        - position: 4
+          met: true
       flagged: false
 
   - id: p019
@@ -658,6 +744,8 @@ pairs:
           met: false
         - position: 3
           met: false
+        - position: 4
+          met: false
       flagged: false
 
   - id: p020
@@ -679,6 +767,8 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
 
@@ -710,5 +800,7 @@ pairs:
         - position: 2
           met: false
         - position: 3
+          met: false
+        - position: 4
           met: false
       flagged: false
