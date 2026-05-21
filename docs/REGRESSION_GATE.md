@@ -12,6 +12,21 @@ Every rubric change must run end-to-end against the live grader before merging. 
 
 GitHub repository secrets storage adds an exposure surface the project does not want to take on. Self-hosted runners would trade one surface for another. The locked decision says the re-run must happen — it does not say CI must be the enforcer. The operator can be, as long as the check actually happens and the result is recorded in the PR.
 
+## The grader vs. the gold standard (read this before realigning anything)
+
+**The grader is Anthropic Claude Sonnet 4.6** (STRATEGY § T2-E; `.env` `AI_MODEL=claude-sonnet-4-6`), with a documented escalation path to Opus 4.7 for the hardest rubrics. It is the model that grades real learners' answers in production, so the regression set exists to keep *it* honest.
+
+**The content and its expected values were authored by the more capable Opus 4.7 and locked.** They are the **gold standard** — the ideal grade a fair human/Opus reading would assign.
+
+This capability asymmetry has a hard consequence for gate triage:
+
+- A disagreement between the Sonnet grader and an Opus-authored expected value is, by default, a **grader calibration gap to document** — *not* evidence the gold standard is wrong. The weaker model disagreeing with the stronger author's judgment is the expected failure direction.
+- **Do not edit a locked expected value down to match the grader.** Doing so degrades the gold standard to the weaker model and defeats the regression set's purpose, which is to *surface* Sonnet's miscalibration, not hide it.
+- **Realign an expected value only when it is a plain authoring error** that a careful reader (human/Opus) would independently agree with — established by the *fair-human read*, not by what the grader output on a given run. The grader is stochastic; a single run is never sufficient grounds to change locked ground truth.
+- Preserve-by-default. When in doubt, keep the Opus value and log the Sonnet disagreement as a calibration gap (and as input to the deferred c1/c3/c4 follow-up audit, which is cataloguing exactly these gaps).
+
+This principle was added 2026-05-21 after the c2-split batch surfaced the asymmetry: several early gate realignments flipped Opus-authored values to match Sonnet's stricter/looser reads, which was backwards.
+
 ## Procedure (operator)
 
 For any PR that edits `content/units/**` (rubric text) or `content/regression-sets/**`:
