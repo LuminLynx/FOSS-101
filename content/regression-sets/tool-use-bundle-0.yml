@@ -168,7 +168,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced prose covering the three decisions and the refund stakes
+    label: All four met, balanced prose covering the three decisions and the refund stakes
     answer: |
       Eng saying it will just define the functions is the trap.
       Tool use here is not one decision but three coupled ones,
@@ -209,7 +209,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Three coupled decisions, not one. Granularity is narrow
       single-purpose tools versus broad composites. Strictness is
@@ -290,7 +290,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, been-bitten experiential voice
+    label: All four met, been-bitten experiential voice
     answer: |
       I shipped this mistake once. We gave a support assistant
       broad, forgiving tools and let the model retry whenever a
@@ -605,7 +605,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: All three met, long-narrative voice
+    label: All four met, long-narrative voice
     answer: |
       Let me walk through why just defining the functions is the
       wrong instinct for this assistant, because the reasoning is
@@ -654,7 +654,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: All three met, structured PM-doc voice in flowing prose, no headers or parentheticals
+    label: All four met, structured PM-doc voice in flowing prose, no headers or parentheticals
     answer: |
       Scoping tool use for the assistant. There are three coupled
       decisions and the combination produces the feel, so they
@@ -697,7 +697,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: All three met, short-form
+    label: All four met, short-form
     answer: |
       Three coupled decisions, not one. Granularity, schema
       strictness, recovery locus. Coupled because a lenient

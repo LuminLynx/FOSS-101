@@ -208,7 +208,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced hybrid recommendation
+    label: All four met, balanced hybrid recommendation
     answer: |
       The team is treating this as a "pick the best
       prompt" exercise when it's actually a contract-shape
@@ -260,7 +260,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, system-prompt-led framing
+    label: All four met, system-prompt-led framing
     answer: |
       The contract-shape question matters more than the
       catch-rate spread between the three prototypes. Two
@@ -360,7 +360,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Two axes. Where the contract lives: system prompt
       (stable rules + schema + role) vs user prompt
@@ -395,7 +395,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no regime mapping)
+    label: c1 + c2 + c3 met, c4 missing (no regime mapping)
     answer: |
       Prompt design is a contract decision across two
       axes — where the contract lives (system vs user
@@ -471,7 +471,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: c2 + c3 met, c1 missing — failure modes + regime mapping without naming multi-axis-contract frame
+    label: c2 + c3 + c4 met, c1 missing — failure modes + regime mapping without naming multi-axis-contract frame
     answer: |
       The failure mode in pure instructions is that rules
       can't fully specify ambiguous-criteria tasks. "What
@@ -535,7 +535,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — failure mode + mechanism, no axis frame, no regime
+    label: c2 + c3 met, c1/c4 missing — failure mode + mechanism, no axis frame, no regime
     answer: |
       The 8% owner-hallucination rate in option A is the
       coverage gap, and the mechanism is specific: pure
@@ -642,7 +642,7 @@ pairs:
       flagged: false
 
   - id: p014
-    label: All three met — c1 borderline failed empirically across two runs (grader-lenient on single-axis enumeration with contract framing); realigned per UNIT_6_GATE.md second-run findings
+    label: All four met — c1 borderline failed empirically across two runs (grader-lenient on single-axis enumeration with contract framing); realigned per UNIT_6_GATE.md second-run findings
     answer: |
       The team is treating this as a writing-quality
       problem when it's really a behavior contract
@@ -711,7 +711,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: Edge case — Portuguese, all three met
+    label: Edge case — Portuguese, all four met
     answer: |
       A equipa está a tratar isto como um exercício de
       escolha-o-melhor-prompt quando é uma decisão de
@@ -761,7 +761,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, all three met (comments name system/user prompt and instructions/examples explicitly per Units 4-5 lesson)
+    label: Edge case — pseudocode answer, all four met (comments name system/user prompt and instructions/examples explicitly per Units 4-5 lesson)
     answer: |
       def prompt_strategy(contract_part, ambiguity_level, maintenance_cadence):
           # Two-axis decision: where contract lives + how it's expressed
@@ -816,7 +816,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice (4 emojis, moderate density per Units 3-5 lesson), all three met
+    label: Edge case — emoji + informal voice (4 emojis, moderate density per Units 3-5 lesson), all four met
     answer: |
       Two-axis contract decision 🎯, not a writing exercise.
 
@@ -910,7 +910,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: All three met, concise / punchy
+    label: All four met, concise / punchy
     answer: |
       Two-axis contract decision: system-vs-user prompt
       and instructions-vs-examples. The three prototypes

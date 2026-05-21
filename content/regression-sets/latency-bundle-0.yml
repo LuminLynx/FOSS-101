@@ -161,7 +161,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced answer with third-option proposal
+    label: All four met, balanced answer with third-option proposal
     answer: |
       The exec's "snappy" instinct isn't wrong, but it's
       collapsing three different latency axes into one number.
@@ -205,7 +205,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, streaming-led framing
+    label: All four met, streaming-led framing
     answer: |
       Streaming is the lever neither prototype is pulling. A
       uses Sonnet (good quality) but blocks for 6s — user
@@ -294,7 +294,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Three latency axes, not one. Model-size: Haiku 1-2s,
       Sonnet 5-7s. Streaming: TTFT 200-500ms regardless of
@@ -326,7 +326,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no regime distinction)
+    label: c1 + c2 + c3 met, c4 missing (no regime distinction)
     answer: |
       Latency isn't a single number — model-size and streaming
       are different axes, and the exec's "snappy" intuition is
@@ -359,7 +359,7 @@ pairs:
       flagged: false
 
   - id: p007
-    label: All three met — gestures-at-quality crossed the c2 bar (was c2 borderline; realigned per UNIT_3_GATE.md — grader-lenient reading mirrors Unit 2 p007)
+    label: c1 + c2 + c4 met, c3 missing — gestures-at-quality crossed the c2 bar (was c2 borderline; realigned per UNIT_3_GATE.md — grader-lenient reading mirrors Unit 2 p007)
     answer: |
       The right framing here is multi-axis. There's the
       model-size lever (Haiku faster but lower quality), the
@@ -393,7 +393,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: c2 + c3 met, c1 missing — failure modes + regime distinction without naming multi-axis trade-off
+    label: c2 + c3 + c4 met, c1 missing — failure modes + regime distinction without naming multi-axis trade-off
     answer: |
       Two failure modes in the proposed options. Option A
       blocks for 6 seconds — the user sees nothing until the
@@ -454,7 +454,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — failure mode + mechanism, no trade-off frame, no regime
+    label: c2 + c3 met, c1/c4 missing — failure mode + mechanism, no trade-off frame, no regime
     answer: |
       The failure mode in option B is that we're saving 3
       seconds of total time at the cost of accuracy on the
@@ -480,7 +480,7 @@ pairs:
       flagged: false
 
   - id: p011
-    label: c3 only — regime distinction, no trade-off frame, no mechanism
+    label: c4 only — regime distinction, no trade-off frame, no mechanism
     answer: |
       The right call depends on the surface shape. For a
       chat-shaped feature where the user reads output
@@ -557,7 +557,7 @@ pairs:
       flagged: false
 
   - id: p014
-    label: c2 + c3 met, c1 missing — uses load-bearing-task language without naming multi-axis trade-off (deliberate borderline)
+    label: c2 + c3 + c4 met, c1 missing — uses load-bearing-task language without naming multi-axis trade-off (deliberate borderline)
     answer: |
       The load-bearing task here is action-item extraction —
       that's what PMs use this feature for, and it's where
@@ -616,7 +616,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: Edge case — Portuguese, all three met
+    label: Edge case — Portuguese, all four met
     answer: |
       A intuição do exec — "queremos isto rápido" — está a
       colapsar três eixos diferentes em um número. Latência
@@ -657,7 +657,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, all three met (was c2 borderline; realigned per UNIT_3_GATE.md — pseudocode comments named mechanism cleanly enough to cross c2; differs from Unit 2 p017 where c1 also fell)
+    label: Edge case — pseudocode answer, c1 + c2 + c4 met, c3 missing (was c2 borderline; realigned per UNIT_3_GATE.md — pseudocode comments named the mechanism cleanly enough to cross c2 but did not explain it, so c3 stays unmet; differs from Unit 2 p017 where c1 also fell)
     answer: |
       def latency_choice(surface_shape, load_bearing_task, exec_pressure):
           # Three-axis check: model-size, streaming, total-completion
@@ -693,7 +693,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice, all three met
+    label: Edge case — emoji + informal voice, all four met
     answer: |
       OK so the exec saying "snappy" is collapsing three
       latency axes into one number 🤦. Three things at once:
@@ -786,7 +786,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: All three met, concise / punchy
+    label: All four met, concise / punchy
     answer: |
       Latency has three axes — model-size, streaming,
       total-completion — and "snappy" is about TTFT, not

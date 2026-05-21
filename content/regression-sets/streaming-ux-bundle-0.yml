@@ -220,7 +220,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced prose covering the three decisions and the surface fit
+    label: All four met, balanced prose covering the three decisions and the surface fit
     answer: |
       Eng saying "stream it like chat" is the trap. Streaming this
       brief isn't one decision — it's three coupled ones, and the
@@ -266,7 +266,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Three coupled decisions, not one. What to stream: tokens /
       semantic chunks / status. How to render: continuous flow /
@@ -349,7 +349,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, been-bitten experiential voice
+    label: All four met, been-bitten experiential voice
     answer: |
       I shipped exactly this once — a structured report, streamed
       "like the chat feature." It demoed great and then support
@@ -718,7 +718,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: All three met, long-narrative voice
+    label: All four met, long-narrative voice
     answer: |
       Let me walk through why "stream it like the chat feature"
       is the wrong instinct for this brief, because the reasoning
@@ -769,7 +769,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: All three met, structured PM-doc voice (flowing prose, no markdown headers)
+    label: All four met, structured PM-doc voice (flowing prose, no markdown headers)
     answer: |
       Scoping streaming for the brief surface. There are three
       coupled decisions here and the combination produces the
@@ -811,7 +811,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: All three met, emoji-tolerant short-form
+    label: All four met, emoji-tolerant short-form
     answer: |
       Streaming = 3 coupled decisions, combination makes the feel.
 

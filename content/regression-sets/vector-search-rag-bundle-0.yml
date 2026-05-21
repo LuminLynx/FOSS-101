@@ -223,7 +223,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced prose covering all dimensions
+    label: c1 + c2 + c4 met, c3 missing — balanced prose covering all dimensions
     answer: |
       I'd push back on the framing of "is the RAG good?" as one
       number. RAG quality decomposes into three independent
@@ -269,7 +269,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       RAG quality = 3 dimensions, measured independently.
 
@@ -350,7 +350,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, "been bitten" experiential voice
+    label: c1 + c2 + c4 met, c3 missing — "been bitten" experiential voice
     answer: |
       I've shipped a RAG feature that passed our recall@10 bar and
       then got reamed in post-launch review because the cited
@@ -655,7 +655,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: All three met, long-narrative voice
+    label: c1 + c2 + c4 met, c3 missing — long-narrative voice
     answer: |
       The way I think about RAG quality is that you have a
       pipeline with three distinct stages and a single quality
@@ -710,7 +710,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: All three met, structured PM-doc voice (flowing prose, no markdown headers)
+    label: c1 + c2 + c4 met, c3 missing — structured PM-doc voice (flowing prose, no markdown headers)
     answer: |
       Quality definition for this RAG launch. Three independent
       dimensions, each with its own signal, none of them a proxy
@@ -755,7 +755,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: All three met, emoji-tolerant short-form
+    label: c1 + c2 + c4 met, c3 missing — emoji-tolerant short-form
     answer: |
       Three dimensions for RAG quality — and they fail
       independently, so we measure each one.
