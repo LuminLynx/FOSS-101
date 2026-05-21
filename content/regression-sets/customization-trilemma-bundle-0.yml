@@ -168,7 +168,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced answer addressing each problem
+    label: All four met, balanced answer addressing each problem
     answer: |
       The eng lead is right that there are three approaches on the
       table but wrong that we pick one. These are three different
@@ -213,7 +213,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, terse engineering-flavored
+    label: All four met, terse engineering-flavored
     answer: |
       Three problems, three shapes, three approaches. Don't pick
       one.
@@ -298,7 +298,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, written in the voice of someone who's been bitten
+    label: All four met, written in the voice of someone who's been bitten
     answer: |
       I've watched a team make exactly this mistake. They had
       budget for fine-tuning, fine-tuned to solve a knowledge gap,
@@ -343,7 +343,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing — trilemma + mechanism, no regime mapping
+    label: c1 + c2 + c3 met, c4 missing — trilemma frame + failure mode + mechanism, no regime mapping
     answer: |
       These are three different problems, not three flavors of the
       same one. The customization trilemma — fine-tuning vs. RAG
@@ -472,7 +472,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — mechanism without trilemma or regime
+    label: c2 + c3 met, c1/c4 missing — failure mode + mechanism without trilemma frame or regime mapping
     answer: |
       The cost math here is what breaks first if we get the
       approach wrong. Fine-tuning shifts behavior distribution
@@ -608,7 +608,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: All three met, long-narrative voice (rewritten 2026-05-14; the original structured PM-doc voice with markdown-style section labels triggered a deterministic grader-payload bug)
+    label: All four met, long-narrative voice (rewritten 2026-05-14; the original structured PM-doc voice with markdown-style section labels triggered a deterministic grader-payload bug)
     answer: |
       There are three approaches on the table — fine-tuning, RAG,
       and prompting — and the eng lead's pick-one framing treats
@@ -689,7 +689,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice, all three met
+    label: Edge case — emoji + informal voice, all four met
     answer: |
       OK so 🙅 nope on the eng lead's "pick one" — that's the
       customization trilemma trap right there. Three problems =
