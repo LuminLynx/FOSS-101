@@ -160,7 +160,11 @@ description: |
   position 4. Identical shape to Unit 11, which split cleanly.
   Pairs re-judged strict-AND; surfaced latent-c3 credit on
   p006/p008/p010; watch-pairs p009/p011/p021 paper-judged c3=F.
-  Live grader gate run pending before merge.
+  GATE PASSED 2026-05-21 (docs/UNIT_12_C2_SPLIT_GATE.md): 100%
+  per-criterion agreement (84/84), 21/21 fully passed, zero errors,
+  zero disagreements — the cleanest run in the rollout. All three
+  watch-pairs confirmed c3=F (no c1/c3 overlap); all three surfaced
+  pairs confirmed c3=T. Zero realignments. Split kept.
 
 pairs:
   - id: p001
