@@ -170,7 +170,7 @@ description: |
 
 pairs:
   - id: p001
-    label: All three met, balanced layered-optimization recommendation
+    label: All four met, balanced layered-optimization recommendation
     answer: |
       Finance is asking the right question and eng is
       framing the wrong answer. Cost at scale isn't a
@@ -239,7 +239,7 @@ pairs:
       flagged: false
 
   - id: p002
-    label: All three met, caching-led framing
+    label: All four met, caching-led framing
     answer: |
       Caching first. The 80% stable-prefix ratio (4k of 5k
       input tokens are system prompt + routing rules +
@@ -339,7 +339,7 @@ pairs:
       flagged: false
 
   - id: p005
-    label: All three met, terse engineering voice
+    label: All four met, terse engineering voice
     answer: |
       Three production-cost levers, not one. Caching,
       batching, capacity (committed-use). Stack them;
@@ -385,7 +385,7 @@ pairs:
       flagged: false
 
   - id: p006
-    label: c1 + c2 met, c3 missing (no per-regime lever mapping)
+    label: c1 + c2 + c3 met, c4 missing — names the axes, a failure mode, and its mechanism, but no per-regime lever mapping
     answer: |
       Cost at scale isn't a pick-one decision — it's a
       multi-axis problem across caching, batching, and
@@ -464,7 +464,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: c2 + c3 met, c1 missing — failure modes + regime mapping without naming three-axis frame or annualization reframe
+    label: c2 + c3 + c4 met, c1 missing — failure mode + mechanism + regime mapping without naming the three-axis frame or annualization reframe
     answer: |
       The failure mode in single-lever cost optimization
       is that the discounts multiply, not substitute. If
@@ -533,7 +533,7 @@ pairs:
       flagged: false
 
   - id: p010
-    label: c2 only — multiplication failure mode + mechanism, no axis frame, no regime
+    label: c2 + c3 met, c1/c4 missing — multiplication failure mode + mechanism, no axis frame, no regime mapping
     answer: |
       The failure mode in single-lever cost optimization
       is that the discounts compound rather than
@@ -645,7 +645,7 @@ pairs:
       flagged: false
 
   - id: p014
-    label: All three met — implicit multi-axis enumeration ("first/second/third lever") + annualization anchor satisfies both c1 AND clauses (was c2+c3 c1-borderline; realigned per UNIT_8_GATE.md — c1 grader-lenient on multi-axis clause when 3 distinct levers identified, plus the $655k anchor satisfies the annualization clause)
+    label: All four met — implicit multi-axis enumeration ("first/second/third lever") + annualization anchor satisfies both c1 AND clauses (was c2+c3 c1-borderline; realigned per UNIT_8_GATE.md — c1 grader-lenient on multi-axis clause when 3 distinct levers identified, plus the $655k anchor satisfies the annualization clause)
     answer: |
       The team is treating this as a single-optimization
       decision when it's a multi-lever production-cost
@@ -719,7 +719,7 @@ pairs:
       flagged: false
 
   - id: p016
-    label: Edge case — Portuguese, all three met
+    label: Edge case — Portuguese, all four met
     answer: |
       A equipa está a tratar isto como uma decisão de
       pick-one quando é um problema multi-axis de
@@ -773,7 +773,7 @@ pairs:
       flagged: false
 
   - id: p017
-    label: Edge case — pseudocode answer, all three met (comments name caching/batching/capacity explicitly per Units 4-7 lesson)
+    label: Edge case — pseudocode answer, all four met (comments name caching/batching/capacity explicitly per Units 4-7 lesson)
     answer: |
       def production_cost_strategy(stable_prefix_ratio, latency_forgiving_share, steady_state_qps):
           # Three production-cost axes: caching / batching / capacity
@@ -828,7 +828,7 @@ pairs:
       flagged: false
 
   - id: p018
-    label: Edge case — emoji + informal voice (4 emojis, plain prose only, no embedded percentage-slash markdown per Unit 6/7 p018 lesson), all three met
+    label: Edge case — emoji + informal voice (4 emojis, plain prose only, no embedded percentage-slash markdown per Unit 6/7 p018 lesson), all four met
     answer: |
       Cost at scale is a stacking decision, not a
       pick-one 🛠️. Three axes — caching, batching, and
@@ -931,7 +931,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: All three met, concise / punchy
+    label: All four met, concise / punchy
     answer: |
       Three production-cost axes — caching, batching,
       capacity — and the discounts multiply, not
