@@ -198,7 +198,7 @@ preserve-by-default per § Recommended next step):
 |---|---|---|---|
 | p007 | c4 `true→false` | Signals all named; push-back is on a *composite score* ("each dimension fails independently, one number hides the problem") — the neighboring meta, not the literal single-signal-as-proxy | **Preserve `true`**; log Sonnet strict read as a c4(ii)-wording calibration gap |
 | p008 | c4 `true→false` | Same shape as p007 (composite push-back + independence) | **Preserve `true`**; same gap |
-| p021 | c4 `true→false` | Signals named, but the answer asserts the single-upstream-cause misconception (*"if we get retrieval right, groundedness and citation faithfulness follow"*) — directly contradicts the independence c4(ii) requires | **Defensible author over-credit**; grader's `false` is well-justified. Confirm with a 2–3× re-run, then likely realign `c4→false` (author correcting an over-credit, not chasing the grader) |
+| p021 | c4 `true→false` (run 1–2), `true→true` (run 3) | Signals named, but the answer asserts the single-upstream-cause misconception (*"if we get retrieval right, groundedness and citation faithfulness follow"*) — directly contradicts the independence c4(ii) requires | **Hold `c4=true` (preserve).** Isolated 2–3× re-run (2026-05-22) returned **2 `false` / 1 `true`** — non-reproducible, stochastic at the c4 margin (sub-0.8 confidence zone). The merits lean `false`, but the grader's own inconsistency shows this is genuinely *borderline*, not a *plain* author error — so preserve the Opus value and log as a stochastic calibration gap (same bucket as p007/p008). The re-runs vindicated the rule: realigning after the first two `false`s would have chased noise. |
 | p011 | c3 `false→true` | Names only *two* dimensions (collapses citation faithfulness into "grounding"), then claims "the fixes are different" for that 2-way split | Grader **lenient** on c3's 3-way different-fixes meta. **Preserve `false`** (spec-faithful Opus value); realigning to match would degrade the gold standard. Log as a lenient calibration gap |
 
 **Carry-forward for the inventory.** p011 is a fresh c3 (different-fixes meta)
@@ -209,3 +209,12 @@ inventory predicts across units 5–13 — but here it manifests as
 lenient-credit the inventory forecast. Future step-4 runs on units 11–13 c4
 should watch for the same strict/neighboring-meta shape, not only the lenient
 one.
+
+**Method note (the `--pair` re-run earns its keep).** p021's resolution is the
+worked example for why borderline disagreements get an isolated 2–3× re-run
+before any expected value is touched: run 1 and 2 said `c4=false`, run 3 said
+`c4=true`. Acting on the first run — or even the first two — would have flipped
+locked ground truth to chase grader noise. The discipline is: confirm
+reproducibility with `run_regression_set … --pair <id>` (2–3×); realign only on
+a *consistent* signal that also reads as a plain author error; otherwise
+preserve and log the margin.
