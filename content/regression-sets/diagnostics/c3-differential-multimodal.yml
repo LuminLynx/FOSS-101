@@ -1,0 +1,53 @@
+# Standalone DIAGNOSTIC regression set for the c1/c4 audit
+# (docs/RUBRIC_AUDIT_C1_C4.md). One pair — single grader call.
+#
+# Unit 13 (multimodal) is 3-criterion (the c2 split was reverted at the
+# gate), so the regime/mapping criterion here is c3, not c4.
+#
+# Isolates c3's meta-conjunct. The answer names the three approaches and
+# frames the decision as diagnosing task shape first (c1 met), and maps
+# each approach to a task shape with reasons (c3 conjunct 1 met) — but
+# COMMITS the PM-error by defaulting to the most capable model (VLM) when
+# unsure, instead of recognizing it. So the c3 meta-conjunct fails:
+# expected [T,F,F].
+#
+# CAVEAT: in this unit c1's "diagnose shape first" and c3's "don't default
+# to the most capable model" are entangled, so this differential is
+# inherently weaker than the streaming/tool-use ones. If the grader marks
+# c1 not-met too, that reflects the entanglement, not a clean c3 read —
+# interpret c3 in light of that.
+#
+# Read: c3 actual=true => lenient AND-bundling on c3 confirmed. c3
+# actual=false => grader caught the PM-error; c3 is a LEAVE.
+#
+# Run:  python -m backend.scripts.run_regression_set \
+#         content/regression-sets/diagnostics/c3-differential-multimodal.yml --show-criteria
+unit_id: multimodal-bundle-0
+pairs:
+  - id: c3-diff-multimodal
+    label: Differential (c3) — maps approaches to shapes correctly but commits the default-to-most-capable PM-error; isolates the c3 meta-conjunct
+    answer: |
+      There are three approaches to a vision feature, and the right move
+      is to diagnose the shape of the visual task first rather than pick
+      by which model is most capable: raw image to a vision model,
+      extract a structured signal first with OCR or classical CV, or a
+      hybrid cheap-extractor-with-VLM-fallback.
+
+      Open-ended understanding — "describe what's happening in this
+      photo" — goes to a VLM. Stable bounded extraction — a fixed-format
+      invoice, a barcode — goes to extract-first. High-volume
+      mostly-stable-with-a-tail goes to hybrid: a cheap extractor on the
+      bulk, the VLM on the tail.
+
+      Honestly though, when we're unsure, we'll just send everything to
+      the VLM — it's the most capable and it'll handle whatever we throw
+      at it.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+      flagged: false

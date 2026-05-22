@@ -1,0 +1,49 @@
+# Standalone DIAGNOSTIC regression set for the c1/c4 audit
+# (docs/RUBRIC_AUDIT_C1_C4.md). One pair — single grader call.
+#
+# Isolates c4's meta-conjunct for Unit 11 (streaming-ux). The answer
+# names the three coupled decisions and treats them as coupled (c1 met),
+# and maps the chat triple to a chat surface with a reason (c4 conjunct 1
+# met) — but COMMITS the PM-error the criterion warns against by defaulting
+# that chat triple onto an artifact/canvas surface it doesn't fit, instead
+# of recognizing the error. So the c4 meta-conjunct fails: expected [T,F,F,F].
+# The committed sub-error ("default the chat triple onto the wrong surface")
+# is chosen so it does NOT contradict c1's coupling claim — c4 stays the
+# only isolated failure.
+#
+# Read: c4 actual=true => lenient AND-bundling on c4 confirmed (credited
+# off the mapping, ignored the misapplication). c4 actual=false => grader
+# caught it; c4 is a LEAVE.
+#
+# Run:  python -m backend.scripts.run_regression_set \
+#         content/regression-sets/diagnostics/c4-differential-streaming.yml --show-criteria
+unit_id: streaming-ux-bundle-0
+pairs:
+  - id: c4-diff-streaming
+    label: Differential (c4) — maps the chat triple correctly but commits the default-onto-wrong-surface PM-error; isolates the c4 meta-conjunct
+    answer: |
+      Streaming is really three coupled decisions, not one toggle:
+      what to stream (raw tokens vs. semantic chunks vs. status-only),
+      how to render the streamed state (continuous flow vs. progressive
+      sections vs. typed-out), and how to recover from a mid-stream
+      failure (silent retry vs. partial accept vs. full restart). The
+      combination is what produces the feel.
+
+      The chat triple is token + continuous-flow + full-restart, and it
+      fits a chat surface because the user reads the output incrementally
+      and a dropped stream can just restart the turn cheaply.
+
+      For our new artifact/canvas feature we'll ship that same chat
+      triple — it's our house default and it's the fastest path to
+      launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false

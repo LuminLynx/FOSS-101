@@ -1,0 +1,47 @@
+# Standalone DIAGNOSTIC regression set for the c1/c4 audit
+# (docs/RUBRIC_AUDIT_C1_C4.md). One pair — single grader call.
+#
+# Isolates c4's meta-conjunct for Unit 12 (tool-use). The answer names
+# the three coupled decisions and treats them as coupled (c1 met), and
+# maps narrow + strict + orchestrator-recovery to a high-stakes refund
+# mutation with a reason (c4 conjunct 1 met) — but COMMITS the PM-error
+# by inheriting the SDK defaults for everything else, instead of
+# recognizing it. So the c4 meta-conjunct fails: expected [T,F,F,F].
+# "Inherit SDK defaults" is the sub-error chosen because it does NOT
+# contradict c1's coupling claim — c4 stays the only isolated failure.
+#
+# Read: c4 actual=true => lenient AND-bundling on c4 confirmed. c4
+# actual=false => grader caught the PM-error; c4 is a LEAVE.
+#
+# Run:  python -m backend.scripts.run_regression_set \
+#         content/regression-sets/diagnostics/c4-differential-tooluse.yml --show-criteria
+unit_id: tool-use-bundle-0
+pairs:
+  - id: c4-diff-tooluse
+    label: Differential (c4) — maps the refund combination correctly but commits the inherit-SDK-defaults PM-error; isolates the c4 meta-conjunct
+    answer: |
+      Tool use is three coupled decisions, not one: tool granularity
+      (many narrow tools vs. few broad composites), schema strictness
+      (strict validation vs. lenient coercion), and error-recovery locus
+      (model-side retry vs. orchestrator-side catch-and-re-prompt). They
+      are coupled — the combination is what makes a tool surface reliable
+      or not.
+
+      For a refund mutation — high-stakes and irreversible — the right
+      combination is narrow tools + strict schema + orchestrator-side
+      recovery, because you want a validated shape the orchestrator can
+      catch on before anything irreversible fires.
+
+      For the rest of our agent's tools we'll just inherit the SDK
+      defaults and move on.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
