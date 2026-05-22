@@ -867,3 +867,43 @@ pairs:
         - position: 4
           met: true
       flagged: false
+
+  # DIFFERENTIAL PAIR for the c1/c4 audit (docs/RUBRIC_AUDIT_C1_C4.md).
+  # Diagnostic, not yet a locked gold pair: it isolates c4's second
+  # conjunct. Near-identical to p007 ([T,F,F,T]) — names a concrete
+  # signal per dimension (c4 conjunct 1 met) — but COMMITS the PM-error
+  # the criterion warns against (treats recall@K as the sufficient
+  # proxy for overall RAG quality) instead of recognizing it, so the
+  # meta-conjunct fails and c4 expected=false. The only semantic
+  # difference from p007 is the final stance. If the grader returns
+  # c4 actual=true, that confirms lenient AND-bundling on c4.
+  - id: p022
+    label: Differential (c4) — names a signal per dimension but commits the recall@K-as-sufficient-proxy PM-error; isolates the c4 meta-conjunct vs p007
+    answer: |
+      Three quality dimensions for this RAG feature.
+
+      Recall — track recall@K and MRR. Tells you whether the right
+      chunks made it into the retrieval set.
+
+      Groundedness — track RAGAS faithfulness. Tells you whether
+      the model used the retrieved chunks.
+
+      Citation faithfulness — track span-level source-quote
+      validation. Tells you whether the cited passage actually
+      backs the claim.
+
+      For the dashboard I'd make recall@K the north-star metric —
+      if retrieval is finding the right chunks the rest follows, so
+      a green recall@K is our single go/no-go signal for whether
+      the RAG feature is good.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
