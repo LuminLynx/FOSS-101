@@ -187,6 +187,45 @@ first live regression run logged in this thread.
 
 ---
 
+## 6. Production / dev dependency split
+
+**Decision.** Backend Python dependencies are split across two files:
+
+- `backend/requirements.txt` — the **production** set. Everything imported by
+  `app/` or by the ops scripts in `scripts/` (which run against the live DB:
+  `migrate_db`, `ingest_units`, `run_regression_set`, `seed_db`).
+- `backend/requirements-dev.txt` — **test-only** packages. Starts with
+  `-r requirements.txt`, so installing it gives the full set; today its only
+  extra is `pytest`.
+
+**Why.** Test-only packages have no business in the deployed Railway
+dependency graph. Keeping `pytest` out of `requirements.txt` means:
+
+- The production image / dependency graph carries only what the running
+  service and its ops scripts actually use.
+- Dependabot alerts against test-only packages (e.g. the pytest predictable
+  `/tmp/pytest-of-{user}` local-DoS advisory) stop being raised against the
+  deployed service — pytest never reaches production, and the alert is no
+  longer attached to the prod manifest.
+
+**Classification rule.** A package belongs in `requirements.txt` if it is
+imported anywhere under `app/` or `scripts/`, or is a runtime backend of one
+that is (e.g. `bcrypt` behind `passlib`, `httpx` under the Anthropic SDK).
+Only packages used *exclusively* under `tests/` go in `requirements-dev.txt`.
+At the time of writing, `pytest` is the only test-exclusive dependency; note
+that `PyYAML` (scripts) and `python-dotenv` (`app/config.py`) are **production**
+deps despite looking dev-ish.
+
+**Operator action.**
+- Running the service: `pip install -r backend/requirements.txt` (unchanged).
+- Running the tests (local or CI): `pip install -r backend/requirements-dev.txt`.
+- `.github/workflows/ci.yml` installs the **dev** set (its pytest step needs
+  it); its pip cache key points at `requirements-dev.txt`.
+
+**Source.** Dependency-hygiene split prompted by the pytest Dependabot alert.
+
+---
+
 ## Launch-readiness checklist (Phase 4)
 
 These are deferred items called out in code review but not action-able

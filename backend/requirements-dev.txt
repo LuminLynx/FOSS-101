@@ -1,0 +1,14 @@
+# Development / test-only dependencies.
+#
+# Install with:
+#   pip install -r backend/requirements-dev.txt
+#
+# The -r line below pulls in the full production set (requirements.txt),
+# so this single file is enough to run the app *and* the test suite.
+#
+# Keeping test-only packages out of requirements.txt keeps them out of the
+# deployed Railway dependency graph entirely (see BACKEND_BEST_PRACTICES.md
+# § Production / dev dependency split).
+-r requirements.txt
+
+pytest==8.3.3
