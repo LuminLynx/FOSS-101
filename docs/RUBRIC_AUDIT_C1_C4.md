@@ -1,6 +1,6 @@
 # Rubric Audit — c1 (framing) and c4 (regime/mapping) AND-Clause Bundling
 
-**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) underway — Units 10, 11, and 13 run (all three HIGH regime/c1 units say "leave, don't split"; see § Step-4 findings). Unit 12 c4 and the c1 units 5–9 remain operator-local and pending.
+**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4): the **HIGH tier is closed** — Units 10, 11, 12, 13 all run, all "leave, don't split" (no lenient bundling anywhere; see § Step-4 findings + § HIGH-tier closeout). The MEDIUM c1 units 5–9 remain operator-local and pending.
 **Date:** 2026-05-21
 **Scope:** All 13 published / authored units in `content/units/`
 **Predecessor:** `docs/RUBRIC_AUDIT.md` (the criterion-2 sweep). This is the deferred c1/c3 follow-up promised there (`RUBRIC_AUDIT.md:13`, `:91`).
@@ -321,3 +321,57 @@ of three HIGH regime/c1 units (10, 11, 13) say "leave, don't split"** — the
 inventory's lenient-bundling forecast is refuted across the whole HIGH tier so
 far. The novel finding here is the **c1↔c3 coupling** (incomplete approach-naming
 in c1 propagates into a withheld c3 mapping), logged for the record.
+
+### Unit 12 (tool-use) — c4 (the last HIGH unit; closes the tier)
+
+**Run.** `run_regression_set tool-use-bundle-0.yml --show-criteria` (live Sonnet
+4.6): **98% (83/84)**, zero ERRORs, 21/21 flagged-correct, 20/21 fully passed.
+A single disagreement (p018 c4), isolated and re-run via `--pair`.
+
+**c4 (HIGH regime) → leave unsplit, no lenient bundling.** The c4 differentials
+all held strict: p006 (names decisions + mechanism, never maps a combination),
+p008 (gestures vaguely at the PM error instead of naming it), and p021 (stakes
+mapping omits the why + PM error) **all correctly returned `c4=false`**. The
+grader holds c4's map-by-stakes + PM-error conjuncts strictly — no lenient
+bundling.
+
+**p018 c4 → stochastic; preserve `c4=true`.** p018 ("all four met, short-form")
+returned `c4=false` on the full-set run but `c4=true` on both isolated re-runs —
+**1 false / 2 true, non-reproducible** (the p021 profile, not the reproducible
+p014/p008 one). Reading the answer confirms the substance is present: it maps the
+refund (high-stakes, irreversible) → narrow + strict + orchestrator recovery
+*with the why*, and names the PM error ("just-define-the-functions inherits
+broad/lenient/model-retries… force the recovery decision before launch"). The
+full-set FAIL was a margin noise event. **Preserve `c4=true`; log as a stochastic
+borderline** (same disposition as Unit 10 p021).
+
+**Net for Unit 12: no content/YAML change. The HIGH tier is closed: 4 of 4
+(10, 11, 12, 13) say "leave, don't split."**
+
+### HIGH-tier closeout (10, 11, 12, 13)
+
+The inventory scored the regime/c1 criteria of Units 10–13 HIGH on the
+*expectation of lenient bundling* — that the grader would credit the whole
+criterion off the first conjunct and silently drop the meta. **All four refute
+that.** The grader holds the second conjunct strictly everywhere; not one HIGH
+criterion lenient-bundled. So **none of the HIGH regime/c1 criteria are split
+candidates** — splitting addresses leniency, and there is none here.
+
+The grader's *actual* error mode across the tier is the **inverse — over-strictness**, and it appears in two flavours, both preserve-by-default (never realign down to chase the stricter Sonnet read):
+
+- **Reproducible strict** on a weak/incomplete second conjunct or a compressed
+  answer: Unit 11 p014 (c1, vague coupling, 3×), Unit 13 p008 (c3, unnamed-hybrid
+  → ungrounded mapping, 4× — the c1↔c3 coupling).
+- **Stochastic strict** at the margin: Unit 10 p021 (c4, 2F/1T), Unit 12 p018
+  (c4, 1F/2T).
+
+A practical implication for any future rubric work: because the failure mode is
+strictness on terse/compressed answers, **adding more separately-scored
+conjuncts (a split) would make it worse** — more boxes to tick in limited words.
+This is independent evidence for leave-don't-split beyond the no-lenient-bundling
+result. Out-of-scope side data point: Unit 11 p011 (c2 lenient on an all-missed
+pair) remains logged for a future c2 revisit.
+
+**Remaining step-4 work:** the MEDIUM c1 units (5–9), per the priority order —
+expected to be even less split-prone than the HIGH tier, but gate-confirmed
+the same way.
