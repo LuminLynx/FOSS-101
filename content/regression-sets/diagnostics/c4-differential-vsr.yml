@@ -1,0 +1,51 @@
+# Standalone DIAGNOSTIC regression set for the c1/c4 audit
+# (docs/RUBRIC_AUDIT_C1_C4.md). Not a gold set — one pair only, so the
+# grader is called once instead of re-grading the full 22-pair bundle.
+#
+# p022 isolates c4's second conjunct for Unit 10 (vector-search-rag).
+# It is near-identical to gold pair p007 ([T,F,F,T]) — names a concrete
+# signal per dimension (c4 conjunct 1 met) — but COMMITS the PM-error the
+# criterion warns against (treats recall@K as the sufficient proxy for
+# overall RAG quality) instead of recognizing it. So the meta-conjunct
+# fails and c4 expected=false. The only semantic difference from p007 is
+# the final stance.
+#
+# Read: if the grader returns c4 actual=true, lenient AND-bundling on c4
+# is confirmed (it credited c4 off "named the signals" and ignored the
+# committed PM-error) — the evidence the audit's step 4 calls for. If it
+# returns c4 actual=false, the grader caught the error and c4 is a LEAVE.
+#
+# Run:  python -m backend.scripts.run_regression_set \
+#         content/regression-sets/diagnostics/c4-differential-vsr.yml --show-criteria
+unit_id: vector-search-rag-bundle-0
+pairs:
+  - id: p022
+    label: Differential (c4) — names a signal per dimension but commits the recall@K-as-sufficient-proxy PM-error; isolates the c4 meta-conjunct vs p007
+    answer: |
+      Three quality dimensions for this RAG feature.
+
+      Recall — track recall@K and MRR. Tells you whether the right
+      chunks made it into the retrieval set.
+
+      Groundedness — track RAGAS faithfulness. Tells you whether
+      the model used the retrieved chunks.
+
+      Citation faithfulness — track span-level source-quote
+      validation. Tells you whether the cited passage actually
+      backs the claim.
+
+      For the dashboard I'd make recall@K the north-star metric —
+      if retrieval is finding the right chunks the rest follows, so
+      a green recall@K is our single go/no-go signal for whether
+      the RAG feature is good.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
