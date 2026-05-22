@@ -119,6 +119,14 @@ python -m backend.scripts.seed_db --reset
 uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+`requirements.txt` is the production set. To run the test suite, install the
+dev set instead (it `-r`'s the production set, so it covers both):
+
+```bash
+pip install -r backend/requirements-dev.txt
+pytest backend/tests/
+```
+
 ## Migration strategy (production-safe)
 
 - The API runtime does **not** create schema on startup. The startup hook
