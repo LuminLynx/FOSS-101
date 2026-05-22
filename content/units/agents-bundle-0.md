@@ -205,9 +205,12 @@ you have already paid for every step that produced it.
 validation), *true-agent* (model-directed loop + external verifier +
 end-state check), and *just-prompt-it* (single call) — cohere because
 each decision reinforces the others. A model-directed loop *forces* a
-termination guard, because the model cannot be trusted to stop itself; a
-step budget alone is not enough on a long loop, so the true-agent shape
-pairs it with an external verifier. Compounding error is only survivable
+termination guard, because the model cannot be trusted to stop itself —
+and for an open-ended goal a blunt step budget cannot tell whether the
+goal is actually met, so the true-agent shape's termination leg is an
+*external verifier* (stop when the goal checks out), with a step budget
+kept only as a cost-ceiling backstop, not as the defining guard.
+Compounding error is only survivable
 on a short fixed workflow; the longer and more model-directed the loop,
 the more per-step validation stops being optional. Pick a model-directed
 loop and you have implicitly committed to a real termination guard and
