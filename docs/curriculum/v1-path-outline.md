@@ -99,11 +99,10 @@ from a different angle, building toward the synthesis decision.
 
 ---
 
-## Productization (Units 7–10) — partially shipped
+## Productization (Units 7–10) — shipped
 
 After Foundations, the path branches into "*can we make this reliable
-enough to ship to users?*" Units 7 and 8 are shipped; Units 9 and 10
-are locked.
+enough to ship to users?*" Units 7–10 are all shipped.
 
 | # | Unit | Status | Trade-off it teaches | Prereqs |
 |---|---|---|---|---|
@@ -176,8 +175,8 @@ are locked.
 
 ## Production (Units 11–15) — 11–13 shipped, 14–15 locked
 
-"*Can we operate this in front of real users?*" Units 11–14
-are locked; Unit 15 remains sketched.
+"*Can we operate this in front of real users?*" Units 11–13 are
+shipped; Units 14 and 15 are locked.
 
 | # | Unit | Status | Trade-off it teaches | Prereqs |
 |---|---|---|---|---|
