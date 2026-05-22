@@ -1,6 +1,6 @@
 # Rubric Audit — c1 (framing) and c4 (regime/mapping) AND-Clause Bundling
 
-**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) underway — Units 10 and 11 run (both HIGH regime/c1 units say "leave, don't split"; see § Step-4 findings). Units 12–13 c4 and the c1 units 5–9 remain operator-local and pending.
+**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) underway — Units 10, 11, and 13 run (all three HIGH regime/c1 units say "leave, don't split"; see § Step-4 findings). Unit 12 c4 and the c1 units 5–9 remain operator-local and pending.
 **Date:** 2026-05-21
 **Scope:** All 13 published / authored units in `content/units/`
 **Predecessor:** `docs/RUBRIC_AUDIT.md` (the criterion-2 sweep). This is the deferred c1/c3 follow-up promised there (`RUBRIC_AUDIT.md:13`, `:91`).
@@ -270,3 +270,54 @@ the project guards against.
 AND-clause criteria (c1, c4) stay unsplit; the disagreements are documented
 calibration gaps, all preserve-by-default. **Two of two HIGH regime/c1 units
 (10, 11) now say "leave, don't split."**
+
+### Unit 13 (multimodal) — c1 and c3 (the 3-criterion / split-reverted unit)
+
+**Note on numbering.** Unit 13 is one of the two 3-criterion units (its c2
+split was *reverted* at the gate — coupled conjuncts, see `RUBRIC_AUDIT.md`
+§ Rollout findings), so its regime criterion is **c3**, not c4. c2 (the coupled
+mechanism + cost/eval criterion) is out of this audit's scope.
+
+**Run.** `run_regression_set multimodal-bundle-0.yml --show-criteria` (live
+Sonnet 4.6): **98% (62/63)**, zero ERRORs, 21/21 flagged-correct, 20/21 fully
+passed. A single disagreement (p008 c3), isolated and re-run 3× via `--pair`.
+
+**c1 (MEDIUM) → leave unsplit, no leniency.** c1 = (i) *names the three
+approaches* AND (ii) *frames the decision as diagnosing task shape first*. p008
+(the c1 differential: names only two approaches cleanly, hybrid left implicit)
+returned `c1=false` — the grader did **not** lenient-credit "names three" off
+the implicit hybrid or the strong shape-first frame. No leniency on c1.
+
+**c3 (HIGH regime) → leave unsplit, no lenient bundling.** c3 = (i) *maps an
+approach to a task shape + why* AND (ii) *names the "reach for the most capable
+model" PM error*. p006 (the clean c3 differential: explains mechanism/cost-eval
+but never maps the receipt to an approach) correctly returned `c3=false` — the
+grader holds the mapping+PM-error conjuncts strictly. **Third HIGH regime/c1
+criterion (after 10, 11) to refute the lenient-bundling forecast → leave.**
+
+**The one disagreement — p008 `c3 expected=true / actual=false`, and what it
+reveals (a c1↔c3 coupling).** Rock-solid reproducible: 4 consistent
+observations (full-set + 3 isolated), every one `c3=false` — not stochastic
+(contrast p021). On the merits p008 *does* map the right shape ("high-volume
+mostly-stable-with-a-tail") to the right behavior ("extract first + escalate")
+and names the PM error, so a fair reader credits c3. The grader withholds it
+because p008 never cleanly *names* the hybrid (its c1 gap), so the c3 mapping
+points at an approach the answer never established and reads as ungrounded — **the
+c1 incompleteness couples into the c3 mapping judgment.** The criteria are not
+fully independent for this answer shape.
+
+- This is *strict coupling*, the **inverse** of lenient bundling — and strict
+  behavior says *leave* (a split addresses leniency, not strictness).
+- **Preserve `c3=true`** (don't realign). Reproducible *stricter* Sonnet read on
+  a *borderline* (label-vs-substance: the approach is described but unnamed) is a
+  documented calibration gap, not a plain author error — same disposition as
+  Unit 11 p014. Reproducibility makes it a *cleaner* logged gap, not a license to
+  flip the Opus value. (If p008 should cleanly earn c3, the fix is an *authoring*
+  change — name the hybrid in the answer so c1 passes and the c3 mapping is
+  grounded — never an expected-value edit.)
+
+**Net for Unit 13: no content/YAML change.** c1 and c3 both stay unsplit. **Three
+of three HIGH regime/c1 units (10, 11, 13) say "leave, don't split"** — the
+inventory's lenient-bundling forecast is refuted across the whole HIGH tier so
+far. The novel finding here is the **c1↔c3 coupling** (incomplete approach-naming
+in c1 propagates into a withheld c3 mapping), logged for the record.
