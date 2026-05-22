@@ -1,10 +1,9 @@
 # v1 Path Outline — "LLM Systems for PMs"
 
 > **Scope.** Phase 3 sequencing for the canonical Phase 1 path
-> (`llm-systems-for-pms`). Tracks units 1–8 as shipped, locks
-> units 9, 10, and 11 with title, trade-off, prereqs, and
-> position rationale, and leaves 12–20 in their original
-> sketched/placeholder states.
+> (`llm-systems-for-pms`). Tracks units 1–13 as shipped, locks
+> units 14 and 15 with title, trade-off, prereqs, and position
+> rationale, and leaves 16–20 as closed-beta-signal placeholders.
 >
 > **Relationship to other docs.** STRATEGY.md says "20 units, well-built."
 > This file says *which* 20, in *which order*. EXECUTION.md says
@@ -100,18 +99,17 @@ from a different angle, building toward the synthesis decision.
 
 ---
 
-## Productization (Units 7–10) — partially shipped
+## Productization (Units 7–10) — shipped
 
 After Foundations, the path branches into "*can we make this reliable
-enough to ship to users?*" Units 7 and 8 are shipped; Units 9 and 10
-are locked.
+enough to ship to users?*" Units 7–10 are all shipped.
 
 | # | Unit | Status | Trade-off it teaches | Prereqs |
 |---|---|---|---|---|
 | 7 | **Hallucination + reliability** | ✅ | Detection vs. mitigation vs. containment for the structural base-rate problem | 4 |
 | 8 | **Cost dynamics at scale** | ✅ | Caching vs. batching vs. capacity — the "second cost conversation" multi-lever optimization | 1, 5 |
-| 9 | **Fine-tuning vs. prompting vs. RAG** | 🔒 | The customization trilemma: which approach matches which kind of quality problem (knowledge gap → RAG; behavior shift → fine-tuning; spec clarity → prompting) | 4, 5, 6 |
-| 10 | **Vector search / RAG fundamentals** | 🔒 | Recall (did retrieval find the right chunks?) vs. groundedness (did the model use them?) vs. citation faithfulness (does the cited source actually say what's claimed?) — three different RAG quality dimensions, three different failure modes, three different measurement disciplines | 1, 2, 4, 9 |
+| 9 | **Fine-tuning vs. prompting vs. RAG** | ✅ | The customization trilemma: which approach matches which kind of quality problem (knowledge gap → RAG; behavior shift → fine-tuning; spec clarity → prompting) | 4, 5, 6 |
+| 10 | **Vector search / RAG fundamentals** | ✅ | Recall (did retrieval find the right chunks?) vs. groundedness (did the model use them?) vs. citation faithfulness (does the cited source actually say what's claimed?) — three different RAG quality dimensions, three different failure modes, three different measurement disciplines | 1, 2, 4, 9 |
 
 ### Position rationale (Units 7–10)
 
@@ -175,18 +173,18 @@ are locked.
 
 ---
 
-## Production (Units 11–15) — partially locked
+## Production (Units 11–15) — 11–13 shipped, 14–15 locked
 
-"*Can we operate this in front of real users?*" Units 11–14
-are locked; Unit 15 remains sketched.
+"*Can we operate this in front of real users?*" Units 11–13 are
+shipped; Units 14 and 15 are locked.
 
 | # | Unit | Status | Trade-off it teaches | Prereqs |
 |---|---|---|---|---|
-| 11 | **Streaming UX** | 🔒 | What to stream (raw tokens / semantic chunks / status only) vs. how to render the streaming state (continuous flow / progressive sections / typed-out) vs. how to handle mid-stream failure (silent retry / partial accept / full restart) — three coupled decisions whose pairings produce three different user feels; mismatched pairings produce a UI the user reads as broken | 1, 3 |
-| 12 | **Tool use / function calling** | 🔒 | Tool granularity (many narrow tools / few broad composites) vs. schema strictness (strict validation / lenient acceptance) vs. error-recovery locus (model retries on tool-error / orchestrator catches and re-prompts) — three coupled decisions that determine whether a tool-using LLM feature feels reliable, capable, and debuggable, or feels brittle, narrow, and opaque to ship and operate | 1, 4, 6, 10 |
-| 13 | **Multimodal (vision basics)** | 🔒 | Send the raw image to a vision model (flexible, zero pipeline, expensive per image, hard to eval) vs. extract structured signal first with OCR / classical CV (cheap, precise, brittle to inputs it wasn't built for) vs. hybrid (cheap extractor with a VLM fallback on low-confidence) — the PM error is defaulting to "throw the image at the multimodal model" for a stable extraction problem, or building a brittle CV pipeline for genuinely open-ended visual understanding | 1, 4, 8 |
+| 11 | **Streaming UX** | ✅ | What to stream (raw tokens / semantic chunks / status only) vs. how to render the streaming state (continuous flow / progressive sections / typed-out) vs. how to handle mid-stream failure (silent retry / partial accept / full restart) — three coupled decisions whose pairings produce three different user feels; mismatched pairings produce a UI the user reads as broken | 1, 3 |
+| 12 | **Tool use / function calling** | ✅ | Tool granularity (many narrow tools / few broad composites) vs. schema strictness (strict validation / lenient acceptance) vs. error-recovery locus (model retries on tool-error / orchestrator catches and re-prompts) — three coupled decisions that determine whether a tool-using LLM feature feels reliable, capable, and debuggable, or feels brittle, narrow, and opaque to ship and operate | 1, 4, 6, 10 |
+| 13 | **Multimodal (vision basics)** | ✅ | Send the raw image to a vision model (flexible, zero pipeline, expensive per image, hard to eval) vs. extract structured signal first with OCR / classical CV (cheap, precise, brittle to inputs it wasn't built for) vs. hybrid (cheap extractor with a VLM fallback on low-confidence) — the PM error is defaulting to "throw the image at the multimodal model" for a stable extraction problem, or building a brittle CV pipeline for genuinely open-ended visual understanding | 1, 4, 8 |
 | 14 | **Agents / multi-step reasoning** | 🔒 | How much to decompose (single call / fixed workflow / model-directed agent loop) vs. how the loop terminates (fixed step budget / model self-assessment / external verifier) vs. where errors are caught (let them compound / per-step validation / end-state check) — the PM error is building a model-directed agent loop for a task that is actually a fixed workflow, paying agent cost, latency, and unpredictability for zero capability gain; that mismatch is the "expensive theater" | 1, 4, 8, 12 |
-| 15 | Safety + content moderation | 🟡 | What stops a feature from getting your team in trouble | — |
+| 15 | **Safety + content moderation** | 🔒 | What to moderate (input prompts / model output / both) vs. how strict to set the threshold (the over-refusal vs. under-block precision/recall trade) vs. where the human sits (auto-block / flag-for-review / human-in-the-loop on high-risk actions) — three coupled decisions whose combination determines whether a feature is safe-and-usable or safe-but-useless; the PM error is treating safety as a single content-filter toggle bolted on at launch instead of threat-modeling the feature's specific abuse surface and layering proportionate defenses | 7, 12, 14 |
 
 ### Position rationale (Unit 11)
 
@@ -331,6 +329,47 @@ are locked; Unit 15 remains sketched.
   agentic systems, so the agent unit must establish what that
   surface is before Unit 15 governs it.
 
+### Position rationale (Unit 15)
+
+- **Safety + content moderation as Unit 15** closes the
+  Production block and the v1 spine. It is positioned last
+  because it *governs the action and risk surface every prior
+  Production unit builds* — tool use (Unit 12) creates the
+  action surface, agents (Unit 14) are its maximal extent, and
+  safety is the discipline that bounds both. Teaching moderation
+  before the learner knows what there is to moderate would be the
+  wrong order.
+- **The load-bearing pedagogy is that "add a content filter" is
+  not one decision but three coupled ones** — what to moderate
+  (input prompts / model output / both), how strict to set the
+  threshold (the over-refusal vs. under-block precision/recall
+  trade), and where the human sits (auto-block / flag-for-review
+  / human-in-the-loop on high-risk actions). As with the
+  Streaming UX (11), Tool use (12), and Agents (14) trilemmas,
+  the combination sets the outcome: aggressive output-only
+  filtering with auto-block is *safe-but-useless* (it over-refuses
+  legitimate use); lenient input-only filtering ships the abuse
+  surface. The PM error is treating safety as a single toggle
+  bolted on at launch rather than threat-modeling the specific
+  feature's abuse surface and layering proportionate defenses.
+- **It generalizes Unit 7's containment axis.** Unit 7
+  (Hallucination + reliability) taught containment as one axis of
+  reliability — making a residual failure *safe*. Unit 15 widens
+  "failure" from *wrong* to *harmful / abusive* and treats
+  containment as a first-class, threat-modeled discipline rather
+  than a reliability sub-axis.
+- **Prereqs 7, 12, 14.** Unit 7 (containment — the reliability
+  ancestor of safety design), Unit 12 (tool use — the action
+  surface a model gains, the thing safety must bound), Unit 14
+  (agents — the maximal autonomous action / risk surface, which
+  Unit 14's own rationale names as the reason Safety follows it).
+  Unit 4 (Evals) was considered and deliberately excluded to keep
+  the chain minimal: measuring a safety classifier's
+  precision/recall is an eval problem, but the unit introduces
+  that framing itself and the action-surface lineage (12 → 14)
+  carries the PM-decision weight — the same minimal-chain
+  discipline applied to every prior lock.
+
 ---
 
 ## Operating (Units 16–20) — placeholder
@@ -375,26 +414,29 @@ Revisit after closed beta.
 
 ## What this file commits us to
 
-1. **Author Unit 13 (Multimodal / vision basics) next.** Unit 12
-   (Tool use / function calling) shipped and passed gate
-   2026-05-17 (see docs/UNIT_12_GATE.md — true 100% on the
-   realignment re-run, the cleanest closeout in the path; 12/20
-   units published). No detour into Unit 15 because something
-   else is "more interesting." Unit 14 (Agents / multi-step
-   reasoning) is locked 2026-05-17, satisfying the one-unit-ahead
-   lock buffer for Unit 13. Unit 13's regression set is authored
-   under the cumulative constraints from UNIT_11_GATE.md /
-   UNIT_12_GATE.md: **no flagged-expected pairs**, **no
-   parenthetical option-lists / markdown headers / quote-led
-   sentences in answer text**, and the **AND-clause-criterion
-   authoring check** (when a pair is intended to meet a
-   criterion containing "AND", verify every conjunct is
-   satisfied explicitly, not just the first — the c2/c3-strict
-   pattern across Units 9/10/11/12).
-2. **Lock Unit 15 (Safety + content moderation) before Unit 14
-   authoring begins.** Maintain the one-unit-ahead lock buffer
-   so the prereq chain is always settled before slot (a) begins
-   on the active unit.
+1. **Author Unit 14 (Agents / multi-step reasoning) next.**
+   Units 1–13 are shipped and gate-passed (Unit 13 multimodal
+   passed at 98%, its c2 split reverted at the gate — see
+   docs/RUBRIC_AUDIT.md § Rollout findings; 13/20 published).
+   Unit 15 (Safety) is now locked (below, 2026-05-22), satisfying
+   the one-unit-ahead lock buffer for Unit 14. Unit 14's
+   regression set is authored under the cumulative constraints
+   from UNIT_11_GATE.md / UNIT_12_GATE.md: **no flagged-expected
+   pairs**, **no parenthetical option-lists / markdown headers /
+   quote-led sentences in answer text**, and the
+   **AND-clause-criterion authoring check** (when a pair is
+   intended to meet a criterion containing "AND", verify every
+   conjunct is satisfied explicitly, not just the first — the
+   c2/c3-strict pattern across Units 9–13, reinforced by the
+   c1/c4 audit's HIGH-tier finding that the grader holds the
+   second conjunct strictly on every regime/c1 criterion).
+2. **Lock Unit 15 — done (2026-05-22).** Unit 15 (Safety +
+   content moderation) is locked below with title, trade-off,
+   prereqs, and position rationale, satisfying the
+   one-unit-ahead buffer for Unit 14. The buffer is now settled
+   through the end of the Production block; Units 16–20 stay
+   🟧 placeholder, to be locked from closed-beta signal rather
+   than armchair-locked.
 3. **Re-read this file at every phase boundary.** What looked obvious
    at outline time may not survive authoring. Document the change.
 4. **Lock each next unit before authoring slot (a).** The discipline
