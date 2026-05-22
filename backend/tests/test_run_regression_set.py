@@ -19,6 +19,7 @@ from scripts.run_regression_set import (
     RegressionPair,
     RegressionSetError,
     evaluate_threshold,
+    main,
     parse_regression_set,
     render_report,
     score_pair,
@@ -370,3 +371,67 @@ def test_evaluate_threshold_errored_pairs_count_against_agreement() -> None:
     # 6/9 = 66.67%, below 80%
     assert pct == pytest.approx(66.6666, rel=1e-3)
     assert passed is False
+
+
+# ---------------------------------------------------------------------------
+# main --pair filter (exercised via --check so no grader / DB is needed)
+# ---------------------------------------------------------------------------
+
+
+TWO_PAIR_YAML = """
+unit_id: tokenization-bundle-0
+description: two-pair fixture for --pair filtering
+pairs:
+  - id: p001
+    label: first
+    answer: |
+      first answer
+    expected:
+      criteria:
+        - position: 1
+          met: true
+      flagged: false
+  - id: p002
+    label: second
+    answer: |
+      second answer
+    expected:
+      criteria:
+        - position: 1
+          met: true
+      flagged: false
+"""
+
+
+def _write_set(tmp_path: Any) -> str:
+    path = tmp_path / "set.yml"
+    path.write_text(TWO_PAIR_YAML, encoding="utf-8")
+    return str(path)
+
+
+def test_main_pair_filter_selects_only_requested(tmp_path: Any, capsys: Any) -> None:
+    rc = main(["run_regression_set", _write_set(tmp_path), "--pair", "p002", "--check"])
+    assert rc == 0
+    # --check reports the post-filter count.
+    assert "1 pair(s)" in capsys.readouterr().out
+
+
+def test_main_pair_filter_unknown_id_errors(tmp_path: Any, capsys: Any) -> None:
+    rc = main(["run_regression_set", _write_set(tmp_path), "--pair", "pZZZ", "--check"])
+    assert rc == 1
+    assert "not found" in capsys.readouterr().err
+
+
+def test_main_pair_filter_dedupes_repeated_id(tmp_path: Any, capsys: Any) -> None:
+    rc = main(
+        ["run_regression_set", _write_set(tmp_path),
+         "--pair", "p001", "--pair", "p001", "--check"]
+    )
+    assert rc == 0
+    assert "1 pair(s)" in capsys.readouterr().out
+
+
+def test_main_no_pair_filter_runs_whole_set_under_check(tmp_path: Any, capsys: Any) -> None:
+    rc = main(["run_regression_set", _write_set(tmp_path), "--check"])
+    assert rc == 0
+    assert "2 pair(s)" in capsys.readouterr().out
