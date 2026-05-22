@@ -1,6 +1,6 @@
 # Rubric Audit — c1 (framing) and c4 (regime/mapping) AND-Clause Bundling
 
-**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) is operator-local and pending.
+**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) underway — first evidence is the Unit 10 c4 run (see § Step-4 findings); the rest is operator-local and pending.
 **Date:** 2026-05-21
 **Scope:** All 13 published / authored units in `content/units/`
 **Predecessor:** `docs/RUBRIC_AUDIT.md` (the criterion-2 sweep). This is the deferred c1/c3 follow-up promised there (`RUBRIC_AUDIT.md:13`, `:91`).
@@ -152,3 +152,60 @@ the weaker grader; document Sonnet disagreements as calibration gaps.
 
 The MEDIUM c1s and the near-paraphrastic vector-search-rag c1 may well be
 "LEAVE" once the grader is run; do not pre-commit to splitting them.
+
+---
+
+## Step-4 findings
+
+### Unit 10 (vector-search-rag) — c4 regime/signals criterion
+
+**Run.** `run_regression_set vector-search-rag-bundle-0.yml --show-criteria`,
+live Sonnet 4.6 grader, post-c2-split 4-criterion rubric. Gate **PASSED**:
+76/84 (90%) per-criterion, 20/21 flagged-correct, 1 ERROR (p005, the known
+stochastic payload bug — isolate-re-run to clear, no pair change).
+Adjusted for the ERROR's 4 unscored criteria: 76/80 (95%).
+
+**The c4 disagreements are all on the *second* conjunct, never the first.**
+c4 = (i) *names a concrete signal per dimension* (recall@K/MRR; RAGAS
+faithfulness; span-level source-quote validation) **AND** (ii) *recognizes
+the PM error of treating any single signal as a sufficient proxy for overall
+RAG quality.* Three pairs failed c4, all `expected=true / actual=false`
+(grader-strict), and **all three satisfy conjunct (i)** — they each name a
+signal per dimension. Every failure is on conjunct (ii).
+
+**Implication: do NOT split c4.** The signal half is universally met;
+splitting would isolate a conjunct that is never the point of disagreement.
+This is the opposite of the c2 case. The inventory above scored Unit 10 c4
+HIGH on the *expectation* of lenient bundling (credit the whole criterion off
+signal-naming); the run **refutes that** — the grader does not lenient-credit,
+it holds conjunct (ii) strictly. c4 stays a single 4th criterion.
+
+**What it actually surfaced: a c4(ii) language-precision gap.** The criterion
+names *one specific* PM error ("single signal as a sufficient proxy"), but
+engaged answers naturally express a *valid neighboring* error — "don't collapse
+to one composite score; keep per-dimension visibility." The Sonnet grader holds
+to the literal wording and withholds credit; the Opus-authored expected values
+credited the spirit. That wording mismatch — not separability, not author error
+— is the real finding. Candidate fix for a future rubric pass: broaden c4(ii)
+to accept the composite-blending framing as satisfying the PM-error
+recognition, or explicitly scope it to the single-signal framing so authoring
+and grader agree.
+
+**Per-pair disposition** (no edits made on this single stochastic run;
+preserve-by-default per § Recommended next step):
+
+| Pair | Disagreement | Read | Disposition |
+|---|---|---|---|
+| p007 | c4 `true→false` | Signals all named; push-back is on a *composite score* ("each dimension fails independently, one number hides the problem") — the neighboring meta, not the literal single-signal-as-proxy | **Preserve `true`**; log Sonnet strict read as a c4(ii)-wording calibration gap |
+| p008 | c4 `true→false` | Same shape as p007 (composite push-back + independence) | **Preserve `true`**; same gap |
+| p021 | c4 `true→false` | Signals named, but the answer asserts the single-upstream-cause misconception (*"if we get retrieval right, groundedness and citation faithfulness follow"*) — directly contradicts the independence c4(ii) requires | **Defensible author over-credit**; grader's `false` is well-justified. Confirm with a 2–3× re-run, then likely realign `c4→false` (author correcting an over-credit, not chasing the grader) |
+| p011 | c3 `false→true` | Names only *two* dimensions (collapses citation faithfulness into "grounding"), then claims "the fixes are different" for that 2-way split | Grader **lenient** on c3's 3-way different-fixes meta. **Preserve `false`** (spec-faithful Opus value); realigning to match would degrade the gold standard. Log as a lenient calibration gap |
+
+**Carry-forward for the inventory.** p011 is a fresh c3 (different-fixes meta)
+lenient data point, distinct from the c4 cluster above. The c4(ii)
+language-precision gap is the same bundling-fragility class the c1/regime
+inventory predicts across units 5–13 — but here it manifests as
+*grader-strict on a literal clause* + *neighboring-meta under-credit*, not the
+lenient-credit the inventory forecast. Future step-4 runs on units 11–13 c4
+should watch for the same strict/neighboring-meta shape, not only the lenient
+one.
