@@ -63,6 +63,7 @@ Before merge, the rubric-change PR description (or a PR comment) carries at mini
 
 If agreement is below 80%, there are open ERRORs, or any FAIL row deserves inspection, triage before merge:
 - Re-run with `--show-criteria` to surface which specific criterion the grader disagreed on for each FAIL pair. The flag adds a per-criterion `expected=… actual=… [ok|MISS]` block under each FAIL row; PASS pairs are unaffected.
+- Isolate a single borderline pair with `--pair <id>` (repeatable) to confirm whether a disagreement is stable or stochastic, without paying for — or adding the grader noise of — the other 20 pairs. The grader is stochastic, so a borderline pair should be re-run 2–3× in isolation before its `expected` value is touched. Example: `run_regression_set content/regression-sets/vector-search-rag-bundle-0.yml --pair p021 --show-criteria`. Whole-file schema validation still runs; an unknown id errors. This is the first-class replacement for the throwaway `_inspect_pairs.py` scripts past gates used.
 - Realign per-pair `expected` values where the grader's strict reading is correct, then re-run.
 - Document any preserved disagreements in the matching `docs/UNIT_*_GATE.md` (one new entry per realigned pair), per the precedent set by Units 2, 9, 10.
 - Investigate ERROR rows against the known payload-bug patterns (markdown headers, emoji density, parenthetical option-lists per `docs/UNIT_*_GATE.md` lessons).

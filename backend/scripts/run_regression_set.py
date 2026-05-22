@@ -374,6 +374,18 @@ def main(argv: list[str]) -> int:
             "disagreed on during gate triage. No effect on PASS pairs."
         ),
     )
+    parser.add_argument(
+        "--pair",
+        action="append",
+        metavar="ID",
+        help=(
+            "run only the pair(s) with this id (repeatable, e.g. "
+            "--pair p021). Use for an isolated single-pair re-run during "
+            "gate triage instead of re-running the whole set — avoids the "
+            "cost and the stochastic noise of the other pairs. Errors if an "
+            "id is not in the set. Whole-file schema validation still runs."
+        ),
+    )
     args = parser.parse_args(argv[1:])
 
     path = Path(args.yaml_path)
@@ -386,6 +398,21 @@ def main(argv: list[str]) -> int:
     except RegressionSetError as exc:
         print(f"schema error: {exc}", file=sys.stderr)
         return 1
+
+    if args.pair:
+        by_id = {p.id: p for p in pairs}
+        missing = [pid for pid in args.pair if pid not in by_id]
+        if missing:
+            print(
+                f"pair id(s) not found in '{unit_id}': {', '.join(missing)}",
+                file=sys.stderr,
+            )
+            return 1
+        # Preserve request order; de-dupe in case an id is passed twice.
+        seen: set[str] = set()
+        pairs = [
+            by_id[pid] for pid in args.pair if not (pid in seen or seen.add(pid))
+        ]
 
     if args.check:
         print(f"--check ok: {len(pairs)} pair(s) for unit '{unit_id}'.")
