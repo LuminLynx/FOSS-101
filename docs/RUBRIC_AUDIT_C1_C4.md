@@ -1,6 +1,6 @@
 # Rubric Audit — c1 (framing) and c4 (regime/mapping) AND-Clause Bundling
 
-**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) underway — first evidence is the Unit 10 c4 run (see § Step-4 findings); the rest is operator-local and pending.
+**Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4) underway — Units 10 and 11 run (both HIGH regime/c1 units say "leave, don't split"; see § Step-4 findings). Units 12–13 c4 and the c1 units 5–9 remain operator-local and pending.
 **Date:** 2026-05-21
 **Scope:** All 13 published / authored units in `content/units/`
 **Predecessor:** `docs/RUBRIC_AUDIT.md` (the criterion-2 sweep). This is the deferred c1/c3 follow-up promised there (`RUBRIC_AUDIT.md:13`, `:91`).
@@ -218,3 +218,55 @@ locked ground truth to chase grader noise. The discipline is: confirm
 reproducibility with `run_regression_set … --pair <id>` (2–3×); realign only on
 a *consistent* signal that also reads as a plain author error; otherwise
 preserve and log the margin.
+
+### Unit 11 (streaming-ux) — c1 (coupling) and c4 (map + PM-error)
+
+**Run.** `run_regression_set streaming-ux-bundle-0.yml --show-criteria`, live
+Sonnet 4.6 grader, 4-criterion rubric. **97% (82/84)**, zero ERRORs, 21/21
+flagged-correct, 19/21 fully passed. Two FAILs, isolated and re-run via `--pair`
+(2026-05-22).
+
+**c4 → leave unsplit (confirms Unit 10).** Zero c4 disagreements across all 21
+pairs. The c4 differentials behaved exactly as the criterion intends: p007
+(maps the combination) and p021 (maps the surface) both returned `c4=false`
+because the PM-error / full-mapping conjunct was absent — the grader **withholds
+c4 on the second conjunct**, it does not lenient-credit off the
+combination-mapping. This replicates the Unit 10 c4 result. The inventory scored
+Unit 11 c4 HIGH on the expectation of lenient bundling; the run refutes it. **c4
+stays a single 4th criterion.**
+
+**c1 → leave unsplit; preserve p014 `c1=true`.** The headline Unit 11 finding.
+c1 = (i) *names the three coupled decisions* AND (ii) *treats them as coupled*.
+p014 (label: "names the three coupled decisions, **vague on coupling**, no
+combination mapped") returned `c1 expected=true / actual=false` on the full-set
+run AND the isolated re-run — and `UNIT_11_C2_SPLIT_GATE.md` already recorded
+the same disagreement and deferred it here. That is **three consistent
+observations**, not stochastic (contrast p021). Two consequences:
+
+- By the audit's own method, a grader that *strictly* withholds the criterion
+  when the second conjunct is weak is **separating the conjuncts cleanly →
+  leave c1 unsplit** (split is only warranted for *lenient* bundling).
+- On the expected value: this is the weaker Sonnet grader being *stricter* than
+  the Opus author on a *borderline* ("vague") coupling. Per the gold-standard
+  principle, a reproducible *stricter* read on a borderline is **not** grounds
+  to flip the Opus `true` — reproducibility makes it a *cleaner documented
+  calibration gap*, not a realign. **Preserve `c1=true`; log as a reproducible
+  grader-strict-on-coupling gap.** (Note: a "c1-only" fixture whose c1 the
+  grader reproducibly rejects is awkward — it reads as all-missed to the
+  grader. If p014 should actually *exercise* c1-met, the fix is to strengthen
+  the **answer's** coupling language, an authoring change — never to chase the
+  grader by editing the expected value.)
+
+**p011 `c2=true` (out of c1/c4 scope).** p011 (all-missed on-topic, "explicitly
+decouples and dismisses recovery") returned `c2 expected=false / actual=true`
+on both the full-set and isolated runs — a reproducible grader-*lenient* c2 read
+crediting a mechanism on an all-missed answer. c2 was already swept, so this is
+**record-only**: preserve `c2=false` (don't chase the lenient read), log as a
+c2-lenient calibration gap. Worth a flag for any future c2 revisit, since a
+reproducible lenient c2 on an all-missed pair is the confident-but-wrong shape
+the project guards against.
+
+**Net for Unit 11: no content/YAML change.** Same shape as Unit 10 — both
+AND-clause criteria (c1, c4) stay unsplit; the disagreements are documented
+calibration gaps, all preserve-by-default. **Two of two HIGH regime/c1 units
+(10, 11) now say "leave, don't split."**
