@@ -17,6 +17,11 @@
 
 ## Why F5 now
 
+> **Historical (design-time motivation).** The present-tense
+> "zero implementation" framing below describes the state when
+> this doc was written. F5 is now implemented end-to-end — see
+> the **Status** section at the end for the verified call chain.
+
 F5 is documented Phase-3 engineering that runs **in parallel**
 with unit authoring, not after Unit 20 — `PHASE_3_4_ROADMAP.md`:
 *"engineering has slack capacity that should be used for
@@ -232,8 +237,40 @@ the grader, or any regression set. No gate re-runs triggered.
 
 ## Status
 
-**Decisions D1–D6 locked pending founder approval of this doc.**
-On approval, implementation proceeds per the plan above
-(propose→approve→execute; no implementation PR precedes this
-doc's merge). Authoring of Units 13–20 continues in parallel and
-is unaffected — F5 touches no curriculum content.
+**Implemented end-to-end (verified 2026-05-22).** Decisions
+D1–D6 (plus the D6 due-gate amendment) are shipped across backend
+and Android; the four-step implementation plan above is complete.
+F5 is no longer the only loop step with zero implementation — the
+loop closes as a system.
+
+Verified call chain:
+
+- **Algorithm + write/tick (plan step 1).**
+  `backend/app/repositories/review_repository.py` — the normative
+  `_LADDER = (1, 3, 7, 21, 60)`, `seed_review` (D3, idempotent
+  first-write-wins), `mark_reviewed` (D6, monotonic advance,
+  `FOR UPDATE`-locked, `clock_timestamp()` due-gate raising
+  `ReviewNotDueError`), `list_due` (D5).
+- **Endpoints (plan step 2).** `backend/app/main.py:261`
+  `GET /api/v1/review-schedule`; `:313`
+  `POST /api/v1/review-schedule/{unit_id}/reviewed`. The tick maps
+  `ReviewNotScheduledError → 404`, `ReviewNotDueError → 409`.
+- **Android (plan step 3).** `model/Path.kt` `ReviewDue`;
+  `data/remote/api/PathApiService.kt` `listDueReviews()` /
+  `markReviewed()`; `data/repository/PathRepository.kt`
+  delegates; `viewmodel/PathHomeViewModel.kt` fetches `reviewsDue`
+  best-effort (`runCatching`, never gates the screen — D4) and
+  optimistically clears a row on tap; `ui/path/PathHomeScreen.kt`
+  renders the "Reviews due" section with `ReviewRow`, tap →
+  `markReviewed` + re-surface.
+
+**Display note.** `PathHomeScreen` guards the section with
+`if (state.reviewsDue.isNotEmpty())`, so "Reviews due" is hidden
+until a review is actually due. Per D3 the first review for any
+completed unit is due `now() + 1 day`, so immediately after
+completing units nothing surfaces — the section is correctly
+invisible, not missing. To see it during development, seed a
+`review_schedule` row with a past `due_at`.
+
+Authoring of the remaining units continues in parallel and is
+unaffected — F5 touches no curriculum content.
