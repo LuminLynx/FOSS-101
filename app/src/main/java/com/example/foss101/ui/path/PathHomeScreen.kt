@@ -144,12 +144,25 @@ private fun LoadedBody(
         ) {
             if (state.path.description.isNotBlank()) {
                 item(key = "description") {
-                    Text(
-                        text = state.path.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
+                    // Intro callout: surfaceVariant is the design system's
+                    // designated pull-quote / callout tint (paper-3), flat so
+                    // it reads as an intro block, not another tappable card.
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    ) {
+                        Text(
+                            text = state.path.description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
             }
 
