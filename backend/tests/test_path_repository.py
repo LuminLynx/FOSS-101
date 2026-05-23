@@ -20,7 +20,17 @@ def test_get_path_returns_path_with_unit_manifest(gated_db) -> None:
     assert [u["position"] for u in units] == [1, 2]
     # Manifest only — no bite/depth/sources.
     assert "biteMd" not in units[0]
-    assert set(units[0].keys()) == {"id", "slug", "title", "position", "status"}
+    assert set(units[0].keys()) == {
+        "id",
+        "slug",
+        "title",
+        "position",
+        "status",
+        "prereqUnitIds",
+    }
+    # Prereqs ride along on the manifest so the client can gate units.
+    assert units[0]["prereqUnitIds"] == []
+    assert units[1]["prereqUnitIds"] == ["unit-a"]
 
 
 def test_get_path_returns_none_for_unknown_id(gated_db) -> None:
