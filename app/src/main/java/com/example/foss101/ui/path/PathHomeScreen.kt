@@ -1,20 +1,30 @@
 package com.example.foss101.ui.path
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,6 +36,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,6 +52,7 @@ import com.example.foss101.ui.components.screenContentPadding
 import com.example.foss101.viewmodel.PathHomeEvent
 import com.example.foss101.viewmodel.PathHomeUiState
 import com.example.foss101.viewmodel.PathHomeViewModel
+import com.example.foss101.viewmodel.UnitGateState
 
 @Composable
 fun PathHomeScreen(
@@ -130,17 +143,27 @@ private fun LoadedBody(
 
         SectionHeader(title = "Units")
 
+        val units = state.path.units
         LazyColumn(
             modifier = Modifier
                 .weight(1f, fill = true)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .fillMaxWidth()
         ) {
-            items(items = state.path.units, key = { it.id }) { unit ->
-                UnitRow(
+            itemsIndexed(items = units, key = { _, unit -> unit.id }) { index, unit ->
+                val gate = state.unitStates[unit.id] ?: UnitGateState.AVAILABLE
+                // Block: avoids the `else { ... }` block-vs-lambda ambiguity.
+                val onOpen: (() -> Unit)? =
+                    if (gate == UnitGateState.LOCKED) null else ({ onOpenUnit(unit.id) })
+                PathNodeRow(
                     unit = unit,
-                    completed = unit.id in state.completedUnitIds,
-                    onClick = { onOpenUnit(unit.id) }
+                    state = gate,
+                    isFirst = index == 0,
+                    isLast = index == units.lastIndex,
+                    // The connecting line fills in "behind" completed nodes.
+                    topTraveled = index > 0 &&
+                        state.unitStates[units[index - 1].id] == UnitGateState.DONE,
+                    bottomTraveled = gate == UnitGateState.DONE,
+                    onClick = onOpen
                 )
             }
         }
@@ -167,68 +190,198 @@ private fun LoadedBody(
         }
 
         val nextUnit = state.nextUnit
-        if (nextUnit != null) {
-            PrimaryActionButton(
+        when {
+            nextUnit != null -> PrimaryActionButton(
                 text = "Continue · ${nextUnit.title}",
                 onClick = { onOpenUnit(nextUnit.id) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
-        } else {
-            Text(
+            state.pathComplete -> Text(
                 text = "Path complete. Phase 2 (the grader) opens next.",
                 style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            // No unit is currently unlocked but the path isn't complete —
+            // a blocked state (e.g. inconsistent prereq data). Don't show
+            // completion; surface that there's nothing to continue to.
+            else -> Text(
+                text = "No units are unlocked right now.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
     }
 }
 
+/**
+ * One unit as a node on the connected path: a left rail (the
+ * connecting line + a numbered/checked/locked node) and a content card.
+ * A LOCKED unit passes `onClick = null` and renders muted + non-tappable;
+ * every other state is openable (a DONE unit stays open for review).
+ */
 @Composable
-private fun UnitRow(
+private fun PathNodeRow(
     unit: UnitManifestEntry,
-    completed: Boolean,
-    onClick: () -> Unit
+    state: UnitGateState,
+    isFirst: Boolean,
+    isLast: Boolean,
+    topTraveled: Boolean,
+    bottomTraveled: Boolean,
+    onClick: (() -> Unit)?
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    val locked = state == UnitGateState.LOCKED
+    val traveledColor = MaterialTheme.colorScheme.primary
+    val untraveledColor = MaterialTheme.colorScheme.outlineVariant
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                .width(48.dp)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = if (completed) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
-                contentDescription = if (completed) "Completed" else "Not started",
-                tint = if (completed) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
+            Canvas(modifier = Modifier.fillMaxHeight().width(48.dp)) {
+                val cx = size.width / 2f
+                val strokePx = 3.dp.toPx()
+                if (!isFirst) {
+                    drawLine(
+                        color = if (topTraveled) traveledColor else untraveledColor,
+                        start = Offset(cx, 0f),
+                        end = Offset(cx, size.height / 2f),
+                        strokeWidth = strokePx
+                    )
                 }
+                if (!isLast) {
+                    drawLine(
+                        color = if (bottomTraveled) traveledColor else untraveledColor,
+                        start = Offset(cx, size.height / 2f),
+                        end = Offset(cx, size.height),
+                        strokeWidth = strokePx
+                    )
+                }
+            }
+            NodeBadge(state = state, position = unit.position)
+        }
+
+        val callback = onClick
+        val cardModifier = Modifier
+            .weight(1f)
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .then(
+                if (callback != null) Modifier.clickable { callback() } else Modifier
             )
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = unit.title,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = "Unit ${unit.position} · ${unit.status}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+        Card(
+            modifier = cardModifier,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = if (locked) 0.dp else 1.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = unit.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if (locked) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        }
+                    )
+                    Text(
+                        text = when (state) {
+                            UnitGateState.LOCKED -> "Locked · finish earlier units first"
+                            UnitGateState.DONE -> "Unit ${unit.position} · completed"
+                            UnitGateState.CURRENT -> "Unit ${unit.position} · continue"
+                            UnitGateState.AVAILABLE -> "Unit ${unit.position} · ${unit.status}"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = if (locked) Icons.Filled.Lock else Icons.Filled.PlayArrow,
+                    contentDescription = if (locked) "Locked" else "Open",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+        }
+    }
+}
+
+/** The circular node on the rail: checked (done), numbered (current/available), or locked. */
+@Composable
+private fun NodeBadge(state: UnitGateState, position: Int) {
+    val diameter = 34.dp
+    when (state) {
+        UnitGateState.DONE -> Box(
+            modifier = Modifier
+                .size(diameter)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary),
+            contentAlignment = Alignment.Center
+        ) {
             Icon(
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = "Open"
+                imageVector = Icons.Filled.Check,
+                contentDescription = "Completed",
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        UnitGateState.CURRENT -> Box(
+            modifier = Modifier
+                .size(diameter)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = position.toString(),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        UnitGateState.AVAILABLE -> Box(
+            modifier = Modifier
+                .size(diameter)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
+                .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = position.toString(),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+        UnitGateState.LOCKED -> Box(
+            modifier = Modifier
+                .size(diameter)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Lock,
+                contentDescription = "Locked",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp)
             )
         }
     }

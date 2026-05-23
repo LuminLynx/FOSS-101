@@ -2,8 +2,9 @@
 
 Path is the canonical curriculum track ("LLM Systems for PMs" in v1).
 A path is a sequenced list of units; the unit list returned here is a
-manifest (id/slug/title/position/status), not the full 9-slot payload —
-that lives in UnitRepository.get_unit.
+manifest (id/slug/title/position/status/prereqUnitIds), not the full
+9-slot payload — that lives in UnitRepository.get_unit. prereqUnitIds
+rides along so the client can gate units whose prerequisites are unmet.
 """
 from __future__ import annotations
 
@@ -30,6 +31,7 @@ def _map_unit_manifest_row(row: Any) -> dict[str, Any]:
         "title": row["title"],
         "position": row["position"],
         "status": row["status"],
+        "prereqUnitIds": list(row["prereq_unit_ids"] or []),
     }
 
 
@@ -44,7 +46,7 @@ def get_path(path_id: str) -> dict[str, Any] | None:
             return None
         unit_rows = connection.execute(
             """
-            SELECT id, slug, title, position, status
+            SELECT id, slug, title, position, status, prereq_unit_ids
             FROM units
             WHERE path_id = %s
             ORDER BY position ASC
@@ -70,12 +72,13 @@ def next_unit_for_user(user_id: str, path_id: str) -> dict[str, Any] | None:
     """Return the next uncompleted unit on `path_id` for `user_id`.
 
     "Next" = lowest `position` whose unit id is not yet in `completions`
-    for this user. Returns the manifest shape (id/slug/title/position/status).
+    for this user. Returns the manifest shape
+    (id/slug/title/position/status/prereqUnitIds).
     Returns None when the user has completed every unit on the path (or the
     path has no units).
     """
     query = """
-        SELECT u.id, u.slug, u.title, u.position, u.status
+        SELECT u.id, u.slug, u.title, u.position, u.status, u.prereq_unit_ids
         FROM units u
         WHERE u.path_id = %s
           AND NOT EXISTS (

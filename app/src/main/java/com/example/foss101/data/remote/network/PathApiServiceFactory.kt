@@ -193,13 +193,20 @@ private fun parsePath(data: JSONObject): Path {
     )
 }
 
-private fun parseUnitManifestEntry(item: JSONObject): UnitManifestEntry = UnitManifestEntry(
-    id = item.optString("id"),
-    slug = item.optString("slug"),
-    title = item.optString("title"),
-    position = item.optInt("position", 0),
-    status = item.optString("status")
-)
+private fun parseUnitManifestEntry(item: JSONObject): UnitManifestEntry {
+    val prereqArray = item.optJSONArray("prereqUnitIds") ?: JSONArray()
+    val prereqs = buildList {
+        for (i in 0 until prereqArray.length()) add(prereqArray.optString(i))
+    }.filter { it.isNotBlank() }
+    return UnitManifestEntry(
+        id = item.optString("id"),
+        slug = item.optString("slug"),
+        title = item.optString("title"),
+        position = item.optInt("position", 0),
+        status = item.optString("status"),
+        prereqUnitIds = prereqs
+    )
+}
 
 private fun parseUnit(data: JSONObject): UnitDetail {
     val sources = (data.optJSONArray("sources") ?: JSONArray()).map(::parseSource)

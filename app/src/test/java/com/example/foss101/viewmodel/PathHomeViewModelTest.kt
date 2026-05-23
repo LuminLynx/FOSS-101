@@ -246,6 +246,119 @@ class PathHomeViewModelTest {
         assertEquals("u-2", state.nextUnit?.id)  // spine untouched
     }
 
+    @Test
+    fun `gate locks units whose prereqs are not yet completed`() {
+        val units = listOf(
+            UnitManifestEntry("u-1", "a", "A", 1, "published"),
+            UnitManifestEntry("u-2", "b", "B", 2, "published", prereqUnitIds = listOf("u-1")),
+            UnitManifestEntry("u-3", "c", "C", 3, "published", prereqUnitIds = listOf("u-2"))
+        )
+
+        val states = computeGateStates(units, completed = emptySet())
+
+        assertEquals(UnitGateState.CURRENT, states["u-1"])
+        assertEquals(UnitGateState.LOCKED, states["u-2"])
+        assertEquals(UnitGateState.LOCKED, states["u-3"])
+    }
+
+    @Test
+    fun `completing a prereq unlocks the next unit as CURRENT`() {
+        val units = listOf(
+            UnitManifestEntry("u-1", "a", "A", 1, "published"),
+            UnitManifestEntry("u-2", "b", "B", 2, "published", prereqUnitIds = listOf("u-1")),
+            UnitManifestEntry("u-3", "c", "C", 3, "published", prereqUnitIds = listOf("u-2"))
+        )
+
+        val states = computeGateStates(units, completed = setOf("u-1"))
+
+        assertEquals(UnitGateState.DONE, states["u-1"])
+        assertEquals(UnitGateState.CURRENT, states["u-2"])
+        assertEquals(UnitGateState.LOCKED, states["u-3"])
+    }
+
+    @Test
+    fun `a unit with multiple prereqs stays locked until all are met`() {
+        val units = listOf(
+            UnitManifestEntry("u-1", "a", "A", 1, "published"),
+            UnitManifestEntry("u-2", "b", "B", 2, "published"),
+            UnitManifestEntry("u-4", "d", "D", 4, "published", prereqUnitIds = listOf("u-1", "u-2"))
+        )
+
+        assertEquals(UnitGateState.LOCKED, computeGateStates(units, setOf("u-1"))["u-4"])
+        assertEquals(UnitGateState.CURRENT, computeGateStates(units, setOf("u-1", "u-2"))["u-4"])
+    }
+
+    @Test
+    fun `completed unit is never locked even if a prereq is missing`() {
+        // Defensive: DONE takes precedence over the gate.
+        val units = listOf(
+            UnitManifestEntry("u-2", "b", "B", 2, "published", prereqUnitIds = listOf("u-1"))
+        )
+
+        assertEquals(UnitGateState.DONE, computeGateStates(units, setOf("u-2"))["u-2"])
+    }
+
+    @Test
+    fun `nextUnit is the unlocked frontier and locked units are gated in state`() = runTest(dispatcher) {
+        val path = samplePath(
+            UnitManifestEntry("u-1", "a", "A", 1, "published"),
+            UnitManifestEntry("u-2", "b", "B", 2, "published", prereqUnitIds = listOf("u-1"))
+        )
+        val viewModel = PathHomeViewModel(
+            FakePathRepository(path = path),
+            FakeCompletionCache(initial = emptySet())
+        )
+
+        viewModel.load()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState as PathHomeUiState.Loaded
+        assertEquals("u-1", state.nextUnit?.id)
+        assertEquals(UnitGateState.CURRENT, state.unitStates["u-1"])
+        assertEquals(UnitGateState.LOCKED, state.unitStates["u-2"])
+    }
+
+    @Test
+    fun `all units completed reports pathComplete with no next unit`() = runTest(dispatcher) {
+        val path = samplePath(
+            UnitManifestEntry("u-1", "a", "A", 1, "published"),
+            UnitManifestEntry("u-2", "b", "B", 2, "published", prereqUnitIds = listOf("u-1"))
+        )
+        val viewModel = PathHomeViewModel(
+            FakePathRepository(path = path),
+            FakeCompletionCache(initial = setOf("u-1", "u-2"))
+        )
+
+        viewModel.load()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState as PathHomeUiState.Loaded
+        assertNull(state.nextUnit)
+        assertTrue(state.pathComplete)
+    }
+
+    @Test
+    fun `a blocked path (nothing unlocked, not all done) is not reported complete`() = runTest(dispatcher) {
+        // Inconsistent prereq data: u-1 depends on a unit that never exists,
+        // so nothing is unlockable. nextUnit is null, but the path is NOT
+        // complete — the UI must not show completion messaging.
+        val path = samplePath(
+            UnitManifestEntry("u-1", "a", "A", 1, "published", prereqUnitIds = listOf("missing"))
+        )
+        val viewModel = PathHomeViewModel(
+            FakePathRepository(path = path),
+            FakeCompletionCache(initial = emptySet())
+        )
+
+        viewModel.load()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState as PathHomeUiState.Loaded
+        assertNull(state.nextUnit)
+        assertEquals(false, state.pathComplete)
+        assertEquals(UnitGateState.LOCKED, state.unitStates["u-1"])
+    }
+
     private fun samplePath(vararg units: UnitManifestEntry): Path = Path(
         id = "llm-systems-for-pms",
         slug = "llm-systems-for-pms",
