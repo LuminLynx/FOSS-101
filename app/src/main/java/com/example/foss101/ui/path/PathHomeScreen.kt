@@ -133,39 +133,16 @@ private fun LoadedBody(
 ) {
     Column(modifier = modifier) {
         val units = state.path.units
-        // The path is the scrolling surface: the description and the
-        // reviews section scroll *with* the units, so the unit list is
-        // never squeezed into leftover space. Only the Continue button is
-        // pinned below.
+        // The path is the scrolling surface; only the Continue button is
+        // pinned below. No intro description: the app store listing and the
+        // app-bar title already establish what this is, and the stepper makes
+        // the sequence self-evident — a re-pitch here is redundant on a screen
+        // the user sees every session.
         LazyColumn(
             modifier = Modifier
                 .weight(1f, fill = true)
                 .fillMaxWidth()
         ) {
-            if (state.path.description.isNotBlank()) {
-                item(key = "description") {
-                    // Intro callout: surfaceVariant is the design system's
-                    // designated pull-quote / callout tint (paper-3), flat so
-                    // it reads as an intro block, not another tappable card.
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                    ) {
-                        Text(
-                            text = state.path.description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-            }
-
             item(key = "units-header") { SectionHeader(title = "Units") }
 
             itemsIndexed(items = units, key = { _, unit -> unit.id }) { index, unit ->
