@@ -147,7 +147,7 @@ private fun AccountSection(
                 modifier = Modifier.weight(1f)
             )
             SecondaryActionButton(
-                text = "Create account",
+                text = "Sign up",
                 onClick = onSignUp,
                 modifier = Modifier.weight(1f)
             )

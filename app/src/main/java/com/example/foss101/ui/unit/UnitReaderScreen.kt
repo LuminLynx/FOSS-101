@@ -142,18 +142,22 @@ private fun LoadedBody(
         modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // First-run whisper: a quiet, learn-by-doing hint shown only while
-        // the user has completed nothing yet. Disappears for good after their
-        // first completion; never shown to a returning user (completion state
-        // is server-synced, so a fresh device still won't re-show it).
+        // First-run whisper: a quiet, learn-by-doing hint shown only while the
+        // user has completed nothing yet. Disappears for good after their first
+        // completion; never shown to a returning user (completion state is
+        // server-synced, so a fresh device still won't re-show it). Kept small,
+        // muted, upright (not italic), and divided from the content so it reads
+        // as a quiet aside rather than a competing pull-quote.
         if (showIntro) {
-            Text(
-                text = "Each unit is a short read, then a decision prompt — " +
-                    "answer in your own words, and you'll get a grade against its rubric.",
-                style = MaterialTheme.typography.bodyMedium,
-                fontStyle = FontStyle.Italic,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = "Each unit is a short read, then a decision prompt — " +
+                        "answer in your own words, and you'll get a grade against its rubric.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            }
         }
 
         Text(
