@@ -19,6 +19,49 @@ import kotlinx.coroutines.launch
 
 const val CANONICAL_PATH_ID: String = "llm-systems-for-pms"
 
+/**
+ * How a unit renders on the path and whether it's openable.
+ *
+ * - DONE: completed; stays openable (spaced review re-surfaces it).
+ * - CURRENT: the first unlocked, not-done unit — the "you are here".
+ * - AVAILABLE: unlocked and not done, but not the immediate next.
+ * - LOCKED: a prerequisite is not yet completed; not openable.
+ *
+ * A completed unit is never LOCKED (it could only have been completed
+ * with its prereqs met), so DONE takes precedence over the gate.
+ */
+enum class UnitGateState { DONE, CURRENT, AVAILABLE, LOCKED }
+
+/**
+ * Map each unit to its gate state from the completed set + prereqs.
+ * Pure and order-independent; `CURRENT` is the lowest-position unit
+ * that is unlocked and not done. With backward-pointing prereqs (every
+ * unit's prereqs are earlier units), a `CURRENT` always exists while
+ * any unit is incomplete, so the "Continue" target is never null until
+ * the path is fully done.
+ */
+fun computeGateStates(
+    units: List<UnitManifestEntry>,
+    completed: Set<String>
+): Map<String, UnitGateState> {
+    fun unlocked(unit: UnitManifestEntry): Boolean =
+        unit.prereqUnitIds.all { it in completed }
+
+    val currentId = units
+        .sortedBy { it.position }
+        .firstOrNull { it.id !in completed && unlocked(it) }
+        ?.id
+
+    return units.associate { unit ->
+        unit.id to when {
+            unit.id in completed -> UnitGateState.DONE
+            !unlocked(unit) -> UnitGateState.LOCKED
+            unit.id == currentId -> UnitGateState.CURRENT
+            else -> UnitGateState.AVAILABLE
+        }
+    }
+}
+
 sealed interface PathHomeUiState {
     object Loading : PathHomeUiState
     data class Error(val message: String, val authExpired: Boolean = false) : PathHomeUiState
@@ -26,6 +69,8 @@ sealed interface PathHomeUiState {
         val path: Path,
         val completedUnitIds: Set<String>,
         val nextUnit: UnitManifestEntry?,
+        /** Per-unit gate state (id -> state), driving node rendering and tap-ability. */
+        val unitStates: Map<String, UnitGateState> = emptyMap(),
         /**
          * F5 / D4 — spaced reviews due, surfaced *alongside* the next
          * new unit. Optional and never a gate: a failed review fetch
@@ -65,6 +110,7 @@ class PathHomeViewModel(
 
                 val path = pathRepository.getPath(pathId)
                 val completed = completionCache.completedUnitIds()
+                val states = computeGateStates(path.units, completed)
                 // F5 / D4: reviews are alongside, never a gate. Fetched
                 // best-effort *after* the path/completed state that the
                 // screen actually depends on; a failure here yields an
@@ -74,7 +120,8 @@ class PathHomeViewModel(
                 PathHomeUiState.Loaded(
                     path = path,
                     completedUnitIds = completed,
-                    nextUnit = path.units.firstOrNull { it.id !in completed },
+                    nextUnit = path.units.firstOrNull { states[it.id] == UnitGateState.CURRENT },
+                    unitStates = states,
                     reviewsDue = reviewsDue
                 )
             } catch (error: PathApiException) {
@@ -118,9 +165,11 @@ class PathHomeViewModel(
         val current = uiState
         if (current !is PathHomeUiState.Loaded) return
         val completed = completionCache.completedUnitIds()
+        val states = computeGateStates(current.path.units, completed)
         uiState = current.copy(
             completedUnitIds = completed,
-            nextUnit = current.path.units.firstOrNull { it.id !in completed }
+            nextUnit = current.path.units.firstOrNull { states[it.id] == UnitGateState.CURRENT },
+            unitStates = states
         )
     }
 

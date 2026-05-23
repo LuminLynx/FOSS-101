@@ -5,7 +5,9 @@ data class UnitManifestEntry(
     val slug: String,
     val title: String,
     val position: Int,
-    val status: String
+    val status: String,
+    /** Unit ids that must be completed before this unit unlocks. Empty = no gate. */
+    val prereqUnitIds: List<String> = emptyList()
 )
 
 data class Path(
