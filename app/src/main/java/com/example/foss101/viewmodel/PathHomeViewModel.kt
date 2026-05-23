@@ -72,6 +72,13 @@ sealed interface PathHomeUiState {
         /** Per-unit gate state (id -> state), driving node rendering and tap-ability. */
         val unitStates: Map<String, UnitGateState> = emptyMap(),
         /**
+         * True only when every unit is completed — genuine path completion.
+         * Distinct from `nextUnit == null` because nothing is currently
+         * unlocked (a blocked state from inconsistent prereq data), so the
+         * UI never shows completion messaging to a stuck learner.
+         */
+        val pathComplete: Boolean = false,
+        /**
          * F5 / D4 — spaced reviews due, surfaced *alongside* the next
          * new unit. Optional and never a gate: a failed review fetch
          * leaves this empty and never blocks `nextUnit` or `Loaded`.
@@ -122,6 +129,7 @@ class PathHomeViewModel(
                     completedUnitIds = completed,
                     nextUnit = path.units.firstOrNull { states[it.id] == UnitGateState.CURRENT },
                     unitStates = states,
+                    pathComplete = path.units.all { it.id in completed },
                     reviewsDue = reviewsDue
                 )
             } catch (error: PathApiException) {
@@ -169,7 +177,8 @@ class PathHomeViewModel(
         uiState = current.copy(
             completedUnitIds = completed,
             nextUnit = current.path.units.firstOrNull { states[it.id] == UnitGateState.CURRENT },
-            unitStates = states
+            unitStates = states,
+            pathComplete = current.path.units.all { it.id in completed }
         )
     }
 

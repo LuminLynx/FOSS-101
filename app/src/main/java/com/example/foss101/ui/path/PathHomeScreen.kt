@@ -190,18 +190,26 @@ private fun LoadedBody(
         }
 
         val nextUnit = state.nextUnit
-        if (nextUnit != null) {
-            PrimaryActionButton(
+        when {
+            nextUnit != null -> PrimaryActionButton(
                 text = "Continue · ${nextUnit.title}",
                 onClick = { onOpenUnit(nextUnit.id) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
-        } else {
-            Text(
+            state.pathComplete -> Text(
                 text = "Path complete. Phase 2 (the grader) opens next.",
                 style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            // No unit is currently unlocked but the path isn't complete —
+            // a blocked state (e.g. inconsistent prereq data). Don't show
+            // completion; surface that there's nothing to continue to.
+            else -> Text(
+                text = "No units are unlocked right now.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
