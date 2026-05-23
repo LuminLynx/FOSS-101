@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.foss101.data.repository.RepositoryProvider
+import com.example.foss101.ui.about.AboutScreen
 import com.example.foss101.ui.auth.AuthScreen
 import com.example.foss101.ui.library.GlossaryLibraryScreen
 import com.example.foss101.ui.path.PathHomeScreen
@@ -61,6 +62,9 @@ fun AppNav() {
         }
         composable("glossary") {
             GlossaryLibraryScreen(repository = glossaryRepository)
+        }
+        composable("about") {
+            AboutScreen()
         }
         composable("settings") {
             SettingsScreen(

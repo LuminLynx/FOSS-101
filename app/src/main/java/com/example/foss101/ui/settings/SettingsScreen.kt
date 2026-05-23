@@ -101,7 +101,8 @@ fun SettingsScreen(
                 SettingsRow(
                     icon = ImageVector.vectorResource(R.drawable.ic_libella_mark),
                     title = "Libella",
-                    description = "AI-fluent enough to lead the decisions their teams now have to make"
+                    description = "AI-fluent enough to lead the decisions their teams now have to make",
+                    onClick = { onNavigate("about") }
                 )
             }
         }
