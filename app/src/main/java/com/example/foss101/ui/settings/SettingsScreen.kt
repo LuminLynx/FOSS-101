@@ -225,7 +225,7 @@ private fun ThemeSegmentedControl(
                     .background(
                         if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
                     )
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = 20.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
