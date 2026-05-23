@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -81,6 +82,13 @@ fun UnitReaderScreen(
 
     val state = viewModel.uiState
 
+    // First-run whisper visibility, captured once per unit entry. Must stay
+    // stable for the screen session: recomputing each recomposition would make
+    // the whisper vanish mid-screen the moment a first-timer submits (the
+    // completion cache updates → isEmpty() flips), shifting content during
+    // grading. Keyed on unitId so it re-evaluates fresh on a new unit.
+    val showIntro = remember(unitId) { completionCache.completedUnitIds().isEmpty() }
+
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
@@ -108,9 +116,7 @@ fun UnitReaderScreen(
             )
             is UnitReaderUiState.Loaded -> LoadedBody(
                 state = state,
-                // First-timer = nothing completed yet. Read once at composition;
-                // it only needs to be right on entry, not reactive mid-screen.
-                showIntro = completionCache.completedUnitIds().isEmpty(),
+                showIntro = showIntro,
                 onToggleTradeOff = viewModel::toggleTradeOff,
                 onToggleDepth = viewModel::toggleDepth,
                 onAnswerChanged = viewModel::onAnswerChanged,
