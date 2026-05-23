@@ -7,11 +7,13 @@ import com.example.foss101.data.auth.TokenStorage
 import com.example.foss101.data.remote.network.ApiConfig
 import com.example.foss101.data.remote.network.GlossaryApiServiceFactory
 import com.example.foss101.data.remote.network.PathApiServiceFactory
+import com.example.foss101.data.settings.ThemePreferenceStore
 
 object RepositoryProvider {
 
     private var tokenStorage: TokenStorage? = null
     private var completionCache: CompletionCache? = null
+    private var themePreferenceStore: ThemePreferenceStore? = null
 
     fun init(context: Context) {
         if (tokenStorage == null) {
@@ -23,6 +25,9 @@ object RepositoryProvider {
                 context = context.applicationContext,
                 userIdProvider = { storage.getUserId() }
             )
+        }
+        if (themePreferenceStore == null) {
+            themePreferenceStore = ThemePreferenceStore(context.applicationContext)
         }
     }
 
@@ -60,6 +65,10 @@ object RepositoryProvider {
 
     val completionCacheInstance: CompletionCache
         get() = requireCompletionCache()
+
+    val themePreferenceStoreInstance: ThemePreferenceStore
+        get() = themePreferenceStore
+            ?: error("RepositoryProvider.init(context) must be called before accessing the theme store.")
 
     private fun requireTokenStorage(): TokenStorage {
         return tokenStorage
