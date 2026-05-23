@@ -132,23 +132,29 @@ private fun LoadedBody(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        if (state.path.description.isNotBlank()) {
-            Text(
-                text = state.path.description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-        }
-
-        SectionHeader(title = "Units")
-
         val units = state.path.units
+        // The path is the scrolling surface: the description and the
+        // reviews section scroll *with* the units, so the unit list is
+        // never squeezed into leftover space. Only the Continue button is
+        // pinned below.
         LazyColumn(
             modifier = Modifier
                 .weight(1f, fill = true)
                 .fillMaxWidth()
         ) {
+            if (state.path.description.isNotBlank()) {
+                item(key = "description") {
+                    Text(
+                        text = state.path.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+            }
+
+            item(key = "units-header") { SectionHeader(title = "Units") }
+
             itemsIndexed(items = units, key = { _, unit -> unit.id }) { index, unit ->
                 val gate = state.unitStates[unit.id] ?: UnitGateState.AVAILABLE
                 // Block: avoids the `else { ... }` block-vs-lambda ambiguity.
@@ -166,25 +172,28 @@ private fun LoadedBody(
                     onClick = onOpen
                 )
             }
-        }
 
-        // F5 / D4: reviews due surface ALONGSIDE the next unit —
-        // optional, never a gate. Rendered only when non-empty, so
-        // a learner with nothing due (or a failed best-effort fetch)
-        // sees the screen exactly as before.
-        if (state.reviewsDue.isNotEmpty()) {
-            SectionHeader(title = "Reviews due")
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                state.reviewsDue.forEach { review ->
-                    ReviewRow(
-                        review = review,
-                        onClick = { onReviewTap(review.unitId) }
-                    )
+            // F5 / D4: reviews due surface ALONGSIDE the path — optional,
+            // never a gate. Rendered only when non-empty, so a learner with
+            // nothing due (or a failed best-effort fetch) sees no section.
+            if (state.reviewsDue.isNotEmpty()) {
+                item(key = "reviews-header") {
+                    SectionHeader(title = "Reviews due")
+                }
+                item(key = "reviews") {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        state.reviewsDue.forEach { review ->
+                            ReviewRow(
+                                review = review,
+                                onClick = { onReviewTap(review.unitId) }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -314,11 +323,15 @@ private fun PathNodeRow(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Icon(
-                    imageVector = if (locked) Icons.Filled.Lock else Icons.Filled.PlayArrow,
-                    contentDescription = if (locked) "Locked" else "Open",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                // No trailing icon when locked — the node's lock glyph is
+                // the single indicator (avoids the double-lock).
+                if (!locked) {
+                    Icon(
+                        imageVector = Icons.Filled.PlayArrow,
+                        contentDescription = "Open",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }
