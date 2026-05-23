@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,6 +82,13 @@ fun UnitReaderScreen(
 
     val state = viewModel.uiState
 
+    // First-run whisper visibility, captured once per unit entry. Must stay
+    // stable for the screen session: recomputing each recomposition would make
+    // the whisper vanish mid-screen the moment a first-timer submits (the
+    // completion cache updates → isEmpty() flips), shifting content during
+    // grading. Keyed on unitId so it re-evaluates fresh on a new unit.
+    val showIntro = remember(unitId) { completionCache.completedUnitIds().isEmpty() }
+
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
@@ -107,6 +116,7 @@ fun UnitReaderScreen(
             )
             is UnitReaderUiState.Loaded -> LoadedBody(
                 state = state,
+                showIntro = showIntro,
                 onToggleTradeOff = viewModel::toggleTradeOff,
                 onToggleDepth = viewModel::toggleDepth,
                 onAnswerChanged = viewModel::onAnswerChanged,
@@ -120,6 +130,7 @@ fun UnitReaderScreen(
 @Composable
 private fun LoadedBody(
     state: UnitReaderUiState.Loaded,
+    showIntro: Boolean,
     onToggleTradeOff: () -> Unit,
     onToggleDepth: () -> Unit,
     onAnswerChanged: (String) -> Unit,
@@ -131,6 +142,20 @@ private fun LoadedBody(
         modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // First-run whisper: a quiet, learn-by-doing hint shown only while
+        // the user has completed nothing yet. Disappears for good after their
+        // first completion; never shown to a returning user (completion state
+        // is server-synced, so a fresh device still won't re-show it).
+        if (showIntro) {
+            Text(
+                text = "Each unit is a short read, then a decision prompt — " +
+                    "answer in your own words, and you'll get a grade against its rubric.",
+                style = MaterialTheme.typography.bodyMedium,
+                fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
         Text(
             text = unit.definition,
             style = MaterialTheme.typography.bodyLarge
