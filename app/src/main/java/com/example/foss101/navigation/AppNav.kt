@@ -26,6 +26,7 @@ fun AppNav() {
     val authRepository = remember { RepositoryProvider.authRepository }
     val pathRepository = remember { RepositoryProvider.pathRepository }
     val completionCache = remember { RepositoryProvider.completionCacheInstance }
+    val themePreferenceStore = remember { RepositoryProvider.themePreferenceStoreInstance }
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
@@ -69,6 +70,7 @@ fun AppNav() {
         composable("settings") {
             SettingsScreen(
                 authRepository = authRepository,
+                themePreferenceStore = themePreferenceStore,
                 onNavigate = { route -> navController.navigate(route) }
             )
         }
