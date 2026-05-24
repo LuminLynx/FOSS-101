@@ -35,7 +35,7 @@ import com.example.foss101.ui.components.SectionHeader
 import com.example.foss101.ui.components.screenContentPadding
 import com.example.foss101.ui.theme.LibellaTheme
 
-private const val FEEDBACK_EMAIL = "libella@pm.me"
+private const val FEEDBACK_EMAIL = "libella-llm@pm.me"
 private const val TAGLINE =
     "AI-fluent enough to lead the decisions their teams now have to make"
 private const val PRODUCT_DESCRIPTION =
