@@ -70,6 +70,43 @@ def test_next_unit_for_user_returns_first_uncompleted(gated_db) -> None:
     assert path_repository.next_unit_for_user(seed["user_id"], seed["path_id"]) is None
 
 
+def test_draft_units_are_not_served(gated_db) -> None:
+    """Draft units are ingested (gradable) but must not reach learners.
+
+    A draft unit bound to the live path must be excluded from both the
+    path manifest (get_path) and the "Continue" target (next_unit_for_user),
+    so unverified content cannot ship just because it was ingested.
+    """
+    seed = seed_path_with_units(gated_db)
+
+    # A draft unit at position 3 — ingested for the gate, but not published.
+    with gated_db() as conn:
+        conn.execute(
+            """
+            INSERT INTO units (
+                id, path_id, slug, position, title, definition,
+                trade_off_framing, bite_md, depth_md, prereq_unit_ids, status
+            ) VALUES
+                ('unit-c', 'path-llm-pms', 'safety', 3,
+                 'Safety', 'Bounds the abuse surface.',
+                 'when / when / cost', 'bite C', 'depth C', '{unit-b}', 'draft')
+            """,
+        )
+        conn.commit()
+
+    from app.repositories import completion_repository, path_repository
+
+    # get_path manifest excludes the draft unit.
+    path = path_repository.get_path(seed["path_id"])
+    assert [u["id"] for u in path["units"]] == ["unit-a", "unit-b"]
+
+    # next_unit never points at a draft: after completing every published
+    # unit, "next" is None — not the draft unit-c.
+    completion_repository.record_completion(seed["user_id"], "unit-a")
+    completion_repository.record_completion(seed["user_id"], "unit-b")
+    assert path_repository.next_unit_for_user(seed["user_id"], seed["path_id"]) is None
+
+
 def test_next_unit_for_user_returns_none_for_path_with_no_units(gated_db) -> None:
     seed = seed_path_with_units(gated_db)
 

@@ -5,6 +5,12 @@ A path is a sequenced list of units; the unit list returned here is a
 manifest (id/slug/title/position/status/prereqUnitIds), not the full
 9-slot payload — that lives in UnitRepository.get_unit. prereqUnitIds
 rides along so the client can gate units whose prerequisites are unmet.
+
+Serving is published-only: get_path and next_unit_for_user filter to
+`status = 'published'`. Draft units are intentionally still ingested
+(the grader reads their rubric from the DB to run the regression-set
+gate), but they must never be served to learners or become the next
+unit on the path until their gate passes and status flips to published.
 """
 from __future__ import annotations
 
@@ -49,6 +55,7 @@ def get_path(path_id: str) -> dict[str, Any] | None:
             SELECT id, slug, title, position, status, prereq_unit_ids
             FROM units
             WHERE path_id = %s
+              AND status = 'published'
             ORDER BY position ASC
             """,
             (path_id,),
@@ -81,6 +88,7 @@ def next_unit_for_user(user_id: str, path_id: str) -> dict[str, Any] | None:
         SELECT u.id, u.slug, u.title, u.position, u.status, u.prereq_unit_ids
         FROM units u
         WHERE u.path_id = %s
+          AND u.status = 'published'
           AND NOT EXISTS (
               SELECT 1 FROM completions c
               WHERE c.user_id = %s AND c.unit_id = u.id
