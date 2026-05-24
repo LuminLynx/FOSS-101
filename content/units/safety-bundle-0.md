@@ -28,7 +28,7 @@ sources:
     date: 2022-08-05
     primary_source: true
   - url: "https://arxiv.org/abs/2312.06674"
-    title: "Llama Guard: LLM-based Input-Output Safeguarding for Human-AI Conversations (Inan, Upasani, Chi, Rungta, Iyer, Mao, Tontchev, Hu, Fuller, Testuggine, Khabsa — Meta)"
+    title: "Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations (Inan, Upasani, Chi, Rungta, Iyer, Mao, Tontchev, Hu, Fuller, Testuggine, Khabsa — Meta)"
     date: 2023-12-07
     primary_source: true
   - url: "https://platform.openai.com/docs/guides/moderation"
