@@ -8,7 +8,7 @@ prereq_unit_ids:
   - evals-bundle-0
   - cost-dynamics-bundle-0
   - tool-use-bundle-0
-status: draft
+status: published
 definition: An agent is a multi-step LLM loop that decides its own next action, and the design is three coupled decisions — how much to decompose, how the loop terminates, and where errors are caught — whose combination determines whether the feature is a reliable pipeline or expensive theater.
 calibration_tags:
   - claim: "The reasoning-and-acting loop (the model observes a tool result, reasons, and chooses the next action) is a standard pattern across major providers, formalized as ReAct."
