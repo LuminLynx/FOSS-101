@@ -66,15 +66,17 @@
 #       PM-doc, flowing prose), p018 (short-form)
 #   * 3 partial (3 of 4): p006 (T,T,T,F), p008 (F,T,T,F),
 #       p010 (F,T,T,F)
-#   * 1 partial (2 of 4): p007 (T,F,F,T)
-#   * 3 partial (1 of 4): p009 (T,F,F,F), p011 (T,F,F,F),
-#       p021 (T,F,F,F) — the c1/c3-overlap watch-pairs
+#   * 2 partial (2 of 4): p007 (T,F,F,T), p021 (T,F,F,T — c4 met:
+#       maps the guarded-action combination + names the PM error;
+#       c3=F watch-pair, realigned from T,F,F,F per PR #197 review)
+#   * 2 partial (1 of 4): p009 (T,F,F,F), p011 (T,F,F,F) — the
+#       remaining c1/c3-overlap watch-pairs
 #   * 6 all-missed on-topic: p004, p012, p014, p015, p019, p020
 #   * 2 off-topic, all-missed, gradable: p003 (pivots to PII/
 #       privacy compliance), p013 (pivots to moderation-vendor /
 #       build-vs-buy)
 #   * 0 flagged-expected
-#   Check: 6 + 3 + 1 + 3 + 6 + 2 = 21.
+#   Check: 6 + 3 + 2 + 2 + 6 + 2 = 21.
 #
 # T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
 # flagged = grader uncertainty, NOT "answer is bad." Off-topic
@@ -719,7 +721,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: Single criterion (c1) — names the three decisions and maps the surface, but the constraint is stated only as generic "the pieces have to fit" without the specific mutual constraint (c1/c3-overlap watch-pair)
+    label: c1 + c4 — names the three decisions and maps the guarded-action combination to the money-transfer surface with the PM error (c4 met), but states the constraint only generically ("the pieces have to fit") without the specific mutual constraint, so c3=false (c1/c3-overlap watch-pair)
     answer: |
       Safety is three coupled decisions: what to moderate, how strict
       the threshold is, and where the human sits. They are coupled, so
@@ -746,5 +748,5 @@ pairs:
         - position: 3
           met: false
         - position: 4
-          met: false
+          met: true
       flagged: false
