@@ -89,13 +89,26 @@
 # answers the grader can confidently grade all-not-met are
 # gradable — flagged: false.
 #
-# GATE: PENDING. This set has not yet been run against the live
-# grader. Per docs/REGRESSION_GATE.md a full live re-run at
-# --threshold 80 is required before Unit 14 flips draft -> published
-# (new authoring is gate-required, not exempt). Structural
-# validators (lint_unit_markdown, ingest_units --check,
-# run_regression_set --check) pass; the operator runs the live
-# grader gate.
+# GATE PASSED 2026-05-24 (docs/UNIT_14_GATE.md). Full live run
+# against the Sonnet 4.6 grader: 83/84 = 98.8% per-criterion
+# (--threshold 80), 19/21 fully passed, 20/21 flagged-correct, 0
+# errors. Zero realignments, zero rewrites. Two preserved
+# disagreements (gold standard kept, per docs/REGRESSION_GATE.md):
+#   * p010 c3 — grader strict-reads the model-directed-loop ->
+#     external-guard constraint as not-met where the Opus value
+#     credits it. Reproducible (2/2 on isolated --pair re-run), but
+#     on a genuine borderline (the constraint sentence is present,
+#     woven into a mechanism answer). Reproducible-strict-on-
+#     borderline -> preserve c3=true, log as a calibration gap (same
+#     family as Unit 11 p014 / Unit 13 p008). NOT realigned.
+#   * p011 flag — all four criteria matched (c3=false confirmed; the
+#     c1/c3 watch-pair held), grader flagged a confident-dismissal
+#     answer. Known flag-unreliability pattern (Units 2/4/5/9/10).
+#     Preserve flagged=false.
+# Headline: all three c1/c3-overlap watch-pairs (p009/p011/p021)
+# returned c3=false — the split is clean, no Unit 13-style fusion.
+# Structural validators (lint_unit_markdown, run_regression_set
+# --check) also pass.
 
 unit_id: agents-bundle-0
 
@@ -110,8 +123,11 @@ description: |
   sentences, English-only, AND-clause strict authoring. Content is
   the deal-desk-assistant decision prompt from the unit. Watch-pairs
   p009/p011/p021 probe the c1/c3 overlap (paper-judged c3=F, as
-  confirmed on Units 11/12). GATE PENDING — operator runs the live
-  Sonnet 4.6 grader at --threshold 80 before publish.
+  confirmed on Units 11/12). GATE PASSED 2026-05-24 at 98.8%
+  per-criterion (83/84); all three watch-pairs returned c3=false
+  (clean split). Two preserved disagreements (p010 c3 reproducible-
+  strict-on-borderline, p011 flag) — zero realignments. See
+  docs/UNIT_14_GATE.md.
 
 pairs:
   - id: p001
