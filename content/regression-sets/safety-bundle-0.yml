@@ -1,0 +1,752 @@
+# Regression set for the Safety + content moderation unit
+# (safety-bundle-0).
+#
+# Unit 15 is authored as flagship under STRATEGY.md § T2 — >= 20
+# pairs before publish. Authored under the cumulative authoring
+# constraints carried forward through Units 11-14:
+#   * NO flagged-expected pairs (retired since Unit 12; the flag
+#     does not fire reliably on real answers).
+#   * NO parenthetical option-lists in answer text — write the
+#     options as prose, never "moderate (input, output, or both)".
+#   * NO markdown-style section headers, NO quote-led sentences.
+#   * English-only per docs/curriculum/v1-path-outline.md.
+#   * AND-clause strict authoring: a pair meeting a criterion that
+#     contains "AND" satisfies every conjunct explicitly.
+#
+# RUBRIC SHAPE: Unit 15 was authored after the 2026-05-21 c2 split,
+# so its rubric ships in the 4-criterion split shape from the start.
+# It is structurally identical to Units 11/12/14 — a "three coupled
+# decisions" unit whose c2 (mechanism) and c3 (the decisions
+# constrain each other) are already separate criteria. This set is
+# modeled directly on tool-use-bundle-0.yml (Unit 12) and
+# agents-bundle-0.yml (Unit 14), the cleanest references.
+#
+# Watch-pairs for the gate (paper-judged c3=F): p009, p011, p021
+# state generic coupling at the c1 level ("they affect each other,
+# decide them together") but do NOT identify the specific mutual
+# constraint (p011 actively dismisses the threshold/human coupling
+# as an ops detail). If the grader credits c3=T on these it signals
+# a c1/c3 overlap (the Unit 13 fusion mode); triage with
+# --show-criteria. On Units 11/12/14 the grader confirmed c3=F on
+# all analogous watch-pairs.
+#
+# Surfaced-c3 pairs (explain the specific constraint, c3=T): p006,
+# p008, p010.
+#
+# Position-to-criterion mapping (from
+# content/units/safety-bundle-0.md slot 8 rubric):
+#
+#   1. "Names the three coupled safety decisions — what to moderate
+#      (input / output / both), how strict the threshold (over-
+#      refusal vs under-block precision/recall trade), where the
+#      human sits (auto-block / flag-for-review / human-in-the-loop)
+#      — AND treats them as coupled (combination -> safe-and-usable
+#      vs safe-but-useless vs unsafe), not three toggles."
+#   2. "Explains the mechanism behind a mismatched-combination
+#      failure — why — strict + auto-block + no human over-refuses
+#      (precision falls as recall rises -> safe-but-useless); or
+#      lenient + output-only lets prompt-injection through because
+#      the abuse entered at the input, never inspected." (mechanism)
+#   3. "Identifies that the three decisions constrain each other —
+#      cannot be chosen independently; auto-block with no human
+#      forces a stricter threshold (errors execute unreviewed), and
+#      moderating only one side forecloses the abuse class entering
+#      on the other side." (the split-out meta-claim)
+#   4. "Maps a matched combination to an abuse surface by stakes
+#      (guarded-action: both + recall-tuned + human-in-the-loop;
+#      assistive: output + balanced + flag-for-review; high-volume
+#      low-stakes: output + precision-tuned + auto-block) and why
+#      the surface drives it AND names the common PM error of
+#      treating safety as a single content-filter toggle bolted on
+#      at launch instead of threat-modeling the abuse surface."
+#
+# Authoring distribution (21 pairs; four-criterion shape):
+#   * 6 all-four-met: p001 (balanced), p002 (terse engineering),
+#       p005 (been-bitten), p016 (long-narrative), p017 (structured
+#       PM-doc, flowing prose), p018 (short-form)
+#   * 3 partial (3 of 4): p006 (T,T,T,F), p008 (F,T,T,F),
+#       p010 (F,T,T,F)
+#   * 2 partial (2 of 4): p007 (T,F,F,T), p021 (T,F,F,T — c4 met:
+#       maps the guarded-action combination + names the PM error;
+#       c3=F watch-pair, realigned from T,F,F,F per PR #197 review)
+#   * 2 partial (1 of 4): p009 (T,F,F,F), p011 (T,F,F,F) — the
+#       remaining c1/c3-overlap watch-pairs
+#   * 6 all-missed on-topic: p004, p012, p014, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable: p003 (pivots to PII/
+#       privacy compliance), p013 (pivots to moderation-vendor /
+#       build-vs-buy)
+#   * 0 flagged-expected
+#   Check: 6 + 3 + 2 + 2 + 6 + 2 = 21.
+#
+# T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
+# flagged = grader uncertainty, NOT "answer is bad." Off-topic
+# answers the grader can confidently grade all-not-met are
+# gradable — flagged: false.
+#
+# Sources for the unit were web-verified per the source-verification
+# discipline in docs/curriculum/v1-path-outline.md (2026-05-24).
+#
+# GATE: PENDING. Per docs/REGRESSION_GATE.md a full live run at
+# --threshold 80 is required before Unit 15 flips draft -> published.
+# Structural validators (run_regression_set --check,
+# lint_unit_markdown) pass; the operator runs the live grader gate.
+
+unit_id: safety-bundle-0
+
+description: |
+  Phase 3 / Unit 15 flagship gate set. Authored against the
+  post-c2-split 4-criterion rubric (Unit 15 was drafted after the
+  split). Modeled structurally on tool-use-bundle-0.yml (Unit 12)
+  and agents-bundle-0.yml (Unit 14), the cleanest "three coupled
+  decisions" references. 21 pairs under the cumulative authoring
+  constraints: zero flagged-expected, no parenthetical option-lists,
+  no markdown headers, no quote-led sentences, English-only,
+  AND-clause strict authoring. Content is the account-assistant
+  decision prompt from the unit (an assistant that can take actions,
+  including a money transfer — a guarded-action surface). Watch-pairs
+  p009/p011/p021 probe the c1/c3 overlap (paper-judged c3=F, as
+  confirmed on Units 11/12/14). GATE PENDING — operator runs the live
+  Sonnet 4.6 grader at --threshold 80 before publish.
+
+pairs:
+  - id: p001
+    label: All four met, balanced prose covering the three decisions and the account-assistant stakes
+    answer: |
+      Legal asking for moderation and eng planning to run the output
+      through a provider API at the default threshold is the trap:
+      adding a content filter looks like one decision and is three
+      coupled ones, and on this surface the combination decides
+      whether we ship safe-and-usable, safe-but-useless, or unsafe.
+
+      The first decision is what to moderate: the user's input, the
+      model's output, or both. The second is how strict to set the
+      threshold, which is where we sit on the over-refusal versus
+      under-block trade. The third is where the human sits: auto-block,
+      flag for review, or a human in the loop before a high-risk
+      action runs. They constrain each other — auto-block with no
+      human forces a stricter threshold because every error executes
+      unreviewed, and moderating only the output forecloses catching
+      an injected instruction that entered at the input.
+
+      This assistant can move money — it can initiate a transfer — so
+      it is a guarded-action surface. The right combination is to
+      moderate both sides, tune the threshold for recall, and put a
+      human in the loop on the transfer. Eng's output-only plan at the
+      default threshold leaves two holes. A prompt injection in the
+      user's input is never inspected where it enters, so it can steer
+      the model toward an action the output filter may not even
+      classify as harmful. And the vendor default threshold was never
+      tuned to this feature's cost of one incident, which here is an
+      erroneously executed transfer. Before launch I want the transfer
+      path gated by a human approval and the threshold set against our
+      own red-team set, not the default.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p002
+    label: All four met, terse engineering voice
+    answer: |
+      Three coupled decisions, not one toggle. What to moderate: the
+      input, the output, or both. Threshold strictness: where we sit
+      on the over-refusal versus under-block trade. Human locus:
+      auto-block, flag-for-review, or human-in-the-loop before a
+      high-risk action. Coupled — auto-block with no human forces a
+      stricter threshold since errors execute unreviewed, and
+      output-only forecloses catching input-side injection.
+
+      This assistant can initiate a transfer, so it is a guarded-action
+      surface: moderate both, recall-tuned threshold, human in the loop
+      on the transfer.
+
+      Eng's plan is output-only, default threshold, auto-block. Failure
+      one: a prompt injection in the input is never inspected where it
+      enters, so it steers the model into an action the output filter
+      may not flag — the harm is the tool call, not the text. Failure
+      two: precision falls as recall rises, so a default-or-strict
+      threshold with no human over-refuses real users and the feature
+      goes safe-but-useless. Tune the threshold on our own red-team
+      set and gate the transfer with a human before launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p003
+    label: Off-topic, gradable, pivots to PII / data-privacy compliance
+    answer: |
+      The bigger question before launch is data privacy. This
+      assistant reads the user's account details and transaction
+      history, and we are about to send that to a third-party model
+      provider. Before we worry about a content filter, legal and
+      privacy need to confirm what personal and financial data leaves
+      our systems, whether we have the right data-processing agreement,
+      what the retention defaults are, and whether any of this triggers
+      financial-data regulation. The moderation design is secondary to
+      confirming we are even allowed to send this data off-platform.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p004
+    label: All-missed on-topic — endorses eng's output-only-at-default plan as sufficient
+    answer: |
+      Eng's plan is fine. Run the model's output through the provider
+      moderation API at the default threshold and block anything it
+      flags. The providers have spent years tuning these classifiers,
+      the defaults are sensible, and it is one clean integration on the
+      response. If something harmful does get through we will see it in
+      logs and adjust. There is not much of a product decision here
+      beyond turning the filter on; the moderation API is a solved
+      piece of infrastructure and we should just ship it on the output.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p005
+    label: All four met, been-bitten experiential voice
+    answer: |
+      I shipped this mistake once. We put a moderation call on the
+      output of an assistant at the vendor's default threshold and
+      called it done. It demoed clean. In production two things bit
+      us: the threshold over-refused a chunk of legitimate requests
+      that happened to look risky, so engaged users churned, and a
+      crafted input talked the model into a workflow our output filter
+      never even looked at because the damage was an action, not a
+      sentence.
+
+      That taught me safety here is three coupled decisions. What to
+      moderate is the input, the output, or both. How strict the
+      threshold is sets where we sit on the over-refusal versus
+      under-block trade. Where the human sits is auto-block, flag for
+      review, or a human in the loop before a high-risk action. They
+      are coupled: once you auto-block with no human, the threshold is
+      the whole defense and has to be stricter, and once you moderate
+      only one side you have conceded the abuse that enters on the
+      other.
+
+      This assistant can move money, so it is a guarded-action surface:
+      moderate both, tune for recall, and a human approves the transfer.
+      The error is treating safety as a filter you bolt on at the end
+      instead of threat-modeling what an adversary does to a feature
+      that can take actions. Decide the threshold against a red-team
+      set and the human gate on the transfer before launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p006
+    label: c1 + c2 + c3 met, c4 missing — names the three decisions, explains the mechanism, identifies the constraint, but never maps a combination to the surface or names the PM error
+    answer: |
+      Adding moderation is three coupled decisions, not one. What to
+      moderate is the input, the output, or both. How strict the
+      threshold is sets where we sit on the over-refusal versus
+      under-block trade. Where the human sits is auto-block, flag for
+      review, or a human in the loop. The combination is what matters,
+      and the legs constrain each other: auto-block with no human
+      forces a stricter threshold because every classifier error
+      executes with nobody to catch it, and moderating only the output
+      forecloses catching an injected instruction that entered at the
+      input.
+
+      The mechanism that bites a mismatched combination is two-sided. A
+      strict threshold with auto-block over-refuses because precision
+      falls as recall rises, so legitimate users get blocked and the
+      feature becomes safe-but-useless. A lenient output-only setup
+      under-blocks because the abuse arrived in the input and was never
+      inspected there. The team needs to choose these deliberately
+      rather than accept a default.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p008
+    label: c2 + c3 met, c1/c4 missing — explains the mechanism and the constraint without framing the three decisions or mapping a combination
+    answer: |
+      The thing that will bite is the interaction between watching only
+      the output and never bounding the threshold with a human. If a
+      crafted input talks the model into an action, the output filter
+      may never flag it, because the harm is the action and not the
+      text, and the input where the abuse entered was never inspected.
+      That is an under-block failure, and it is invisible in a demo
+      that only sends benign prompts.
+
+      And these settings are not independent. Once the threshold is the
+      only defense, with no human reviewing, it has to be set strict,
+      and a strict threshold over-refuses because precision drops as
+      recall climbs. So you are pushed toward either leaking harm or
+      refusing real users, with no middle, precisely because the
+      what-to-moderate choice and the human-locus choice were made in
+      isolation. The leniency in one place forces rigor in another.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p010
+    label: c2 + c3 met, c1/c4 missing — explains the over-refusal mechanism and the threshold/human constraint, no framing, no map
+    answer: |
+      The core failure here is over-refusal. If we set the threshold
+      strict and auto-block with no human, the feature blocks a real
+      fraction of legitimate requests, because a moderation classifier
+      trades precision against recall — pushing recall up to catch more
+      harm drags precision down, so more good requests get caught in
+      the net. Users hit refusals on reasonable asks and stop trusting
+      the assistant, which is the safe-but-useless outcome.
+
+      The reason this is not a standalone threshold tweak is that the
+      threshold choice is tied to the human-locus choice. With a human
+      in the loop you can run a looser threshold, because the human is
+      the backstop that catches what slips through. With auto-block and
+      no human, the threshold has to carry the whole load and so has to
+      be stricter, which is exactly what produces the over-refusal. You
+      cannot pick one without the other.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p007
+    label: c1 + c4 met, c2/c3 missing — names the three decisions and maps the surface to guarded-action with the PM error, but the mechanism is asserted not explained and the constraint is not identified
+    answer: |
+      Safety here is three coupled decisions: what to moderate, how
+      strict the threshold is, and where the human sits. The
+      combination is what produces the feel rather than any single
+      pick.
+
+      This assistant can initiate a transfer, so it is a guarded-action
+      surface, and the right combination is to moderate both sides,
+      tune the threshold for recall, and put a human in the loop on the
+      transfer. A low-stakes assistant could get by moderating the
+      output with a balanced threshold and asynchronous review, but a
+      feature that can move money is not that surface. Eng's instinct
+      to run one moderation call on the output at the default threshold
+      is the classic error of treating safety as a single filter you
+      bolt on at launch instead of threat-modeling the specific abuse
+      surface, and it will demo fine while operating badly the first
+      time someone probes it.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p009
+    label: Single criterion (c1) — cleanly names the three coupled decisions and says decide them together, stops there
+    answer: |
+      Moderation is not one decision. It is three coupled ones, and the
+      team should decide them together rather than turn on a default
+      filter. The first is what to moderate, which is the user's input,
+      the model's output, or both. The second is how strict to set the
+      threshold. The third is where the human sits, whether a flagged
+      item is auto-blocked, queued for review, or sent to a person
+      before a high-risk action. These are coupled, so the combination
+      is what determines how the feature behaves, and they should not
+      be treated as three independent switches.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p011
+    label: Single criterion (c1) — names the three decisions but dismisses the threshold/human coupling as an ops concern, asserting only generic coupling (c1/c3-overlap watch-pair)
+    answer: |
+      Safety is three coupled decisions: what to moderate, how strict
+      the threshold is, and where the human sits. They go together, so
+      we should decide them as a set rather than piecemeal.
+
+      For this assistant the product decisions that matter are what to
+      moderate and roughly how strict to be, and we should moderate
+      both the input and the output to be safe. The threshold and the
+      human-review setup are really operational tuning that the support
+      and trust-and-safety teams own after launch — they will watch the
+      flags and adjust the cutoff and the review queue as they learn.
+      So from a product standpoint the coupling just means we hand the
+      ops teams a coherent starting configuration and let them tune the
+      rest.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p012
+    label: All-missed on-topic — "set the threshold to maximum strictness and block everything risky"
+    answer: |
+      The safest move is to set the moderation threshold as strict as
+      it goes. If there is any chance a request or response is harmful,
+      block it. Yes we will refuse some legitimate requests, but for a
+      financial assistant that is the right trade — better to frustrate
+      a few users than to let anything harmful through. Crank the
+      sensitivity to maximum on every category, auto-block on any flag,
+      and we are covered. We can loosen it later if users complain too
+      much, but starting maximally strict is the responsible default
+      for a feature that touches money.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p013
+    label: Off-topic, gradable, pivots to moderation-vendor / build-vs-buy choice
+    answer: |
+      The decision that actually matters is which moderation provider
+      we standardize on. OpenAI's moderation endpoint, a dedicated
+      classifier like Llama Guard we host ourselves, or a commercial
+      trust-and-safety vendor all have different category coverage,
+      latency, and cost, and that choice constrains everything
+      downstream. I would push eng to run a bake-off across two or
+      three moderation backends on our traffic before we design
+      anything, and to weigh build versus buy. Get the vendor decision
+      right first and the configuration follows from whatever tool we
+      land on.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p014
+    label: All-missed on-topic — "moderation is the provider's responsibility"
+    answer: |
+      Honestly this is the model provider's job, not ours. The frontier
+      labs already train their models to refuse harmful requests and
+      run their own safety layers, so most of the risk is handled
+      upstream before the response ever reaches us. We should rely on
+      the model's built-in safety training and the provider's terms of
+      service rather than building our own moderation stack. If we want
+      a belt-and-suspenders check we can add the provider's moderation
+      endpoint, but the heavy lifting is theirs. Building our own
+      content-safety system would be reinventing what the labs already
+      do better.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p015
+    label: All-missed on-topic — "safety is a launch checklist item, bolt it on at the end"
+    answer: |
+      Moderation is a launch-readiness checklist item. We get the core
+      assistant working first, and in the final week before launch we
+      add the content filter to satisfy legal's requirement and check
+      the box. It is the kind of thing that can be added at the end
+      without affecting the rest of the build, since it is just a filter
+      that sits in front of the responses. Let us not let it block the
+      feature work now; we will wire in a moderation call during launch
+      hardening and move on.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p016
+    label: All four met, long-narrative voice
+    answer: |
+      Let me walk through why running one moderation call on the output
+      at the default threshold is the wrong instinct for this assistant,
+      because the reasoning is the whole point.
+
+      Adding moderation looks like one decision and is really three, and
+      the three are coupled. The first is what to moderate, which can be
+      the user's input, the model's output, or both. The second is how
+      strict to set the threshold, which is where you choose to sit on
+      the trade between over-refusing legitimate use and under-blocking
+      harm. The third is where the human sits, which is whether a flagged
+      item is auto-blocked, queued for asynchronous review, or routed to
+      a person before a high-risk action executes.
+
+      What makes this one coupled decision rather than three independent
+      ones is that the choices reinforce or undermine each other. The
+      moment you auto-block with no human, the threshold becomes the
+      entire defense and has to be set stricter, because there is no
+      second line to catch a miss or reverse an over-block. And the
+      moment you moderate only the output, you have given up on catching
+      an injected instruction that entered through the input, because
+      the place the abuse arrived was never inspected.
+
+      This assistant can initiate a money transfer, which makes it a
+      guarded-action surface, and the combination that fits is to
+      moderate both sides, tune the threshold toward recall, and put a
+      human in the loop before the transfer runs. The failure the team
+      would ship by following eng's plan is two-fold: the default
+      threshold was never set against our own abuse surface, so it
+      over-refuses real users into churn, and the output-only placement
+      misses the prompt injection that steers the model toward an action
+      the output filter does not even classify as harmful. The error
+      underneath both is treating safety as a single filter bolted on at
+      launch instead of threat-modeling what an adversary does to a
+      feature that can act, and then layering proportionate defenses.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p017
+    label: All four met, structured PM-doc voice in flowing prose, no headers or parentheticals
+    answer: |
+      Scoping moderation for the account assistant. There are three
+      coupled decisions and the combination produces the outcome, so
+      they have to be decided together rather than inherited from a
+      default filter.
+
+      The first decision is what to moderate, which runs from the user's
+      input to the model's output to both. The second is how strict to
+      set the threshold, which is where we sit on the over-refusal
+      versus under-block trade. The third is where the human sits, which
+      is auto-block, asynchronous flag-for-review, or a human in the
+      loop before a high-risk action. These are coupled because
+      auto-block with no human forces a stricter threshold, since every
+      error executes with nobody to catch it, and moderating only one
+      side forecloses the abuse class that enters on the other side.
+
+      The recommended combination for this surface is to moderate both
+      input and output, tune the threshold for recall, and require human
+      approval on the transfer action, because the feature can move
+      money and the cost of one missed abuse is an irreversible
+      transfer. The rationale for not just filtering the output at the
+      default is two-fold. A prompt injection in the input never reaches
+      the output filter as something harmful, because the harm is the
+      action it triggers. And the default threshold was tuned by the
+      vendor for a generic surface, not for our cost of one incident, so
+      it either over-refuses or under-blocks here. The risk if this is
+      skipped is that the threshold and human decisions are never made
+      deliberately, and production sets them for us at the first
+      incident.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p018
+    label: All four met, short-form
+    answer: |
+      Three coupled decisions, not one filter. What to moderate: input,
+      output, or both. Threshold strictness: the over-refusal versus
+      under-block trade. Human locus: auto-block, flag-for-review, or
+      human-in-the-loop. Coupled — auto-block with no human forces a
+      stricter threshold, and output-only forecloses catching input-side
+      injection.
+
+      This assistant can transfer money, so it is a guarded-action
+      surface: moderate both, recall-tuned threshold, human approves the
+      transfer.
+
+      Output-only at the default fails twice: an input injection steers
+      an action the output filter never flags, and a default threshold
+      over-refuses because precision drops as recall rises. The error is
+      bolting on one filter instead of threat-modeling the abuse surface.
+      Decide the threshold on a red-team set and the human gate on the
+      transfer before launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p019
+    label: All-missed on-topic — "just put a human reviewing everything"
+    answer: |
+      The simplest safe answer is to have a human review every
+      interaction. Put a person in the loop on all of it — every
+      response and every action the assistant wants to take gets
+      approved by a human before it goes out. That way nothing harmful
+      ever reaches a user or executes without a person signing off. Yes
+      it is more headcount, but safety is worth it, and we avoid the
+      whole question of where to set a threshold because a human is
+      always the final check. Staff a review team and route everything
+      through them.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p020
+    label: All-missed on-topic — refuses the premise, "don't ship an assistant that can take actions"
+    answer: |
+      The premise is wrong. We should not ship an AI assistant that can
+      take real actions on a user's account at all. Letting a model
+      initiate transfers or change settings is asking for trouble no
+      content filter can fix, and the safe product is a read-only
+      assistant that answers questions and hands the user a link to do
+      the action themselves. Push back on the brief: strip the action
+      capability, ship the question-answering assistant, and the whole
+      moderation question shrinks to filtering text. Trying to make an
+      acting assistant safe is solving a problem we created by giving it
+      actions in the first place.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p021
+    label: c1 + c4 — names the three decisions and maps the guarded-action combination to the money-transfer surface with the PM error (c4 met), but states the constraint only generically ("the pieces have to fit") without the specific mutual constraint, so c3=false (c1/c3-overlap watch-pair)
+    answer: |
+      Safety is three coupled decisions: what to moderate, how strict
+      the threshold is, and where the human sits. They are coupled, so
+      the combination is what matters rather than any single choice.
+
+      For this assistant, which can move money, the right combination is
+      to moderate both sides, set a careful threshold, and keep a human
+      on the transfer, the guarded-action shape. Defaulting to one
+      output filter is the usual mistake of treating safety as a single
+      toggle.
+
+      If the combination is wrong the feature will generally behave
+      badly and feel either unsafe or unusable, because the pieces have
+      to fit together and a mismatch produces a worse outcome overall.
+      The important part is choosing a combination that matches the
+      surface, and a poor match will degrade things in the ways you
+      would expect.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: true
+      flagged: false
