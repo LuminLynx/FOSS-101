@@ -1,0 +1,781 @@
+# Regression set for the Agents / multi-step reasoning unit
+# (agents-bundle-0).
+#
+# Unit 14 is authored as flagship under STRATEGY.md § T2 — >= 20
+# pairs before publish. Authored under the cumulative authoring
+# constraints carried forward through Units 11-13:
+#   * NO flagged-expected pairs. The flag does not fire on real
+#     answers regardless of shape (refuted across Units 2/9/10/11);
+#     retired from the distribution since Unit 12.
+#   * NO parenthetical option-lists in answer text — e.g. never
+#     "decompose (single call, fixed workflow, or loop)" inside an
+#     answer; write the options as prose. This was the deterministic
+#     grader-payload trigger in Unit 11 p007/p014.
+#   * NO markdown-style section headers (Unit 9 p016 lesson),
+#     NO quote-led sentences (Unit 11 lesson).
+#   * English-only per docs/curriculum/v1-path-outline.md.
+#   * AND-clause strict authoring (UNIT_12_GATE.md escalation): a
+#     pair intended to MEET a criterion containing "AND" satisfies
+#     EVERY conjunct explicitly, not just the first.
+#
+# RUBRIC SHAPE: Unit 14 was authored AFTER the 2026-05-21 c2 split,
+# so its rubric ships in the 4-criterion split shape from the start
+# — no retroactive split needed. It is structurally identical to
+# Units 11 (streaming-ux) and 12 (tool-use): a "three coupled
+# decisions" unit whose c2 (mechanism) and c3 (the decisions
+# constrain each other) are already separate criteria. This set is
+# modeled directly on tool-use-bundle-0.yml (Unit 12), the cleanest
+# gate-passing reference in the path (100% on its c2-split gate).
+#
+# Watch-pairs for the gate (paper-judged c3=F): p009, p011, p021
+# state generic coupling at the c1 level ("they affect each other,
+# decide them together") but do NOT identify the specific mutual
+# constraint (p011 actively dismisses termination as a framework
+# detail). If the grader credits c3=T on these it signals a c1/c3
+# overlap (the Unit 13 fusion failure mode); triage at the gate with
+# --show-criteria. On Units 11 and 12 (identical split) the grader
+# confirmed c3=F on all three analogous watch-pairs.
+#
+# Surfaced-c3 pairs (explain the specific constraint, so c3=T):
+# p006, p008, p010.
+#
+# Position-to-criterion mapping (from
+# content/units/agents-bundle-0.md slot 8 rubric):
+#
+#   1. "Names the three coupled agent decisions — how much to
+#      decompose, how the loop terminates, and where errors are
+#      caught — AND treats them as coupled, the combination sets
+#      the feel, not three independent toggles."
+#   2. "Explains the mechanism behind a mismatched-combination
+#      failure — why it happens — e.g. a model-directed loop with
+#      no step budget and no per-step validation builds compounding
+#      error and runaway cost because reliability is the product of
+#      per-step reliability and cost scales with step count; or a
+#      fixed workflow that lets errors compound ships a
+#      confidently-wrong end state." (mechanism only)
+#   3. "Identifies that the three decisions constrain each other —
+#      cannot be chosen independently; a model-directed loop forces
+#      a termination guard because the model cannot be trusted to
+#      stop itself, and compounding error is only survivable on a
+#      short fixed workflow." (the split-out meta-claim)
+#   4. "Maps a matched combination to a task shape — reliable-
+#      pipeline (fixed workflow + step budget + per-step
+#      validation), true-agent (model-directed loop + external
+#      verifier + end-state check), just-prompt-it (single call) —
+#      and why it fits AND names the common PM error of building a
+#      model-directed loop for a task that is actually a fixed
+#      workflow (the 'expensive theater')."
+#
+# Authoring distribution (21 pairs; four-criterion shape):
+#   * 6 all-four-met: p001 (balanced prose), p002 (terse
+#       engineering), p005 (been-bitten), p016 (long-narrative),
+#       p017 (structured PM-doc, flowing prose), p018 (short-form)
+#   * 3 partial (3 of 4): p006 (T,T,T,F — names+mechanism+constraint,
+#       no map/PM-error), p008 (F,T,T,F — mechanism+constraint, no
+#       framing, no map), p010 (F,T,T,F — same shape)
+#   * 1 partial (2 of 4): p007 (T,F,F,T — names+maps by task shape,
+#       mechanism asserted not explained, constraint not identified)
+#   * 3 partial (1 of 4): p009 (T,F,F,F), p011 (T,F,F,F),
+#       p021 (T,F,F,F) — the c1/c3-overlap watch-pairs
+#   * 6 all-missed on-topic: p004, p012, p014, p015, p019, p020
+#   * 2 off-topic, all-missed, gradable (NOT flagged): p003 (pivots
+#       to Unit 15 governance — should an agent touch deals at all),
+#       p013 (pivots to orchestration-framework / infra choice)
+#   * 0 flagged-expected (retired per UNIT_11_GATE.md)
+#   Check: 6 + 3 + 1 + 3 + 6 + 2 = 21.
+#
+# T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
+# flagged = grader uncertainty, NOT "answer is bad." Off-topic
+# answers the grader can confidently grade all-not-met are
+# gradable — flagged: false.
+#
+# GATE: PENDING. This set has not yet been run against the live
+# grader. Per docs/REGRESSION_GATE.md a full live re-run at
+# --threshold 80 is required before Unit 14 flips draft -> published
+# (new authoring is gate-required, not exempt). Structural
+# validators (lint_unit_markdown, ingest_units --check,
+# run_regression_set --check) pass; the operator runs the live
+# grader gate.
+
+unit_id: agents-bundle-0
+
+description: |
+  Phase 3 / Unit 14 flagship gate set. Authored against the
+  post-c2-split 4-criterion rubric (Unit 14 was drafted after the
+  split, so no retroactive decomposition was needed). Modeled
+  structurally on tool-use-bundle-0.yml (Unit 12), the cleanest
+  gate-passing "three coupled decisions" reference. 21 pairs under
+  the cumulative authoring constraints: zero flagged-expected, no
+  parenthetical option-lists, no markdown headers, no quote-led
+  sentences, English-only, AND-clause strict authoring. Content is
+  the deal-desk-assistant decision prompt from the unit. Watch-pairs
+  p009/p011/p021 probe the c1/c3 overlap (paper-judged c3=F, as
+  confirmed on Units 11/12). GATE PENDING — operator runs the live
+  Sonnet 4.6 grader at --threshold 80 before publish.
+
+pairs:
+  - id: p001
+    label: All four met, balanced prose covering the three decisions and the deal-desk task shape
+    answer: |
+      Eng saying give the model the tools and let it figure out the
+      steps is the trap. Building an agent here is not one decision
+      but three coupled ones, and the combination is what decides
+      whether this is a reliable pipeline or expensive theater.
+
+      The first decision is how much to decompose: a single call, a
+      fixed workflow we design in advance, or a model-directed loop
+      that picks its own next step. The second is how the loop
+      terminates: a fixed step budget, the model judging itself done,
+      or an external verifier that checks the goal is actually met.
+      The third is where errors are caught: let them compound,
+      validate each step, or check only the end state. These
+      constrain each other — a model-directed loop forces a real
+      termination guard because the model cannot be trusted to stop
+      itself, and compounding error is only survivable on a short
+      fixed workflow.
+
+      The deal-desk task has knowable steps: pull the contract
+      history, check the current pricing rules, flag non-standard
+      terms, draft the approval summary. That shape is a fixed
+      workflow with a step budget and per-step validation, the
+      reliable-pipeline combination, not a model-directed loop. The
+      failure eng would ship by letting the model figure out the
+      steps is the expensive theater: end-to-end reliability is the
+      product of per-step reliability, so four 90-percent steps land
+      around 66 percent end-to-end, and an unbounded loop has no cost
+      ceiling — it can wander through a dozen tool calls toward a
+      wrong summary and bill for every one. Before launch I want the
+      termination guard and the per-step validation decided
+      explicitly, because neither shows up in the clean-opportunity
+      demo.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p002
+    label: All four met, terse engineering voice
+    answer: |
+      Three coupled decisions, not one. Decompose: single call,
+      fixed workflow, or model-directed loop. Terminate: step
+      budget, model self-assessment, or external verifier. Catch
+      errors: let them compound, per-step validation, or end-state
+      check. Coupled, because a model-directed loop forces a
+      termination guard the model cannot supply itself, and
+      compounding error only survives on a short fixed workflow.
+
+      Deal-desk steps are knowable: pull history, check pricing,
+      flag terms, draft summary. That is a fixed workflow plus a
+      step budget plus per-step validation, the reliable-pipeline
+      shape.
+
+      Let-the-model-figure-it-out defaults to a model-directed loop
+      with no real termination guard and no per-step check. That is
+      the expensive theater: reliability multiplies, so four
+      90-percent steps is about 66 percent end-to-end, and cost adds
+      with step count, so an unbounded loop has no ceiling and bills
+      for every wandering call. Demos clean on one opportunity,
+      operates badly across the real distribution. Force the
+      termination and error-catching decisions before launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p003
+    label: Off-topic, gradable, pivots to Unit 15 governance — should an agent touch deals at all
+    answer: |
+      Before we design any loop, the real question is whether a
+      model should be drafting finance-facing approval summaries on
+      live deals at all. A wrong pricing concession or a missed
+      non-standard term is a revenue and compliance exposure, and
+      that is a governance call, not an engineering one. I would want
+      deal-desk leadership and finance to decide whether a human
+      signs off on every summary regardless of how the assistant is
+      built, and I would lean toward a mandatory human approval gate
+      on anything that moves a number. The internal architecture is
+      secondary to that authorization decision.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p004
+    label: All-missed on-topic — "just give it the tools and a loop, models are good at this now"
+    answer: |
+      Agent frameworks are mature enough that this is mostly an
+      integration task. We give the model the four tools it needs
+      and let it run its own loop until it produces the approval
+      summary. Modern models are good at planning multi-step work,
+      so the loop will figure out the order on its own and adapt when
+      something is missing. There is not really a product decision
+      here beyond writing good tool descriptions and a clear goal
+      prompt. I would let eng wire it up and spend our time on the
+      summary formatting instead.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p005
+    label: All four met, been-bitten experiential voice
+    answer: |
+      I shipped this mistake once. We gave a research assistant a
+      goal and a set of tools and let it decide its own steps, with
+      the model declaring when it was done. It demoed like magic. In
+      production it would occasionally decide it needed just one more
+      lookup, then another, and we had runs that burned thirty tool
+      calls and a few dollars each wandering toward an answer that
+      was wrong anyway.
+
+      That taught me an agent is three coupled decisions. How much to
+      decompose runs from a single call to a fixed workflow to a
+      model-directed loop. How it terminates runs from a fixed step
+      budget to model self-assessment to an external verifier. Where
+      errors are caught runs from letting them compound to per-step
+      validation to an end-state check. They are coupled, because the
+      moment you let the model direct the loop you have committed to
+      a real termination guard, since the model is the worst judge of
+      whether it is finished, and compounding error is only tolerable
+      on a short fixed sequence.
+
+      The deal-desk task is a fixed workflow wearing an agent
+      costume. The steps are knowable in advance, so the right shape
+      is a fixed workflow with a step budget and per-step validation,
+      the reliable-pipeline combination. The expensive-theater
+      failure is real here: reliability is the product of per-step
+      reliability, so an unchecked four-step run is well under its
+      per-step rate, and an unbounded loop has no cost ceiling. The
+      termination and validation decisions are the ones nobody makes
+      until an incident makes them.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p006
+    label: Partial credit (c1+c2+c3) — names the three coupled decisions, explains the mechanism, identifies the constraint, but never maps a combination to the task shape or names the PM error
+    answer: |
+      Building an agent is three coupled decisions, not one. How much
+      to decompose, from a single call to a fixed workflow to a
+      model-directed loop. How the loop terminates, from a fixed step
+      budget to model self-assessment to an external verifier. Where
+      errors are caught, from letting them compound to per-step
+      validation to an end-state check. The combination is what
+      matters, and the decisions constrain each other: a
+      model-directed loop forces a termination guard because the
+      model cannot be trusted to stop itself, and compounding error
+      is only survivable on a short fixed workflow.
+
+      The mechanism that bites is two-sided. End-to-end reliability
+      is roughly the product of per-step reliability, so a loop with
+      no per-step validation gets less reliable the longer it runs —
+      four 90-percent steps land near 66 percent. And cost scales
+      with step count, so a loop with no step budget has no ceiling
+      and bills for every reasoning turn and tool round-trip. The
+      team needs to choose these deliberately rather than inherit a
+      default loop.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p008
+    label: Partial credit (c2+c3) — explains the mismatch mechanism and the constraint, but never frames the three decisions (c1) or maps a combination to the task (c4)
+    answer: |
+      The thing that will bite is the interaction between letting the
+      model run its own loop and never bounding it. If the model
+      decides its own next step and also decides when it is done,
+      nothing stops a run from compounding: each step has some error
+      rate, and because end-to-end reliability is the product of the
+      per-step rates, an unchecked four or five step run drifts well
+      below the per-step number, while the cost climbs with every
+      extra turn because there is no ceiling on how long it goes.
+
+      The deeper point is that these are not independent settings.
+      Once you hand the loop to the model, you have implicitly
+      committed to a real termination guard, because the model is
+      exactly the component that cannot reliably tell whether the
+      goal is met. And letting errors compound is only safe on a
+      short, fixed sequence; the longer and more model-directed the
+      loop, the more per-step validation stops being optional. The
+      leniency in one choice forces rigor in another.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p007
+    label: Partial credit (c1+c4) — names the three coupled decisions and maps the deal-desk task to reliable-pipeline with the PM error, but the mechanism is asserted rather than explained and the constraint is not identified
+    answer: |
+      An agent is three coupled decisions: how much to decompose, how
+      the loop terminates, and where errors are caught. The
+      combination is what produces the feel rather than any single
+      pick.
+
+      For the deal-desk assistant the right combination is a fixed
+      workflow with a step budget and per-step validation, the
+      reliable-pipeline shape, because the steps are knowable in
+      advance — pull history, check pricing, flag terms, draft the
+      summary. A true-agent shape with a model-directed loop and an
+      external verifier would fit a task whose steps genuinely cannot
+      be predetermined, but this is not that task. Eng's instinct to
+      give the model the tools and let it figure out the steps is the
+      classic expensive theater: paying agent cost, latency, and
+      unpredictability for a task a fixed workflow would have handled,
+      with no capability gain. It will demo fine on a clean
+      opportunity and operate badly across the real spread.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p009
+    label: Single criterion (c1) — cleanly names the three coupled decisions and says decide them together, but never identifies the specific mutual constraint (c1/c3-overlap watch-pair)
+    answer: |
+      Building an agent is not a single decision. It is three coupled
+      ones, and the team should decide them together rather than
+      inherit a default loop. The first is how much to decompose, from
+      a single call to a fixed workflow to a model-directed loop. The
+      second is how the loop terminates, from a fixed step budget to
+      the model judging itself done to an external verifier. The
+      third is where errors are caught, from letting them compound to
+      per-step validation to an end-state check. These are coupled,
+      so the combination is what determines how the feature behaves,
+      and they should not be treated as three independent toggles set
+      in isolation.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p010
+    label: Single criterion (c2) — explains the compounding-error and runaway-cost mechanism and gestures at the constraint, but never frames the three decisions or maps a combination
+    answer: |
+      The core thing that goes wrong is that a model-directed loop
+      with nothing bounding it gets both less reliable and more
+      expensive the longer it runs. Reliability across a sequence is
+      roughly the product of the per-step reliabilities, so a step
+      that is ninety percent reliable run five times with no
+      intermediate check lands around fifty-nine percent end-to-end —
+      a feature that works in the one-step demo and fails two times
+      in five in production. The cost moves the same way: every loop
+      turn is a model call plus a tool round-trip, the latency is
+      serialized so the user waits for the sum, and with no step
+      budget there is no ceiling on either. And the reason this is
+      hard to bolt on afterward is that the looseness and the
+      bounding are entangled — once the model directs the loop, only
+      a guard outside the model can decide it is actually done.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p011
+    label: Single criterion (c1) — names the three coupled decisions but dismisses termination as a framework detail, committing the skip-the-termination-decision error c3 warns against (c1/c3-overlap watch-pair)
+    answer: |
+      An agent is three coupled decisions: how much to decompose, how
+      it terminates, and where errors are caught. The combination is
+      what matters, so they should be chosen together.
+
+      For the deal-desk assistant the right shape is a fixed workflow
+      over the four known steps, the reliable-pipeline combination,
+      because the work is predictable. Defaulting to a free-running
+      loop is the usual mistake of treating this as one inherited
+      decision.
+
+      Termination mostly takes care of itself once the workflow is
+      fixed, so it is really an implementation detail the agent
+      framework handles rather than a product decision. The two
+      decisions worth our attention are decomposition and error
+      handling; the framework will stop the loop sensibly on its own.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p012
+    label: All-missed on-topic — "always model-directed, fixed workflows are legacy"
+    answer: |
+      The whole point of using an agent is to let the model handle
+      the planning, so a model-directed loop is the right call here.
+      Hard-coding a fixed workflow is the legacy way of doing this —
+      it is brittle and breaks the moment a deal does not fit the
+      script. If we let the model decide its own steps it will adapt
+      to non-standard opportunities automatically, which is exactly
+      the hard case. I would give it the tools, a clear goal, and let
+      it run until it is confident it has the summary. Fixed
+      workflows are a step backward when the model can orchestrate
+      itself.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p013
+    label: Off-topic, gradable, pivots to orchestration-framework / infra choice
+    answer: |
+      The decision that actually matters here is which orchestration
+      framework we standardize on. LangGraph, a custom state machine,
+      or one of the managed agent platforms all give us different
+      tradeoffs around observability, state persistence, and how easy
+      it is to swap the underlying model later. I would push eng to
+      evaluate two or three frameworks against our deal-desk tools
+      before writing any loop logic, because the framework choice
+      determines what we can monitor and how we recover. Get the
+      platform decision right first and the rest of the design
+      follows from it.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p014
+    label: All-missed on-topic — "skip the step budget, the model will stop itself"
+    answer: |
+      I would not over-engineer the termination logic. Modern models
+      are good at knowing when they have finished a task, so we can
+      let the deal-desk assistant decide for itself when the approval
+      summary is complete and stop there. Adding a fixed step budget
+      just risks cutting the model off mid-task on a complicated deal
+      that genuinely needed a few more lookups. Trust the model to
+      self-assess completion, and only revisit if we see runs that
+      obviously go off the rails. Self-termination is the flexible
+      default and the step budget is a blunt instrument we probably
+      do not need.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p015
+    label: All-missed on-topic — "agents are just prompt engineering with tools"
+    answer: |
+      At the end of the day an agent is just a good prompt plus some
+      tools. The lever that matters is the system prompt that tells
+      the model how to approach the deal-desk task and how to use
+      each tool. If we write that carefully, the model will run the
+      steps in a sensible order and produce a good summary. Whether
+      we call it a workflow or a loop is mostly terminology; the real
+      work is the prompt and the tool descriptions. I would focus the
+      team there and treat the orchestration as boilerplate around a
+      well-written prompt.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p016
+    label: All four met, long-narrative voice
+    answer: |
+      Let me walk through why letting the model figure out the steps
+      is the wrong instinct for the deal-desk assistant, because the
+      reasoning is the whole point.
+
+      Building an agent looks like one decision and is really three,
+      and the three are coupled. The first is how much to decompose,
+      which ranges from a single call, to a fixed workflow we lay out
+      in advance, to a model-directed loop that chooses its own next
+      action each turn. The second is how the loop terminates, which
+      ranges from a fixed budget on the number of steps, to the model
+      declaring itself done, to an external verifier that checks
+      whether the goal was actually met. The third is where errors
+      are caught, which ranges from letting them compound, to
+      validating each step before the next consumes it, to checking
+      only the final result.
+
+      What makes this one coupled decision rather than three
+      independent ones is that the choices reinforce or undermine
+      each other. The moment you let the model direct the loop, you
+      have committed to a real termination guard, because the model
+      is precisely the component that cannot be trusted to know when
+      it is finished. And letting errors compound is only survivable
+      on a short fixed sequence; the longer and more model-directed
+      the loop, the more per-step validation stops being optional.
+
+      The deal-desk task has knowable steps. Pull the account's
+      contract history, check the current pricing rules, flag any
+      non-standard terms, and draft the approval summary. That is a
+      fixed workflow with a step budget and per-step validation, the
+      reliable-pipeline shape, not a model-directed loop. The failure
+      the team would ship by inheriting the loop is the expensive
+      theater: end-to-end reliability is the product of the per-step
+      rates, so an unchecked multi-step run drifts well below its
+      per-step reliability, and an unbounded loop has no cost ceiling,
+      so it can wander through many tool calls toward a wrong summary
+      and bill for all of them. The termination and error-catching
+      decisions are the ones that never get made until an incident
+      makes them, because the clean-opportunity demo never runs long
+      enough to drift.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p017
+    label: All four met, structured PM-doc voice in flowing prose, no headers or parentheticals
+    answer: |
+      Scoping the deal-desk assistant. There are three coupled
+      decisions and the combination produces the behavior, so they
+      have to be decided together rather than inherited from whatever
+      loop the framework gives us.
+
+      The first decision is how much to decompose, which runs from a
+      single call to a fixed workflow we design to a model-directed
+      loop that picks its own next step. The second is how the loop
+      terminates, which is either a fixed step budget, the model
+      judging itself complete, or an external verifier that checks
+      the goal is met. The third is where errors are caught, which is
+      either letting them compound, validating each step, or checking
+      only the end state. These are coupled because a model-directed
+      loop forces a real termination guard, since the model cannot be
+      trusted to stop itself, and compounding error is only survivable
+      on a short fixed workflow.
+
+      The recommended combination for this task is a fixed workflow
+      with a step budget and per-step validation, the
+      reliable-pipeline shape, because the deal-desk steps are
+      knowable in advance and each one is checkable. The rationale
+      for not letting the model figure out the steps is that the
+      task is a fixed workflow wearing an agent costume, and building
+      the loop anyway is the expensive theater: reliability is the
+      product of per-step reliability so an unchecked run drifts
+      below its per-step rate, and cost scales with step count so an
+      unbounded loop has no ceiling. The risk if this analysis is
+      skipped is that the termination and validation decisions are
+      never made, because they have no happy-path demo, and a
+      production incident makes them for us.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p018
+    label: All four met, short-form
+    answer: |
+      Three coupled decisions, not one. How much to decompose, how
+      the loop terminates, where errors are caught. Coupled because a
+      model-directed loop forces a termination guard the model cannot
+      supply itself, and compounding error only survives a short
+      fixed workflow.
+
+      Deal-desk steps are knowable, so it is a fixed workflow with a
+      step budget and per-step validation, the reliable-pipeline
+      shape.
+
+      Letting the model figure out the steps is the expensive
+      theater: reliability multiplies, so an unchecked four-step run
+      lands well under its per-step rate, and cost adds with steps,
+      so an unbounded loop has no ceiling. Demos clean, operates
+      badly. Decide termination and error-catching before launch.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: true
+        - position: 3
+          met: true
+        - position: 4
+          met: true
+      flagged: false
+
+  - id: p019
+    label: All-missed on-topic — "let errors compound, an end-state check is enough"
+    answer: |
+      We do not need to validate every intermediate step. That is
+      expensive and slow. The simpler design is to let the assistant
+      run the whole task and then check the final approval summary
+      before it goes to finance. If the end state looks right, the
+      intermediate steps were right; if it looks wrong, we re-run.
+      One check at the end is much cheaper than a check after every
+      tool call, and it catches the only thing that matters, which is
+      whether the summary is correct. Validate the output, not the
+      process.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p020
+    label: All-missed on-topic — "ship the loop now, add guardrails later if needed"
+    answer: |
+      The fastest path is to ship the model-directed loop now and add
+      guardrails only if we see problems. Premature step budgets and
+      per-step validation are the kind of over-engineering that slows
+      a launch for failures that may never happen. Get the agent in
+      front of the deal-desk team, watch how it does on real
+      opportunities, and then decide whether termination limits or
+      validation are worth building. Adding complexity before we have
+      evidence we need it is wasted effort. Ship the simple loop,
+      iterate on guardrails from real usage.
+    expected:
+      criteria:
+        - position: 1
+          met: false
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
+
+  - id: p021
+    label: Single criterion (c1) — names the three coupled decisions and maps the task, but the constraint is stated only as generic "mismatched pieces interact poorly" without the specific mutual constraint (c1/c3-overlap watch-pair)
+    answer: |
+      An agent is three coupled decisions: how much to decompose, how
+      the loop terminates, and where errors are caught. They are
+      coupled, so the combination is what matters rather than any
+      single choice.
+
+      For the deal-desk assistant the right combination is a fixed
+      workflow over the four known steps with a step budget, the
+      reliable-pipeline shape, because the task is predictable and a
+      model-directed loop would be overkill. Defaulting to whatever
+      loop the framework provides is the standard mistake of treating
+      this as one decision.
+
+      If the combination is wrong things will generally go badly and
+      the feature will feel unreliable, because mismatched pieces
+      tend to interact poorly and produce a worse outcome overall.
+      The important part is picking the combination that matches the
+      task, and a poor match will degrade quality in the ways you
+      would expect.
+    expected:
+      criteria:
+        - position: 1
+          met: true
+        - position: 2
+          met: false
+        - position: 3
+          met: false
+        - position: 4
+          met: false
+      flagged: false
