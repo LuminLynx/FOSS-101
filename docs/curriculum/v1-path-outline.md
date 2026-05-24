@@ -619,3 +619,50 @@ floor.
 **For future authoring sessions.** Default = ≥ 20 pairs.
 Deviations (10–19 pairs) need an explicit rationale at slot (d)
 authoring time, recorded in the regression-set YAML header.
+
+---
+
+## Process discipline — source verification (2026-05-24)
+
+**The rule.** Every source on a unit (the `sources:` front-matter:
+url, title, date) must be **web-verified before that unit's gate
+run** — confirm the URL resolves to the cited work, and that the
+title, authors, and date are accurate. LLM-drafted sources are a
+starting point, never the shipped artifact. This is the source-side
+companion to `STRATEGY.md` TR2 ("the LLM produces drafts; the human
+ships") and to T1 Q2 ("every claim human-verified before publish").
+
+**Why it's a discipline now.** The schema linter checks only that
+sources are *well-formed* (url + title + date present) — not that
+the URL *resolves* or that the metadata is *correct*. Units 14 and
+15 were authored with LLM-drafted sources that were not web-checked
+at authoring time. A later verification pass (2026-05-24) found the
+*Building effective agents* source pointed at a non-resolving
+`/engineering/` path — and the same wrong URL had already shipped in
+**Unit 12 (published)**, plus a title typo in Unit 15. All real, all
+invisible to the linter. Reactive verification works but lets errors
+reach `main`; doing it at authoring time stops them at the editor.
+
+**The check (per unit, before the gate).**
+
+- Open every source URL; confirm it resolves to the cited work
+  (papers: confirm the arXiv id / DOI; provider docs: confirm the
+  current canonical path, since provider docs move).
+- Confirm title, author list, and date match the source.
+- Confirm each calibration-tagged claim traces to one of the listed
+  sources (topical match at minimum; the human owns final sign-off).
+- Record nothing extra in the file — the gate doc already notes the
+  unit passed; a clean verification needs no artifact beyond correct
+  front-matter.
+
+**Tooling note.** Direct page fetches may be blocked (e.g. arXiv /
+some provider docs return 403 to automated fetchers); web *search*
+is the reliable verification path in that case — it returns the
+canonical title, authors, date, and URL to check the front-matter
+against.
+
+**Forward-only.** Units 1–13 were gate-passed before this discipline
+was written; their sources are not retroactively swept beyond errors
+already found (the Unit 12 URL fix). The discipline applies from the
+next unit authored (Unit 15's regression set / gate onward) and to
+any unit touched for another reason.
