@@ -2,6 +2,7 @@ package com.example.foss101.ui.path
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lock
@@ -49,6 +51,7 @@ import com.example.foss101.ui.components.AppScreenScaffold
 import com.example.foss101.ui.components.PrimaryActionButton
 import com.example.foss101.ui.components.SectionHeader
 import com.example.foss101.ui.components.screenContentPadding
+import com.example.foss101.ui.theme.LibellaTheme
 import com.example.foss101.viewmodel.PathHomeEvent
 import com.example.foss101.viewmodel.PathHomeUiState
 import com.example.foss101.viewmodel.PathHomeViewModel
@@ -280,10 +283,15 @@ private fun PathNodeRow(
             )
         Card(
             modifier = cardModifier,
+            shape = RoundedCornerShape(2.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = if (locked) 0.dp else 1.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(
+                1.dp,
+                if (locked) LibellaTheme.colors.hairlineSub else LibellaTheme.colors.hairline
+            )
         ) {
             Row(
                 modifier = Modifier
@@ -398,10 +406,12 @@ private fun ReviewRow(
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
+        shape = RoundedCornerShape(2.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
     ) {
         Row(
             modifier = Modifier
