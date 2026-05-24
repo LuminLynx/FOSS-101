@@ -23,9 +23,11 @@ from .repositories import (
     completion_repository,
     grade_repository,
     path_repository,
+    rate_limit_repository,
     review_repository,
     unit_repository,
 )
+from .repositories.rate_limit_repository import RateLimitExceededError
 from .repository import (
     create_user,
     get_term_by_id,
@@ -383,6 +385,26 @@ def post_grade(
                 "message": f"Unit '{unit_id}' has no rubric criteria; nothing to grade.",
             },
         )
+
+    # Cost guard (OWASP LLM10): cap paid grade calls per user. Recorded
+    # before the model call so abusive attempts count even if grading
+    # then fails.
+    try:
+        rate_limit_repository.check_and_record_grade_attempt(current_user_id)
+    except RateLimitExceededError as exc:
+        response = _envelope_response(
+            status_code=429,
+            data=None,
+            error={
+                "code": "RATE_LIMITED",
+                "message": (
+                    f"Grade rate limit reached ({exc.limit} per "
+                    f"{exc.window_seconds}s). Try again later."
+                ),
+            },
+        )
+        response.headers["Retry-After"] = str(exc.retry_after_seconds)
+        return response
 
     try:
         grader_output = grade_decision_answer(unit, request.answer)

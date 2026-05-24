@@ -53,6 +53,15 @@ JWT_SECRET = os.getenv("JWT_SECRET", "change-me-in-production")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRATION_DAYS = int(os.getenv("JWT_EXPIRATION_DAYS", "30"))
 
+# Per-user grade rate limit (OWASP LLM10 — unbounded consumption). Each
+# grade call is a paid model call; cap attempts per user over a sliding
+# window. Defaults are generous for genuine practice (a learner won't
+# legitimately grade 30 answers an hour) but bound scripted cost abuse.
+GRADE_RATE_LIMIT_MAX = int(os.getenv("GRADE_RATE_LIMIT_MAX", "30"))
+GRADE_RATE_LIMIT_WINDOW_SECONDS = int(
+    os.getenv("GRADE_RATE_LIMIT_WINDOW_SECONDS", "3600")
+)
+
 
 # Default values that must NOT appear in a production deployment.
 # POSTGRES_PASSWORD is intentionally absent from this tuple — it's

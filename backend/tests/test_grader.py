@@ -27,8 +27,10 @@ from app.main import app
 from app.repositories import (
     completion_repository,
     grade_repository,
+    rate_limit_repository,
     unit_repository,
 )
+from app.repositories.rate_limit_repository import RateLimitExceededError
 
 
 @pytest.fixture
@@ -210,6 +212,9 @@ def test_grade_endpoint_returns_502_when_grader_fails(
         raise AIServiceError("synthetic failure", code="AI_REQUEST_FAILED")
 
     monkeypatch.setattr("app.main.grade_decision_answer", _raise)
+    monkeypatch.setattr(
+        rate_limit_repository, "check_and_record_grade_attempt", lambda *a, **k: None
+    )
 
     response = client.post(
         "/api/v1/units/u-1/grade",
@@ -290,6 +295,9 @@ def test_grade_endpoint_persists_completion_and_grades(
     monkeypatch.setattr("app.main.grade_decision_answer", _grader)
     monkeypatch.setattr(completion_repository, "record_completion", _record_completion)
     monkeypatch.setattr(grade_repository, "upsert_grades", _upsert)
+    monkeypatch.setattr(
+        rate_limit_repository, "check_and_record_grade_attempt", lambda *a, **k: None
+    )
 
     response = client.post(
         "/api/v1/units/u-1/grade",
@@ -304,6 +312,40 @@ def test_grade_endpoint_persists_completion_and_grades(
     assert {q["criterionId"] for q in body["answerQuotes"]} == {11, 12}
     assert captured["answer"] == "tokens not characters or words"
     assert captured["completion_id"] == 42
+
+
+def test_grade_endpoint_returns_429_when_rate_limited(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
+) -> None:
+    monkeypatch.setattr(
+        unit_repository,
+        "get_unit",
+        lambda unit_id: {
+            "id": unit_id,
+            "rubric": {"criteria": [{"id": 1, "text": "c1"}]},
+        },
+    )
+
+    def _block(*_args: Any, **_kwargs: Any) -> None:
+        raise RateLimitExceededError(retry_after_seconds=42, limit=30, window_seconds=3600)
+
+    monkeypatch.setattr(
+        rate_limit_repository, "check_and_record_grade_attempt", _block
+    )
+
+    def _should_not_run(*_args: Any, **_kwargs: Any) -> None:
+        raise AssertionError("grader must not be called once rate-limited")
+
+    monkeypatch.setattr("app.main.grade_decision_answer", _should_not_run)
+
+    response = client.post(
+        "/api/v1/units/u-1/grade",
+        json={"answer": "anything"},
+        headers=auth_header,
+    )
+    assert response.status_code == 429
+    assert response.json()["error"]["code"] == "RATE_LIMITED"
+    assert response.headers["Retry-After"] == "42"
 
 
 def test_grade_request_rejects_empty_answer(
@@ -367,3 +409,42 @@ def test_upsert_drops_grades_for_criteria_not_in_submission(gated_db) -> None:
         "stale criterion row should be deleted on re-grade"
     )
     assert second[0]["confidence"] == pytest.approx(0.95)
+
+
+def test_rate_limit_allows_under_cap_then_blocks(gated_db) -> None:
+    """Per-user grade limiter: allow up to the cap, then 429 (raise).
+
+    Counts grade attempts in a sliding window; the (cap+1)-th attempt in
+    the window must raise RateLimitExceededError with a positive
+    Retry-After, and must not record a row (so the user isn't penalized
+    past the cap).
+    """
+    from .conftest import seed_path_with_units
+
+    seed = seed_path_with_units(gated_db)
+    user_id = seed["user_id"]
+
+    # Three attempts allowed under a cap of 3.
+    for _ in range(3):
+        rate_limit_repository.check_and_record_grade_attempt(
+            user_id, max_attempts=3, window_seconds=3600
+        )
+
+    # Fourth attempt within the window is blocked.
+    with pytest.raises(RateLimitExceededError) as exc_info:
+        rate_limit_repository.check_and_record_grade_attempt(
+            user_id, max_attempts=3, window_seconds=3600
+        )
+    assert exc_info.value.retry_after_seconds >= 1
+    assert exc_info.value.limit == 3
+
+    # A different user is unaffected (per-user, not global).
+    with gated_db() as conn:
+        conn.execute(
+            "INSERT INTO users (id, email, password_hash, display_name) "
+            "VALUES ('u-other', 'other@example.com', 'x', 'Other')"
+        )
+        conn.commit()
+    rate_limit_repository.check_and_record_grade_attempt(
+        "u-other", max_attempts=3, window_seconds=3600
+    )
