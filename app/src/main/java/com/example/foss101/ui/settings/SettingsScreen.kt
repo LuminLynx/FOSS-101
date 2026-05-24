@@ -238,7 +238,7 @@ private fun ThemeSegmentedControl(
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     color = tint,
                     maxLines = 1
                 )
