@@ -34,8 +34,8 @@ sources:
     title: "Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn, Cassano, Berman, Gopinath, Narasimhan, Yao)"
     date: 2023-03-20
     primary_source: true
-  - url: "https://www.anthropic.com/engineering/building-effective-agents"
-    title: "Anthropic — Building Effective Agents (workflows vs. agents; use the simplest solution and add complexity only when it demonstrably improves outcomes)"
+  - url: "https://www.anthropic.com/news/building-effective-agents"
+    title: "Anthropic — Building effective agents (workflows vs. agents; use the simplest solution and add complexity only when it demonstrably improves outcomes)"
     date: 2026-05-22
     primary_source: true
   - url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"

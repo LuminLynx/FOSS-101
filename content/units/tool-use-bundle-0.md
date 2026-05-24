@@ -34,8 +34,8 @@ sources:
     title: "Google Cloud — Vertex AI function calling (function declarations)"
     date: 2026-05-17
     primary_source: true
-  - url: "https://www.anthropic.com/engineering/building-effective-agents"
-    title: "Anthropic — Building Effective Agents (workflows vs. agents; simplest solution first)"
+  - url: "https://www.anthropic.com/news/building-effective-agents"
+    title: "Anthropic — Building effective agents (workflows vs. agents; simplest solution first)"
     date: 2026-05-17
     primary_source: true
   - url: "https://arxiv.org/abs/2210.03629"
