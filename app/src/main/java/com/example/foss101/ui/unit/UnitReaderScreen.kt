@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -148,15 +149,29 @@ private fun LoadedBody(
         // server-synced, so a fresh device still won't re-show it). Kept small,
         // muted, upright (not italic), and divided from the content so it reads
         // as a quiet aside rather than a competing pull-quote.
-        if (showIntro) {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        
+                if (showIntro) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
+                )
                 Text(
                     text = "Each unit is a short read, then a decision prompt — " +
                         "answer in your own words, and you'll get a grade against its rubric.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
         }
 
