@@ -203,6 +203,17 @@ def test_validator_verifies_quote_against_fence_escaped_answer() -> None:
     assert out.grades[0]["criterion_id"] == 1
 
 
+def test_get_client_configures_retries_and_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    # M6: the client must carry explicit retry/timeout so a rate-limited
+    # grade self-paces (SDK honors Retry-After) instead of erroring, and a
+    # hung request can't block forever.
+    monkeypatch.setattr(ai_service, "AI_PROVIDER_API_KEY", "sk-ant-dummy-key")
+    monkeypatch.setattr(ai_service, "AI_MAX_RETRIES", 7)
+    monkeypatch.setattr(ai_service, "AI_REQUEST_TIMEOUT_SECONDS", 33.0)
+    client = ai_service._get_client()
+    assert client.max_retries == 7
+
+
 def test_extract_usage_pulls_known_fields() -> None:
     """Real Anthropic responses carry usage on a SDK Pydantic model.
     `_extract_usage` must read the cache-related fields too; the

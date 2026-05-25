@@ -37,7 +37,13 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from .config import AI_MODEL, AI_PROVIDER, AI_PROVIDER_API_KEY
+from .config import (
+    AI_MAX_RETRIES,
+    AI_MODEL,
+    AI_PROVIDER,
+    AI_PROVIDER_API_KEY,
+    AI_REQUEST_TIMEOUT_SECONDS,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -139,7 +145,11 @@ def _get_client():
         raise AIUnavailableError("AI_PROVIDER_API_KEY is not configured.")
     import anthropic
 
-    return anthropic.Anthropic(api_key=AI_PROVIDER_API_KEY)
+    return anthropic.Anthropic(
+        api_key=AI_PROVIDER_API_KEY,
+        max_retries=AI_MAX_RETRIES,
+        timeout=AI_REQUEST_TIMEOUT_SECONDS,
+    )
 
 
 def _build_cached_context(unit: dict[str, Any]) -> str:
