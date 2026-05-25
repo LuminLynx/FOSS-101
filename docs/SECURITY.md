@@ -147,7 +147,7 @@ If you believe you've found a security issue in Libella, please report it
 privately rather than opening a public issue or PR that describes the
 weakness.
 
-- **Contact:** joaoport@pm.me
+- **Contact:** libella-llm@pm.me
 - Please include enough detail to reproduce, and give us reasonable time to
   remediate before any public discussion.
 - We will not pursue good-faith research that respects user privacy, avoids
