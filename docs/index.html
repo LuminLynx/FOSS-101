@@ -1,322 +1,499 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Libella — AI fluency for product decisions</title>
-  <meta name="description" content="Libella is an Android learning path for product professionals learning LLM systems through trade-offs, rubrics, evals, RAG, and calibrated AI grading.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://luminlynx.github.io/Libella/">
+<meta charset="utf-8" />
+<title>Libella — Decision-grade fluency in LLM systems</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="A focused Android app teaching LLM systems to product managers, one trade-off at a time. For senior PMs who'd rather decide right than read fast." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://luminlynx.github.io/Libella/" />
 
-  <meta property="og:title" content="Libella — AI fluency for product decisions">
-  <meta property="og:description" content="An Android learning path for product professionals learning LLM systems through trade-offs, rubrics, evals, RAG, and calibrated AI grading.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://luminlynx.github.io/Libella/">
-  <meta property="og:site_name" content="Libella">
+<meta property="og:title" content="Libella — Decision-grade fluency in LLM systems" />
+<meta property="og:description" content="Twenty trade-offs. One PM, deciding. No streaks, no badges, no daily nudge." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://luminlynx.github.io/Libella/" />
+<meta property="og:site_name" content="Libella" />
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Libella — AI fluency for product decisions">
-  <meta name="twitter:description" content="An Android learning path for product professionals learning LLM systems through trade-offs, rubrics, evals, RAG, and calibrated AI grading.">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Libella — Decision-grade fluency in LLM systems" />
+<meta name="twitter:description" content="Twenty trade-offs. One PM, deciding. No streaks, no badges, no daily nudge." />
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0b1020;
-      --panel: #151d36;
-      --text: #f6f8ff;
-      --muted: #b8c2dc;
-      --line: rgba(255,255,255,.15);
-      --accent: #9bb7ff;
-      --green: #90e7b8;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+<link rel="icon" href="assets/libella-mark.svg" />
 
-    * {
-      box-sizing: border-box;
-    }
+<!-- Promo bundle is standalone but rides on the project's token sheet -->
+<link rel="stylesheet" href="colors_and_type.css" />
 
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top left, rgba(91, 126, 255, .35), transparent 30rem), var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
+<style>
+  /* Follow the visitor's OS light/dark preference — the token sheet
+     (colors_and_type.css) defines light as the default :root and dark
+     via @media (prefers-color-scheme: dark). */
+  html { color-scheme: light dark; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper-0); color: var(--ink-1);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  a { color: var(--oxblood); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 
-    .wrap {
-      width: min(1080px, calc(100% - 32px));
-      margin: 0 auto;
-    }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  hr.hair { border: 0; border-top: 1px solid var(--hair-1); margin: 0; }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 0;
-    }
+  /* ─── Top nav ────────────────────────────────────────────── */
+  nav.top {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper-0);
+    border-bottom: 1px solid var(--hair-1);
+  }
+  nav.top .row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
+  }
+  .wordmark { display: flex; align-items: center; gap: 10px; }
+  .wordmark img { width: 22px; height: 22px; display: block; }
+  .wordmark .name {
+    font-family: var(--font-display); font-size: 18px; font-weight: 500;
+    color: var(--ink-1); letter-spacing: -0.012em;
+  }
+  nav .grow { flex: 1; }
+  nav a.link {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-2);
+  }
+  nav a.link:hover { color: var(--ink-1); text-decoration: none; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-ui); font-size: 13px; font-weight: 500;
+    padding: 10px 16px; border-radius: 4px; border: 1px solid transparent;
+    cursor: pointer; line-height: 1; transition: background 120ms cubic-bezier(.2,.6,.2,1);
+  }
+  .btn-primary   { background: var(--oxblood); color: #FAF7F0; }
+  .btn-primary:hover { background: #5F2014; text-decoration: none; }
+  .btn-secondary { background: transparent; color: var(--ink-1); border-color: var(--ink-1); }
+  .btn-secondary:hover { background: var(--paper-3); text-decoration: none; }
+  /* On dark, oxblood lifts to a warm salmon — flip the button text dark
+     and lighten the hover so contrast holds. */
+  @media (prefers-color-scheme: dark) {
+    .btn-primary { color: #1C1815; }
+    .btn-primary:hover { background: #E8967D; }
+  }
 
-    .brand {
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: -.03em;
-    }
+  /* ─── Hero ───────────────────────────────────────────────── */
+  .hero { padding: 80px 0 96px; }
+  .hero .eyebrow {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-3);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero .eyebrow .dot { width: 7px; height: 7px; background: var(--oxblood); border-radius: 50%; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 7vw, 84px);
+    line-height: 1.04;
+    font-weight: 400; letter-spacing: -0.018em;
+    margin: 0 0 24px; max-width: 14ch;
+    text-wrap: balance;
+  }
+  .hero h1 em { font-style: italic; color: var(--oxblood); font-weight: 400; }
+  .hero .lede {
+    font-family: var(--font-body);
+    font-size: clamp(18px, 1.6vw, 22px); line-height: 1.55;
+    color: var(--ink-2); margin: 0 0 36px; max-width: 56ch;
+  }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero .meta {
+    margin-top: 56px; display: flex; align-items: center; gap: 20px;
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-3);
+  }
+  .hero .meta .rule { flex: 0 1 80px; height: 1px; background: var(--hair-1); }
 
-    nav {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
+  /* ─── Section heading shared ─────────────────────────────── */
+  section.band { padding: 80px 0; border-top: 1px solid var(--hair-1); }
+  section.band .lede {
+    font-family: var(--font-body); font-size: clamp(17px, 1.4vw, 20px);
+    color: var(--ink-2); line-height: 1.55; margin: 0 0 32px; max-width: 60ch;
+  }
+  .band-h {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 44px); line-height: 1.1;
+    font-weight: 400; letter-spacing: -0.012em;
+    margin: 0 0 12px; max-width: 18ch; text-wrap: balance;
+  }
+  .band-eyebrow {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.16em; color: var(--ink-3);
+    margin-bottom: 16px;
+  }
 
-    a {
-      color: inherit;
-    }
+  /* ─── Thesis (three columns: matters / breaks / costs) ──── */
+  .thesis .cols {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    margin-top: 24px;
+  }
+  .thesis .col {
+    border-top: 1px solid var(--hair-1);
+    padding-top: 20px;
+  }
+  .thesis .col .label {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-3);
+    margin-bottom: 14px;
+  }
+  .thesis .col h3 {
+    font-family: var(--font-display); font-size: 24px; line-height: 1.2;
+    font-weight: 500; margin: 0 0 12px; color: var(--ink-1);
+  }
+  .thesis .col p {
+    font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+    color: var(--ink-2); margin: 0;
+  }
 
-    nav a {
-      color: var(--muted);
-      text-decoration: none;
-    }
+  /* ─── The path ─────────────────────────────────────────── */
+  .path .grid {
+    display: grid; grid-template-columns: 1fr; gap: 0; margin-top: 12px;
+  }
+  .path .unit {
+    display: grid;
+    grid-template-columns: 48px 1fr auto auto;
+    align-items: center; gap: 18px;
+    padding: 18px 0; border-top: 1px solid var(--hair-1);
+  }
+  .path .unit:last-child { border-bottom: 1px solid var(--hair-1); }
+  .path .unit .num { font-family: var(--font-mono); font-size: 13px; color: var(--ink-3); }
+  .path .unit .name { font-family: var(--font-display); font-size: 20px; color: var(--ink-1); font-weight: 500; }
+  .path .unit .name em { font-style: italic; color: var(--oxblood); font-weight: 400; }
+  .path .unit .tag {
+    font-family: var(--font-ui); font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 4px 10px; border-radius: 2px;
+  }
+  /* Calibration-tier chips — colors come from the token sheet so they
+     track light/dark automatically. */
+  .tag-settled   { background: var(--sage-tint);   color: var(--sage); }
+  .tag-contested { background: var(--ochre-tint);  color: var(--ochre); }
+  .tag-locked    { background: var(--mineral-tint); color: var(--mineral); }
+  .tag-upnext    { background: var(--oxblood-tint); color: var(--oxblood); }
+  .path .unit .status {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-3);
+  }
 
-    .hero {
-      padding: 76px 0 56px;
-      max-width: 900px;
-    }
+  /* ─── Screens showcase ─────────────────────────────────── */
+  .screens .strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+    margin-top: 32px;
+  }
+  .screen {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .screen .img {
+    background: var(--paper-2); border: 1px solid var(--hair-1);
+    overflow: hidden; aspect-ratio: 412 / 720;
+  }
+  .screen .img picture { display: block; width: 100%; height: 100%; }
+  .screen .img img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .screen .cap {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-3);
+  }
+  .screen .blurb {
+    font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+    color: var(--ink-1);
+  }
 
-    .pill {
-      display: inline-block;
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--green);
-      background: rgba(255,255,255,.06);
-      font-weight: 800;
-    }
+  /* ─── Calibration ─────────────────────────────────────── */
+  .cal .row {
+    display: grid; grid-template-columns: 120px 1fr;
+    align-items: baseline; gap: 24px;
+    padding: 16px 0; border-top: 1px solid var(--hair-1);
+  }
+  .cal .row:last-child { border-bottom: 1px solid var(--hair-1); }
+  .cal .row .chip {
+    font-family: var(--font-ui); font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 5px 10px; border-radius: 2px;
+    justify-self: start; align-self: center;
+  }
+  .cal .row .claim {
+    font-family: var(--font-body); font-size: 17px; line-height: 1.5;
+    color: var(--ink-1);
+  }
+  .pullquote {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.4vw, 30px); line-height: 1.3;
+    font-weight: 400; color: var(--ink-1);
+    border-left: 2px solid var(--oxblood);
+    padding: 6px 0 6px 24px;
+    margin: 36px 0 0 0;
+    max-width: 36ch;
+  }
+  .pullquote em { font-style: italic; }
 
-    h1 {
-      font-size: clamp(2.8rem, 8vw, 6.4rem);
-      line-height: .92;
-      letter-spacing: -.08em;
-      margin: 22px 0;
-    }
+  /* ─── CTA ─────────────────────────────────────────────── */
+  .cta {
+    text-align: center; padding: 96px 0;
+    border-top: 1px solid var(--hair-1);
+  }
+  .cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px); line-height: 1.1;
+    font-weight: 400; letter-spacing: -0.012em;
+    margin: 0 auto 16px; max-width: 18ch; text-wrap: balance;
+  }
+  .cta h2 em { font-style: italic; color: var(--oxblood); }
+  .cta .lede { max-width: 52ch; margin: 0 auto 32px; }
+  .cta .ctas { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .cta .small {
+    margin-top: 24px;
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-3);
+  }
 
-    .lead {
-      color: var(--muted);
-      font-size: clamp(1.1rem, 2vw, 1.35rem);
-      max-width: 780px;
-    }
+  /* ─── Footer ─────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--hair-1);
+    padding: 32px 0;
+    font-family: var(--font-ui); font-size: 12px;
+    color: var(--ink-3);
+    display: flex; align-items: center; gap: 24px;
+  }
+  footer .grow { flex: 1; }
 
-    .actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 30px;
-    }
-
-    .button {
-      display: inline-flex;
-      min-height: 48px;
-      align-items: center;
-      justify-content: center;
-      padding: 0 18px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 900;
-      border: 1px solid var(--line);
-    }
-
-    .button.primary {
-      background: linear-gradient(135deg, var(--accent), var(--green));
-      color: #07101f;
-      border: 0;
-    }
-
-    section {
-      padding: 42px 0;
-    }
-
-    h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1;
-      letter-spacing: -.05em;
-      margin: 0 0 16px;
-    }
-
-    .copy {
-      color: var(--muted);
-      max-width: 760px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 24px;
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.055);
-      border-radius: 22px;
-      padding: 22px;
-    }
-
-    .card h3 {
-      margin: 0 0 8px;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .units {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 24px;
-      counter-reset: unit;
-    }
-
-    .unit {
-      counter-increment: unit;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      background: var(--panel);
-    }
-
-    .unit:before {
-      content: counter(unit);
-      display: inline-grid;
-      place-items: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 9px;
-      margin-right: 10px;
-      background: rgba(155,183,255,.18);
-      color: var(--accent);
-      font-weight: 900;
-    }
-
-    .unit span {
-      color: var(--green);
-      font-size: .84rem;
-      font-weight: 800;
-      display: block;
-      margin-top: 6px;
-    }
-
-    .banner {
-      border: 1px solid rgba(144,231,184,.35);
-      background: rgba(144,231,184,.08);
-      border-radius: 22px;
-      padding: 22px;
-      color: #d8ffe8;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 34px 0 54px;
-      color: var(--muted);
-    }
-
-    @media (max-width: 780px) {
-      .grid,
-      .units {
-        grid-template-columns: 1fr;
-      }
-
-      header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 14px;
-      }
-    }
-  </style>
+  /* ─── Responsive ─────────────────────────────────────── */
+  @media (max-width: 880px) {
+    .thesis .cols { grid-template-columns: 1fr; gap: 0; }
+    .thesis .col + .col { margin-top: 0; }
+    .screens .strip { grid-template-columns: repeat(2, 1fr); }
+    .path .unit { grid-template-columns: 36px 1fr auto; }
+    .path .unit .status { display: none; }
+    nav .link.hide-md { display: none; }
+    .hero { padding: 56px 0 72px; }
+    section.band { padding: 56px 0; }
+  }
+  @media (max-width: 520px) {
+    .screens .strip { grid-template-columns: 1fr; }
+    .cal .row { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">Libella</div>
-      <nav>
-        <a href="#path">Path</a>
-        <a href="#status">Status</a>
-        <a href="https://github.com/LuminLynx/Libella">GitHub</a>
-      </nav>
-    </header>
 
-    <main>
-      <section class="hero">
-        <div class="pill">Phase 3 in progress · 9 of 20 units published</div>
-        <h1>AI fluency for product decisions.</h1>
-        <p class="lead">
-          Libella is a mobile-native Android learning path for product professionals who need to understand LLM systems well enough to make build, buy, skip, scope, and risk decisions.
-        </p>
-        <div class="actions">
-          <a class="button primary" href="https://github.com/LuminLynx/Libella">View repository</a>
-          <a class="button" href="#path">Explore the v1 path</a>
-        </div>
-      </section>
-
-      <section>
-        <h2>Decision-grade AI literacy, not AI hype.</h2>
-        <p class="copy">
-          Libella teaches LLM systems through product trade-offs: what changes, what breaks, what it costs, what should be measured, and what decision a product leader should make next.
-        </p>
-        <p class="copy">
-          The v1 Android app teaches LLM systems for product managers and product-side professionals: tokenization, context windows, latency, evals, model selection, hallucination, RAG, streaming UX, rubrics, and calibrated AI grading.
-        </p>
-
-        <div class="grid">
-          <article class="card">
-            <h3>Trade-off first</h3>
-            <p>Every unit starts from the product decision, then opens the mechanism only as far as the decision requires.</p>
-          </article>
-
-          <article class="card">
-            <h3>Calibrated reliability</h3>
-            <p>Claims are sourced and confidence-tagged. Uncertainty is treated as a valid answer.</p>
-          </article>
-
-          <article class="card">
-            <h3>Path, not catalog</h3>
-            <p>The core surface is a sequenced learning path. Glossary material supports the path rather than replacing it.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="path">
-        <h2>v1 path: LLM Systems for PMs</h2>
-        <p class="copy">
-          The canonical v1 path is a 20-unit sequence for product professionals learning how LLM-backed products behave in production.
-        </p>
-
-        <div class="units">
-          <div class="unit">Tokenization <span>Published</span></div>
-          <div class="unit">Context Window <span>Published</span></div>
-          <div class="unit">Latency <span>Published</span></div>
-          <div class="unit">Evals <span>Published</span></div>
-          <div class="unit">Model selection <span>Published</span></div>
-          <div class="unit">Prompt design basics <span>Published</span></div>
-          <div class="unit">Hallucination + reliability <span>Published</span></div>
-          <div class="unit">Cost dynamics at scale <span>Published</span></div>
-          <div class="unit">Fine-tuning vs. prompting vs. RAG <span>Published</span></div>
-          <div class="unit">Vector search / RAG fundamentals <span>Locked</span></div>
-          <div class="unit">Streaming UX <span>Locked</span></div>
-          <div class="unit">Tool use, multimodal, agents, safety, operations <span>Planned</span></div>
-        </div>
-      </section>
-
-      <section id="status">
-        <div class="banner">
-          <strong>Development status:</strong> Libella is currently in Phase 3. Phase 1 Foundation and Phase 2 Unit-1 pilot are complete. Phase 3 authoring and engineering continue in parallel. Public launch readiness has not started.
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      Libella · AI fluency for product decisions ·
-      <a href="https://github.com/LuminLynx/Libella">GitHub repository</a>
-    </footer>
+<!-- ─── Nav ─────────────────────────────────────────────── -->
+<nav class="top">
+  <div class="wrap row">
+    <a class="wordmark" href="#top">
+      <picture>
+        <source srcset="assets/libella-mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img src="assets/libella-mark.svg" alt="" />
+      </picture>
+      <span class="name">Libella</span>
+    </a>
+    <div class="grow"></div>
+    <a class="link hide-md" href="#path">The path</a>
+    <a class="link hide-md" href="#screens">Screens</a>
+    <a class="link hide-md" href="https://github.com/LuminLynx/Libella">GitHub</a>
+    <a class="btn btn-primary" href="#beta">Join the beta</a>
   </div>
+</nav>
+
+<!-- ─── Hero ─────────────────────────────────────────────── -->
+<header id="top" class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span> Libella · LLM Systems for PMs</div>
+    <h1>Decision-grade fluency in LLM systems. <em>One trade-off at a time.</em></h1>
+    <p class="lede">
+      A focused Android reader for senior product managers who need to
+      make build / buy / skip calls on AI features — and back the call
+      up with calibrated reasoning. Twenty units, in order, each one a
+      single trade-off. No streaks. No badges. No daily nudge.
+    </p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="#beta">Join the beta</a>
+      <a class="btn btn-secondary" href="https://github.com/LuminLynx/Libella">View on GitHub</a>
+    </div>
+    <div class="meta">
+      <span>Phase 3 · in development</span>
+      <span class="rule"></span>
+      <span>15 / 20 units published</span>
+      <span class="rule"></span>
+      <span>GPL-3.0</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── Thesis ─────────────────────────────────────────── -->
+<section id="thesis" class="band thesis">
+  <div class="wrap">
+    <div class="band-eyebrow">The thesis</div>
+    <h2 class="band-h">A trade-off, not a topic.</h2>
+    <p class="lede">
+      Most AI-fluency content treats PMs like coding-bootcamp students.
+      Libella treats you like the decision-maker you are. Every unit
+      teaches one concept through the same three-question scaffold —
+      because that's how product decisions actually get made.
+    </p>
+    <div class="cols">
+      <div class="col">
+        <div class="label">§ When this matters</div>
+        <h3>Which feature, which call, which Monday.</h3>
+        <p>Each unit names the concrete decisions the concept changes — cost forecasts, latency budgets, vendor comparisons, scoping calls. Not "important to know," but "load-bearing for these decisions."</p>
+      </div>
+      <div class="col">
+        <div class="label">§ When this breaks</div>
+        <h3>The way most teams get it wrong.</h3>
+        <p>Failure modes, named. Estimating cost in words instead of tokens. Treating latency as one number. Shipping streaming UX where output is consumed atomically. The mistakes you can recognize after, but ought to recognize before.</p>
+      </div>
+      <div class="col">
+        <div class="label">§ What it costs</div>
+        <h3>What you'd have to give up to be right.</h3>
+        <p>The discipline the right call demands — naming three latency metrics instead of one, asking eng for benchmarks on your prompt shape, measuring before promising. Cheaper than the failure mode it prevents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── The path ─────────────────────────────────────────── -->
+<section id="path" class="band path">
+  <div class="wrap">
+    <div class="band-eyebrow">The path</div>
+    <h2 class="band-h">Twenty units. <em>One curated order.</em></h2>
+    <p class="lede">
+      One path, in v1. <em>LLM Systems for PMs.</em> Fifteen units are
+      published; the last five — the operating-phase units — lock from
+      real closed-beta signal rather than from the armchair.
+    </p>
+    <div class="grid">
+      <div class="unit"><div class="num">§ 01</div><div class="name">Tokenization</div><div class="tag tag-settled">Settled</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 02</div><div class="name">Context window</div><div class="tag tag-settled">Settled</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 03</div><div class="name">Latency</div><div class="tag tag-settled">Settled</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 04</div><div class="name">Evals</div><div class="tag tag-settled">Settled</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 05</div><div class="name">Model selection</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 06</div><div class="name">Prompt design basics</div><div class="tag tag-settled">Settled</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 07</div><div class="name">Hallucination + reliability</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 08</div><div class="name">Cost dynamics at scale</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 09</div><div class="name">Fine-tuning vs. prompting vs. RAG</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 10</div><div class="name">Vector search / RAG fundamentals</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 11</div><div class="name">Streaming UX</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 12</div><div class="name">Tool use · function calling</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 13</div><div class="name">Multimodal · vision basics</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 14</div><div class="name">Agents · multi-step reasoning</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 15</div><div class="name">Safety + content moderation</div><div class="tag tag-contested">Contested</div><div class="status">Published</div></div>
+      <div class="unit"><div class="num">§ 16–20</div><div class="name">Operating units — monitoring · vendor risk · A/B · fallbacks</div><div class="tag tag-locked">Locked</div><div class="status">From beta signal</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Screens ─────────────────────────────────────────── -->
+<section id="screens" class="band screens">
+  <div class="wrap">
+    <div class="band-eyebrow">The app</div>
+    <h2 class="band-h">A briefing, not a course app.</h2>
+    <p class="lede">
+      Four product screens. Editorial typography, hairline rules, no
+      decorative imagery, no progress bars within a unit. The visual
+      restraint is the design stance — and it makes the writing earn
+      its space.
+    </p>
+    <div class="strip">
+      <div class="screen">
+        <div class="img">
+          <picture>
+            <source srcset="app-store/screens-dark/01-path-home.png" media="(prefers-color-scheme: dark)" />
+            <img src="app-store/screens/01-path-home.png" alt="Libella path home" />
+          </picture>
+        </div>
+        <div class="cap">01 · Path home</div>
+        <div class="blurb">The next unit, one tap away. Optional spaced review surfaces alongside the path — never as a gate.</div>
+      </div>
+      <div class="screen">
+        <div class="img">
+          <picture>
+            <source srcset="app-store/screens-dark/02-unit-reader.png" media="(prefers-color-scheme: dark)" />
+            <img src="app-store/screens/02-unit-reader.png" alt="Libella unit reader" />
+          </picture>
+        </div>
+        <div class="cap">02 · Unit reader</div>
+        <div class="blurb">One scroll. Same order, every unit. Definition, bite, framing, depth, prompt, calibration, sources.</div>
+      </div>
+      <div class="screen">
+        <div class="img"><img src="app-store/screens/03-settings.png" alt="Libella settings" /></div>
+        <div class="cap">03 · Settings</div>
+        <div class="blurb">Four sections — account, library, appearance, about. What's not here is the feature.</div>
+      </div>
+      <div class="screen">
+        <div class="img"><img src="app-store/screens/04-auth.png" alt="Libella auth" /></div>
+        <div class="cap">04 · Sign in</div>
+        <div class="blurb">Email and password. Your unit grades and review schedule sync across devices.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Calibration ─────────────────────────────────────── -->
+<section class="band cal">
+  <div class="wrap">
+    <div class="band-eyebrow">Calibration</div>
+    <h2 class="band-h">Every claim, <em>sourced and tagged.</em></h2>
+    <p class="lede">
+      Each unit's claims carry a tier: <em>settled</em>, <em>contested</em>, or
+      <em>unsettled</em>. Sources sit after the decision prompt — never
+      before — so the consensus doesn't prime your answer. The grader
+      will tell you when it doesn't have enough signal to grade fairly.
+    </p>
+    <div style="margin-top: 16px;">
+      <div class="row"><span class="chip tag-settled">Settled</span><div class="claim">Models bill and meter context windows in tokens, not characters or words.</div></div>
+      <div class="row"><span class="chip tag-settled">Settled</span><div class="claim">BPE-style subword tokenization is the dominant scheme across frontier models.</div></div>
+      <div class="row"><span class="chip tag-contested">Contested</span><div class="claim">Whether token-level pricing is the right unit of cost for product decisions long-term — vs. characters, semantic units, or compute-time billing — is unsettled as the market evolves.</div></div>
+      <div class="row"><span class="chip tag-locked">Unsettled</span><div class="claim">Whether next-generation small-model latency improvements will obviate the streaming-vs-blocking distinction.</div></div>
+    </div>
+    <div class="pullquote">
+      <em>Confidence as a feature, not a softening.</em>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ────────────────────────────────────────────── -->
+<section id="beta" class="cta">
+  <div class="wrap">
+    <h2>Built for the call <em>you have to make on Monday.</em></h2>
+    <p class="lede">
+      Phase 3's first fifteen units have shipped and the grader
+      regression sets hold their gate. Closed beta opens next. Leave
+      an email and we'll write the moment there's something to use.
+    </p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="mailto:beta@libella.app?subject=Libella%20beta">Join the beta</a>
+      <a class="btn btn-secondary" href="https://github.com/LuminLynx/Libella">Read the code</a>
+    </div>
+    <div class="small">No streaks. No badges. No daily nudge.</div>
+  </div>
+</section>
+
+<!-- ─── Footer ─────────────────────────────────────────── -->
+<footer>
+  <div class="wrap" style="display: flex; align-items: center; gap: 24px; width: 100%;">
+    <a class="wordmark" href="#top">
+      <picture>
+        <source srcset="assets/libella-mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img src="assets/libella-mark.svg" alt="" />
+      </picture>
+      <span class="name" style="font-size: 16px;">Libella</span>
+    </a>
+    <div class="grow"></div>
+    <a href="privacy-policy.html">Privacy</a>
+    <span>·</span>
+    <a href="account-deletion.html">Delete account</a>
+    <span>·</span>
+    <a href="https://github.com/LuminLynx/Libella">GitHub</a>
+    <span>·</span>
+    <span>GPL-3.0</span>
+  </div>
+</footer>
+
 </body>
 </html>

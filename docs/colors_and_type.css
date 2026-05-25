@@ -1,0 +1,310 @@
+/* ============================================================
+   Libella — colors & type tokens
+   Editorial / reference-document direction:
+   serif display, hairline rules, restrained color, generous air.
+   These tokens map 1:1 to the Compose theme (Color.kt / Type.kt)
+   and the brief in docs/DESIGN_BRIEF.md.
+   ============================================================ */
+
+/* --- Webfonts ------------------------------------------------ */
+/* Source Serif 4 — editorial body+display
+   IBM Plex Sans  — UI labels / app-bar meta (cool, neutral)
+   JetBrains Mono — code / token counts / inline measurements
+   NOTE: all three are Google-Fonts substitutions for the in-app
+   FontFamily.SansSerif default that Type.kt currently ships.
+   Flag this to the team — fonts/ contains nothing locally yet. */
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..800;1,8..60,300..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* ----------------------------------------------------------
+     Color — Paper & Ink (LIGHT, the canonical mode)
+     A warm off-white "paper" with warm near-black "ink",
+     hairline rules that are warm taupe (not 50% gray),
+     and a restrained accent palette of marginal-annotation
+     ink colors: oxblood (primary), sage (settled), ochre
+     (contested), mineral (mono / chrome).
+     ---------------------------------------------------------- */
+
+  /* Paper — surfaces, from full to subtle */
+  --paper-0:  #F5F1E8; /* page background — warm off-white */
+  --paper-1:  #FAF7F0; /* raised surface — quieter than paper-0 */
+  --paper-2:  #FFFFFF; /* card / sheet — true paper */
+  --paper-3:  #EDE7D8; /* deeper section — pull-quote, callout */
+
+  /* Ink — foreground, in three weights */
+  --ink-1:    #1C1815; /* body — warm near-black, NOT pure */
+  --ink-2:    #4A433C; /* meta / secondary copy */
+  --ink-3:    #8A8175; /* tertiary / placeholder / muted meta */
+
+  /* Hairline — the single most identity-defining element.
+     Two weights only. NEVER a heavy 1.5–2px gray border. */
+  --hair-1:   #C8BFAE; /* dividers between rows, between sections */
+  --hair-2:   #E0D9C8; /* sub-dividers, focus-rest, table interior */
+
+  /* Accents — restrained, marginal-ink palette.
+     Use SPARINGLY. The accent should feel underlined, not painted. */
+  --oxblood:           #7D2A1A; /* primary action, key emphasis */
+  --oxblood-tint:      #F1E2DC; /* tint container — Reviews-due, focused row */
+  --sage:              #5C6B5D; /* "settled" calibration tag */
+  --sage-tint:         #E6E8E0;
+  --ochre:             #8B6A1C; /* "contested" calibration tag */
+  --ochre-tint:        #F1E8D0;
+  --mineral:           #46556B; /* mono / code / chrome accent */
+  --mineral-tint:      #E2E6EC;
+
+  /* Semantic — completed / review-needed / error */
+  --completed:         var(--oxblood); /* unit ✓ uses oxblood, not green */
+  --review-needed:     var(--ochre);   /* "we're not confident" banner */
+  --error:             #8C2017;        /* form / submit errors */
+  --error-tint:        #F2DEDB;
+
+  /* ----------------------------------------------------------
+     Type
+     ---------------------------------------------------------- */
+
+  /* Families */
+  --font-display: "Source Serif 4", "Source Serif Pro", "Georgia", serif;
+  --font-body:    "Source Serif 4", "Source Serif Pro", "Georgia", serif;
+  --font-ui:      "IBM Plex Sans", "Inter", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Tracking */
+  --tracking-display: -0.012em; /* large serif — tighten slightly */
+  --tracking-body:    -0.003em;
+  --tracking-ui:       0.00em;
+  --tracking-eyebrow:  0.10em;  /* small-caps eyebrows — wide */
+
+  /* Scale — designed in 8pt rhythm; line-heights tuned for
+     editorial body density (~1.55) and tight display (~1.12). */
+  --t-display:   44px;  --lh-display:   50px;
+  --t-h1:        32px;  --lh-h1:        38px;  /* screen title */
+  --t-h2:        24px;  --lh-h2:        30px;  /* unit title in reader */
+  --t-h3:        19px;  --lh-h3:        26px;  /* section header */
+  --t-h4:        16px;  --lh-h4:        22px;  /* card title */
+  --t-body:      16px;  --lh-body:      26px;  /* prose default */
+  --t-body-sm:   14px;  --lh-body-sm:   22px;  /* meta / supporting */
+  --t-ui:        14px;  --lh-ui:        20px;  /* buttons, tabs */
+  --t-eyebrow:   11px;  --lh-eyebrow:   14px;  /* small-caps labels */
+  --t-mono:      13px;  --lh-mono:      20px;
+
+  /* Weights */
+  --w-light:    300;
+  --w-regular:  400;
+  --w-medium:   500;
+  --w-semibold: 600;
+
+  /* ----------------------------------------------------------
+     Spacing — 4pt base, expressed as a small set of named steps.
+     Generous outer padding (--s-6) is the editorial signature.
+     ---------------------------------------------------------- */
+  --s-0:   2px;
+  --s-1:   4px;
+  --s-2:   8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-7:  32px;
+  --s-8:  40px;
+  --s-9:  56px;
+  --s-10: 80px;
+
+  /* Screen edge — Compose AppScreenScaffold pads 20dp h / 12dp v */
+  --gutter:  20px;
+  --gutter-v: 12px;
+
+  /* ----------------------------------------------------------
+     Radii — restrained. Editorial = mostly square / 2–4px only.
+     The current Android theme rounds 8–28dp; we override toward
+     the editorial direction in v1's restyle.
+     ---------------------------------------------------------- */
+  --r-0:  0px;   /* hairline cards — square */
+  --r-1:  2px;   /* fields, chips */
+  --r-2:  4px;   /* button corner — barely there */
+  --r-3:  8px;   /* sheet / modal */
+
+  /* ----------------------------------------------------------
+     Elevation — flat. No drop shadows by default.
+     A single hairline border carries the card.
+     We expose one whisper-shadow for modal/sheet only.
+     ---------------------------------------------------------- */
+  --shadow-flat:  none;
+  --shadow-card:  none;                                       /* hairline-only */
+  --shadow-sheet: 0 1px 0 rgba(28,24,21,0.04),
+                  0 16px 40px -16px rgba(28,24,21,0.18);      /* modal / bottom sheet */
+  --focus-ring:   0 0 0 2px var(--paper-0),
+                  0 0 0 4px var(--oxblood);                   /* focus halo */
+
+  /* ----------------------------------------------------------
+     Motion — restrained. Editorial reads, doesn't bounce.
+     Disclosures expand in 180–220ms ease-out; nothing springs.
+     ---------------------------------------------------------- */
+  --dur-fast:  120ms;
+  --dur-base:  200ms;
+  --dur-slow:  320ms;
+  --ease-out:  cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-in:   cubic-bezier(0.4, 0.0, 1, 1);
+}
+
+/* --- Dark mode --------------------------------------------------
+   Mirror of the warm-paper palette. Same restraint, inverted weight.
+   Triggered by [data-theme="dark"] or prefers-color-scheme.
+   ---------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper-0:  #15130F;
+    --paper-1:  #1B1814;
+    --paper-2:  #221E18;
+    --paper-3:  #2A251D;
+
+    --ink-1:    #E8E2D5;
+    --ink-2:    #B5AC9C;
+    --ink-3:    #7C7466;
+
+    --hair-1:   #3A352C;
+    --hair-2:   #2A251D;
+
+    --oxblood:           #D6816A;
+    --oxblood-tint:      #3A1F18;
+    --sage:              #A2AB94;
+    --sage-tint:         #232722;
+    --ochre:             #D7B673;
+    --ochre-tint:        #2E2718;
+    --mineral:           #9DAFC2;
+    --mineral-tint:      #1E242C;
+    --error:             #E4856E;
+    --error-tint:        #381914;
+  }
+}
+[data-theme="dark"] {
+    --paper-0:  #15130F;
+    --paper-1:  #1B1814;
+    --paper-2:  #221E18;
+    --paper-3:  #2A251D;
+    --ink-1:    #E8E2D5;
+    --ink-2:    #B5AC9C;
+    --ink-3:    #7C7466;
+    --hair-1:   #3A352C;
+    --hair-2:   #2A251D;
+    --oxblood:           #D6816A;
+    --oxblood-tint:      #3A1F18;
+    --sage:              #A2AB94;
+    --sage-tint:         #232722;
+    --ochre:             #D7B673;
+    --ochre-tint:        #2E2718;
+    --mineral:           #9DAFC2;
+    --mineral-tint:      #1E242C;
+    --error:             #E4856E;
+    --error-tint:        #381914;
+}
+
+/* ============================================================
+   Semantic type roles. Use these directly in JSX/HTML.
+   Body text gets --tracking-body via the body{} rule below.
+   ============================================================ */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tracking-body);
+  color: var(--ink-1);
+  background: var(--paper-0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.t-display, h1.display {
+  font-family: var(--font-display);
+  font-size: var(--t-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--w-regular);   /* serif display reads better at 400, not bold */
+  color: var(--ink-1);
+}
+
+.t-h1, h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--w-regular);
+  color: var(--ink-1);
+}
+
+.t-h2, h2 {
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  line-height: var(--lh-h2);
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--w-regular);
+  color: var(--ink-1);
+}
+
+.t-h3, h3 {
+  font-family: var(--font-display);
+  font-size: var(--t-h3);
+  line-height: var(--lh-h3);
+  font-weight: var(--w-medium);
+  color: var(--ink-1);
+}
+
+.t-h4, h4 {
+  font-family: var(--font-display);
+  font-size: var(--t-h4);
+  line-height: var(--lh-h4);
+  font-weight: var(--w-semibold);
+  color: var(--ink-1);
+}
+
+.t-body, p {
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tracking-body);
+  font-weight: var(--w-regular);
+  color: var(--ink-1);
+}
+
+.t-body-sm, .meta {
+  font-family: var(--font-body);
+  font-size: var(--t-body-sm);
+  line-height: var(--lh-body-sm);
+  color: var(--ink-2);
+}
+
+.t-ui, button, input, label {
+  font-family: var(--font-ui);
+  font-size: var(--t-ui);
+  line-height: var(--lh-ui);
+  letter-spacing: var(--tracking-ui);
+}
+
+.t-eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--t-eyebrow);
+  line-height: var(--lh-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: var(--w-semibold);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.t-mono, code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  line-height: var(--lh-mono);
+  color: var(--ink-2);
+}
+
+/* Inline emphasis used widely in unit prose */
+em  { font-style: italic; color: var(--ink-1); }
+strong { font-weight: var(--w-semibold); color: var(--ink-1); }
+
+/* The signature hairline rule */
+hr, .hairline {
+  border: 0;
+  border-top: 1px solid var(--hair-1);
+  margin: 0;
+}
+.hairline-sub { border-top-color: var(--hair-2); }
