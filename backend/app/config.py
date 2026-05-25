@@ -87,6 +87,11 @@ AI_REQUEST_TIMEOUT_SECONDS = float(os.getenv("AI_REQUEST_TIMEOUT_SECONDS", "60")
 # costs a needless human review, a missed one only loses a backstop.
 AI_QUOTE_MIN_OVERLAP = float(os.getenv("AI_QUOTE_MIN_OVERLAP", "0.5"))
 
+# Host allow-list for TrustedHostMiddleware. Comma-separated; default "*"
+# (allow any Host) so dev / CI / health checks aren't blocked. Production
+# should set it to its real domain(s) to reject Host-header spoofing.
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "*").split(",") if h.strip()]
+
 
 # Default values that must NOT appear in a production deployment.
 # POSTGRES_PASSWORD is intentionally absent from this tuple — it's

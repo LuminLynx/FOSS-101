@@ -425,7 +425,9 @@ def test_grade_endpoint_persists_completion_and_grades(
             "alreadyCompleted": False,
         }
 
-    def _upsert(completion_id: int, grades: list[dict[str, Any]], flagged: bool) -> list[dict[str, Any]]:
+    def _upsert(
+        completion_id: int, grades: list[dict[str, Any]], flagged: bool, user_id: str
+    ) -> list[dict[str, Any]]:
         captured["completion_id"] = completion_id
         captured["flagged"] = flagged
         return [
@@ -539,9 +541,10 @@ def test_upsert_drops_grades_for_criteria_not_in_submission(gated_db) -> None:
             {"criterion_id": crit_b, "met": False, "confidence": 0.7, "rationale": "no", "answer_quote": ""},
         ],
         flagged=False,
+        user_id=user_id,
     )
 
-    first = grade_repository.list_grades_for_completion(completion["id"])
+    first = grade_repository.list_grades_for_completion(completion["id"], user_id)
     assert {g["criterionId"] for g in first} == {crit_a, crit_b}
 
     # Second grade — criterion B is no longer in the submission. The
@@ -552,13 +555,35 @@ def test_upsert_drops_grades_for_criteria_not_in_submission(gated_db) -> None:
             {"criterion_id": crit_a, "met": True, "confidence": 0.95, "rationale": "still ok", "answer_quote": "y"},
         ],
         flagged=False,
+        user_id=user_id,
     )
 
-    second = grade_repository.list_grades_for_completion(completion["id"])
+    second = grade_repository.list_grades_for_completion(completion["id"], user_id)
     assert {g["criterionId"] for g in second} == {crit_a}, (
         "stale criterion row should be deleted on re-grade"
     )
     assert second[0]["confidence"] == pytest.approx(0.95)
+
+
+def test_upsert_grades_rejects_completion_not_owned(gated_db) -> None:
+    """Tenant guard: writing grades for another user's completion raises."""
+    from .conftest import seed_path_with_units
+
+    seed = seed_path_with_units(gated_db)
+    completion = completion_repository.record_completion(
+        user_id=seed["user_id"], unit_id=seed["unit_a_id"]
+    )["completion"]
+
+    with pytest.raises(grade_repository.CompletionNotOwnedError):
+        grade_repository.upsert_grades(
+            completion_id=completion["id"],
+            grades=[
+                {"criterion_id": seed["criterion_ids"][0], "met": True,
+                 "confidence": 0.9, "rationale": "x", "answer_quote": "x"},
+            ],
+            flagged=False,
+            user_id="u-not-the-owner",
+        )
 
 
 def test_rate_limit_allows_under_cap_then_blocks(gated_db) -> None:

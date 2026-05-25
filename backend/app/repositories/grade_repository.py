@@ -39,6 +39,14 @@ from typing import Any
 from ..db import get_connection
 
 
+class CompletionNotOwnedError(Exception):
+    """Raised when grades are written/read for a completion that doesn't
+    belong to the acting user — a tenant-isolation guard. It can't happen
+    via the current endpoint (the completion id is server-derived from the
+    authenticated user), but it's enforced at the repository so a future
+    caller that passes a client-supplied completion_id can't cross tenants."""
+
+
 def _map_grade_row(row: Any) -> dict[str, Any]:
     return {
         "id": row["id"],
@@ -56,6 +64,7 @@ def upsert_grades(
     completion_id: int,
     grades: list[dict[str, Any]],
     flagged: bool,
+    user_id: str,
 ) -> list[dict[str, Any]]:
     """Replace this completion's grades atomically.
 
@@ -82,6 +91,17 @@ def upsert_grades(
 
     persisted: list[dict[str, Any]] = []
     with get_connection() as connection:
+        # Tenant guard: refuse to write grades for a completion the user
+        # doesn't own. Belt-and-suspenders today (the endpoint derives
+        # completion_id from the authenticated user), enforced here so a
+        # future client-supplied id can't cross tenants.
+        owner = connection.execute(
+            "SELECT 1 FROM completions WHERE id = %s AND user_id = %s",
+            (completion_id, user_id),
+        ).fetchone()
+        if owner is None:
+            raise CompletionNotOwnedError(completion_id)
+
         # Atomic with the UPSERTs below. Drop any prior rows whose
         # criterion id isn't in the incoming submission — those reflect
         # a rubric the grader no longer evaluated against.
@@ -120,17 +140,22 @@ def upsert_grades(
     return persisted
 
 
-def list_grades_for_completion(completion_id: int) -> list[dict[str, Any]]:
-    """Return all grades for a completion, ordered by criterion position."""
+def list_grades_for_completion(completion_id: int, user_id: str) -> list[dict[str, Any]]:
+    """Return all grades for a completion the user owns, by criterion position.
+
+    Scoped by `user_id` via the completions join so one user can never read
+    another's grades, regardless of how `completion_id` was obtained.
+    """
     with get_connection() as connection:
         rows = connection.execute(
             """
             SELECT g.*
             FROM grades g
             JOIN rubric_criteria rc ON rc.id = g.criterion_id
-            WHERE g.completion_id = %s
+            JOIN completions c ON c.id = g.completion_id
+            WHERE g.completion_id = %s AND c.user_id = %s
             ORDER BY rc.position ASC
             """,
-            (completion_id,),
+            (completion_id, user_id),
         ).fetchall()
     return [_map_grade_row(row) for row in rows]

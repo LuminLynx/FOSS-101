@@ -4,6 +4,7 @@ from typing import Any
 
 from fastapi import Depends, FastAPI, Query
 from fastapi.encoders import jsonable_encoder
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -18,7 +19,7 @@ from .auth import (
     validate_password,
     verify_login,
 )
-from .config import validate_production_config
+from .config import ALLOWED_HOSTS, validate_production_config
 from .migrations import run_migrations
 from .repositories import (
     auth_rate_limit_repository,
@@ -45,6 +46,10 @@ from .repository import (
 LOGGER = logging.getLogger(__name__)
 
 app = FastAPI(title="AI-101 Backend", version="0.3.0")
+
+# Reject spoofed Host headers in production (set ALLOWED_HOSTS to the real
+# domain[s]); default "*" is a no-op so dev / CI / health checks are unaffected.
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
 
 
 class CompletionRequest(BaseModel):
@@ -471,6 +476,7 @@ def post_grade(
         completion_id=completion["id"],
         grades=grader_output.grades,
         flagged=grader_output.flagged,
+        user_id=current_user_id,
     )
 
     return _envelope_response(
