@@ -8,7 +8,12 @@ from __future__ import annotations
 import pytest
 
 from app import config
-from app.config import ProductionConfigError, is_production, validate_production_config
+from app.config import (
+    ProductionConfigError,
+    _parse_allowed_hosts,
+    is_production,
+    validate_production_config,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -152,3 +157,16 @@ def test_gate_fires_for_capitalized_production_typo(monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(config, "AI_PROVIDER_API_KEY", "sk-ant-real")
     with pytest.raises(ProductionConfigError, match="JWT_SECRET"):
         validate_production_config()
+
+
+def test_parse_allowed_hosts_falls_back_to_wildcard_when_blank() -> None:
+    # A present-but-empty env var must not yield an empty list (which would
+    # make TrustedHostMiddleware reject every request).
+    assert _parse_allowed_hosts("") == ["*"]
+    assert _parse_allowed_hosts(",") == ["*"]
+    assert _parse_allowed_hosts("   ") == ["*"]
+
+
+def test_parse_allowed_hosts_parses_real_hosts() -> None:
+    assert _parse_allowed_hosts("*") == ["*"]
+    assert _parse_allowed_hosts("a.com, b.com") == ["a.com", "b.com"]
