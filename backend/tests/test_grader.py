@@ -205,7 +205,48 @@ def test_validator_tolerates_whitespace_only_differences_in_quote() -> None:
         expected_criterion_ids={1},
         answer="models bill in tokens not words, not characters",
     )
+    assert out.flagged is False
     assert out.grades[0]["criterion_id"] == 1
+
+
+def test_validator_grounds_paraphrased_reordered_truncated_quote() -> None:
+    # The real grader rarely quotes verbatim — it reorders, truncates, and
+    # drops punctuation. Such a quote is grounded (its words come from the
+    # answer) and must NOT be flagged, even though it isn't an exact substring.
+    answer = (
+        "Decide what to moderate, how strict the threshold is, and where the "
+        "human sits in the loop."
+    )
+    payload = {
+        "grades": [_grade(1, answer_quote="how strict ... the threshold; where the human sits")],
+        "flagged": False,
+    }
+    out = _validate_grader_output(payload, expected_criterion_ids={1}, answer=answer)
+    assert out.flagged is False, "a grounded paraphrase must not be flagged"
+
+
+def test_validator_flags_quote_inflated_by_repeated_word() -> None:
+    # Multiplicity guard: repeating a word the answer contains only once
+    # must not inflate overlap past the floor (Codex P1).
+    answer = "moderate the threshold"  # "the" appears once
+    payload = {
+        "grades": [_grade(1, answer_quote="the the the quantum matrix")],
+        "flagged": False,
+    }
+    out = _validate_grader_output(payload, expected_criterion_ids={1}, answer=answer)
+    assert out.flagged is True
+
+
+def test_validator_flags_mostly_fabricated_quote() -> None:
+    # A quote whose words mostly aren't in the answer is below the overlap
+    # floor → flagged, even if it borrows a stray common word.
+    answer = "Decide the moderation threshold and the human review point."
+    payload = {
+        "grades": [_grade(1, answer_quote="the quantum blockchain teleportation matrix")],
+        "flagged": False,
+    }
+    out = _validate_grader_output(payload, expected_criterion_ids={1}, answer=answer)
+    assert out.flagged is True
 
 
 def test_validator_verifies_quote_against_fence_escaped_answer() -> None:

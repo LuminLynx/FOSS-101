@@ -78,6 +78,15 @@ AUTH_RATE_LIMIT_WINDOW_SECONDS = int(
 AI_MAX_RETRIES = int(os.getenv("AI_MAX_RETRIES", "5"))
 AI_REQUEST_TIMEOUT_SECONDS = float(os.getenv("AI_REQUEST_TIMEOUT_SECONDS", "60"))
 
+# Minimum fraction of an answer_quote's words that must appear in the
+# submitted answer for the quote to count as "grounded". Below this, the
+# grader's cited evidence looks fabricated and the answer is flagged for
+# review. Token-overlap (not exact substring) tolerates how the model
+# really quotes — paraphrase, reorder, truncation — while still catching a
+# quote that shares little with the answer. Lenient by design: a false flag
+# costs a needless human review, a missed one only loses a backstop.
+AI_QUOTE_MIN_OVERLAP = float(os.getenv("AI_QUOTE_MIN_OVERLAP", "0.5"))
+
 
 # Default values that must NOT appear in a production deployment.
 # POSTGRES_PASSWORD is intentionally absent from this tuple — it's

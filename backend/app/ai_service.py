@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -42,6 +43,7 @@ from .config import (
     AI_MODEL,
     AI_PROVIDER,
     AI_PROVIDER_API_KEY,
+    AI_QUOTE_MIN_OVERLAP,
     AI_REQUEST_TIMEOUT_SECONDS,
 )
 
@@ -229,15 +231,34 @@ def _build_user_message(answer: str) -> str:
     )
 
 
-def _normalize_quote(text: str) -> str:
-    """Whitespace-normalized form for verbatim-span comparison.
+_WORD_RE = re.compile(r"\w+", re.UNICODE)
 
-    Collapses any run of whitespace to a single space and strips, so an
-    honest quote that differs from the answer only in incidental
-    whitespace still matches, while a fabricated quote (a span not present
-    in the answer at all) does not.
+
+def _quote_grounded(answer_quote: str, visible_answer: str, *, min_overlap: float) -> bool:
+    """Is `answer_quote` grounded in the answer the model saw?
+
+    Returns True when at least `min_overlap` of the quote's words appear in
+    the answer (case-insensitive, punctuation-insensitive). This is
+    deliberately looser than exact-substring containment: the model quotes
+    by paraphrasing, reordering, and truncating, so a verbatim-span check
+    flags far too many honest quotes. Token overlap still catches a quote
+    that shares little or nothing with the answer — the fabricated-evidence
+    case the check exists to surface — while letting real (if imperfect)
+    quotes through.
     """
-    return " ".join(text.split())
+    quote_tokens = _WORD_RE.findall(answer_quote.lower())
+    if not quote_tokens:
+        return True
+    # Multiset, not set: a quote token only counts as grounded up to how
+    # many times that word actually appears in the answer, so repeating a
+    # common word ("the the the …") can't inflate the overlap score.
+    available = Counter(_WORD_RE.findall(visible_answer.lower()))
+    hits = 0
+    for token in quote_tokens:
+        if available[token] > 0:
+            available[token] -= 1
+            hits += 1
+    return hits / len(quote_tokens) >= min_overlap
 
 
 def _validate_grader_output(
@@ -250,10 +271,12 @@ def _validate_grader_output(
     grades.
 
     `answer` is the submitted learner answer; every non-empty `answer_quote`
-    is checked to be a verbatim span of it (whitespace-normalized, against the
-    answer the model actually saw — same fence-escaping applied). The model is
-    adversary-steerable via the answer, so a fabricated quote could otherwise
-    pass as "evidence" and inflate its own grade. A quote that doesn't verify
+    is checked to be *grounded* in it — at least `AI_QUOTE_MIN_OVERLAP` of the
+    quote's words appear in the answer the model saw (same fence-escaping
+    applied). Token overlap, not exact substring, because the model quotes by
+    paraphrasing/reordering/truncating. The model is adversary-steerable via
+    the answer, so a fabricated quote could otherwise pass as "evidence" and
+    inflate its own grade. A quote that doesn't verify
     forces `flagged=true` (human review) rather than raising — an honest grade
     is never lost to a loose quote, but fabricated evidence can't pass
     unreviewed.
@@ -261,7 +284,7 @@ def _validate_grader_output(
     if not isinstance(payload, dict):
         raise AIServiceError("Grader returned a non-object payload.")
 
-    visible_answer = _normalize_quote(_fence_escape(answer))
+    visible_answer = _fence_escape(answer)
 
     grades = payload.get("grades")
     flagged = payload.get("flagged")
@@ -299,8 +322,10 @@ def _validate_grader_output(
             raise AIServiceError(
                 f"Grade for criterion {cid} is met=true but answer_quote is empty."
             )
-        if answer_quote.strip() and _normalize_quote(answer_quote) not in visible_answer:
-            # The quote should be a real span of the submitted answer, not
+        if answer_quote.strip() and not _quote_grounded(
+            answer_quote, visible_answer, min_overlap=AI_QUOTE_MIN_OVERLAP
+        ):
+            # The quote should be grounded in the submitted answer, not
             # fabricated "evidence" — otherwise a steered model could cite a
             # made-up quote and mark the criterion met. We flag for review
             # rather than reject, so an honest grade is never lost to a loose
