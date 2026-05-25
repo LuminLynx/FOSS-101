@@ -204,15 +204,37 @@ def _build_user_message(answer: str) -> str:
     )
 
 
-def _validate_grader_output(payload: dict[str, Any], expected_criterion_ids: set[int]) -> GraderOutput:
+def _normalize_quote(text: str) -> str:
+    """Whitespace-normalized form for verbatim-span comparison.
+
+    Collapses any run of whitespace to a single space and strips, so an
+    honest quote that differs from the answer only in incidental
+    whitespace still matches, while a fabricated quote (a span not present
+    in the answer at all) does not.
+    """
+    return " ".join(text.split())
+
+
+def _validate_grader_output(
+    payload: dict[str, Any], expected_criterion_ids: set[int], answer: str
+) -> GraderOutput:
     """Enforce the T2-D guardrails on what the model returned.
 
     Raises AIServiceError on schema violations: the endpoint catches and
     surfaces the failure rather than persisting partial / suspicious
     grades.
+
+    `answer` is the submitted learner answer; every non-empty `answer_quote`
+    must be a verbatim span of it (whitespace-normalized). The model is
+    adversary-steerable via the answer, so an unverified quote would let a
+    crafted answer fabricate "evidence" and inflate its own grade — the
+    quote is checked against the answer the model actually saw (with the
+    same close-tag escaping the fence applies).
     """
     if not isinstance(payload, dict):
         raise AIServiceError("Grader returned a non-object payload.")
+
+    visible_answer = _normalize_quote(_ANSWER_CLOSE_RE.sub("&lt;/learner_answer&gt;", answer))
 
     grades = payload.get("grades")
     flagged = payload.get("flagged")
@@ -248,6 +270,14 @@ def _validate_grader_output(payload: dict[str, Any], expected_criterion_ids: set
             # at the span of the answer that supports it.
             raise AIServiceError(
                 f"Grade for criterion {cid} is met=true but answer_quote is empty."
+            )
+        if answer_quote.strip() and _normalize_quote(answer_quote) not in visible_answer:
+            # The quote must be a real span of the submitted answer, not
+            # fabricated "evidence" — otherwise a steered model could cite a
+            # made-up quote and mark the criterion met.
+            raise AIServiceError(
+                f"Grade for criterion {cid} cites an answer_quote that is not a "
+                f"verbatim span of the submitted answer."
             )
         cleaned.append(
             {
@@ -334,7 +364,7 @@ def grade_decision_answer(unit: dict[str, Any], answer: str) -> GraderOutput:
     if tool_use_payload is None:
         raise AIServiceError("Grader did not produce a submit_grades tool call.")
 
-    output = _validate_grader_output(tool_use_payload, expected_ids)
+    output = _validate_grader_output(tool_use_payload, expected_ids, answer)
     output.usage = _extract_usage(response)
     return output
 
