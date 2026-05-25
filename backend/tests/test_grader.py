@@ -183,14 +183,17 @@ def test_validator_rejects_top_level_missing_flagged() -> None:
         _validate_grader_output(payload, expected_criterion_ids={1}, answer=_DEFAULT_ANSWER)
 
 
-def test_validator_rejects_fabricated_answer_quote() -> None:
+def test_validator_flags_fabricated_answer_quote() -> None:
     # Self-grade-inflation guard: a met grade citing a quote that never
-    # appears in the submitted answer must be rejected, not trusted.
+    # appears in the submitted answer is flagged for review (not silently
+    # trusted, but not rejected either — an honest loose quote isn't lost).
     payload = {"grades": [_grade(1, answer_quote="evidence I made up")], "flagged": False}
-    with pytest.raises(AIServiceError, match="not a\\s+verbatim span"):
-        _validate_grader_output(
-            payload, expected_criterion_ids={1}, answer="a totally unrelated answer body"
-        )
+    out = _validate_grader_output(
+        payload, expected_criterion_ids={1}, answer="a totally unrelated answer body"
+    )
+    assert out.flagged is True
+    # The grade is still returned (for the reviewer), just flagged.
+    assert out.grades[0]["criterion_id"] == 1
 
 
 def test_validator_tolerates_whitespace_only_differences_in_quote() -> None:

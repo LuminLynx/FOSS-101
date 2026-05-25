@@ -250,11 +250,13 @@ def _validate_grader_output(
     grades.
 
     `answer` is the submitted learner answer; every non-empty `answer_quote`
-    must be a verbatim span of it (whitespace-normalized). The model is
-    adversary-steerable via the answer, so an unverified quote would let a
-    crafted answer fabricate "evidence" and inflate its own grade — the
-    quote is checked against the answer the model actually saw (with the
-    same close-tag escaping the fence applies).
+    is checked to be a verbatim span of it (whitespace-normalized, against the
+    answer the model actually saw — same fence-escaping applied). The model is
+    adversary-steerable via the answer, so a fabricated quote could otherwise
+    pass as "evidence" and inflate its own grade. A quote that doesn't verify
+    forces `flagged=true` (human review) rather than raising — an honest grade
+    is never lost to a loose quote, but fabricated evidence can't pass
+    unreviewed.
     """
     if not isinstance(payload, dict):
         raise AIServiceError("Grader returned a non-object payload.")
@@ -268,6 +270,7 @@ def _validate_grader_output(
 
     seen_ids: set[int] = set()
     cleaned: list[dict[str, Any]] = []
+    unverified_quote = False
     for entry in grades:
         if not isinstance(entry, dict):
             raise AIServiceError("Grader returned a non-object grade entry.")
@@ -297,13 +300,12 @@ def _validate_grader_output(
                 f"Grade for criterion {cid} is met=true but answer_quote is empty."
             )
         if answer_quote.strip() and _normalize_quote(answer_quote) not in visible_answer:
-            # The quote must be a real span of the submitted answer, not
+            # The quote should be a real span of the submitted answer, not
             # fabricated "evidence" — otherwise a steered model could cite a
-            # made-up quote and mark the criterion met.
-            raise AIServiceError(
-                f"Grade for criterion {cid} cites an answer_quote that is not a "
-                f"verbatim span of the submitted answer."
-            )
+            # made-up quote and mark the criterion met. We flag for review
+            # rather than reject, so an honest grade is never lost to a loose
+            # quote, while a fabricated one can't silently pass unreviewed.
+            unverified_quote = True
         cleaned.append(
             {
                 "criterion_id": cid,
@@ -319,9 +321,10 @@ def _validate_grader_output(
         raise AIServiceError(f"Grader did not return grades for criteria: {sorted(missing)}.")
 
     # Override the model's `flagged` if any criterion came back below the
-    # threshold. The model sometimes under-reports its own uncertainty;
-    # we err on the side of flagging.
-    if any(g["confidence"] < CONFIDENCE_FLAG_THRESHOLD for g in cleaned):
+    # threshold, or if any cited quote couldn't be verified against the
+    # answer. The model sometimes under-reports its own uncertainty; we err
+    # on the side of flagging for human review.
+    if unverified_quote or any(g["confidence"] < CONFIDENCE_FLAG_THRESHOLD for g in cleaned):
         flagged = True
 
     return GraderOutput(grades=cleaned, flagged=flagged)
