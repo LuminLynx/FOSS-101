@@ -138,3 +138,27 @@ def test_auth_rate_limit_blocks_after_cap_then_clears(gated_db) -> None:
     auth_rate_limit_repository.check_and_record_auth_attempt(
         other, max_attempts=3, window_seconds=900
     )
+
+
+def test_get_user_by_email_omits_password_hash(gated_db) -> None:
+    # L2: the public lookup must never expose the hash; the auth-only
+    # lookup may, since login needs it to verify a password.
+    from app.repository import (
+        create_user,
+        get_user_auth_by_email,
+        get_user_by_email,
+    )
+
+    create_user(
+        email="leak@example.com",
+        password_hash="hash-must-not-leak",
+        display_name="Leaky",
+    )
+
+    safe = get_user_by_email("leak@example.com")
+    assert safe is not None
+    assert "password_hash" not in safe
+
+    auth = get_user_auth_by_email("leak@example.com")
+    assert auth is not None
+    assert auth["password_hash"] == "hash-must-not-leak"

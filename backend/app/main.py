@@ -33,6 +33,7 @@ from .repositories.rate_limit_repository import RateLimitExceededError
 from .repository import (
     create_user,
     get_term_by_id,
+    get_user_auth_by_email,
     get_user_by_email,
     get_user_by_id,
     list_categories,
@@ -201,7 +202,7 @@ def post_login(request: LoginRequest) -> JSONResponse:
 
     # verify_login runs bcrypt even when the email is unknown, so the
     # response time doesn't reveal whether the account exists.
-    row = get_user_by_email(email)
+    row = get_user_auth_by_email(email)
     if not verify_login(request.password, row["password_hash"] if row else None):
         return _envelope_response(
             status_code=401,

@@ -242,12 +242,32 @@ def create_user(*, email: str, password_hash: str, display_name: str) -> dict[st
 
 
 def get_user_by_email(email: str) -> dict[str, Any] | None:
+    """Public-safe user lookup — never includes password_hash.
+
+    Use for existence checks and any path whose result may be serialized.
+    Login, which needs the hash to verify a password, must use
+    `get_user_auth_by_email` instead.
+    """
     with get_connection() as connection:
         row = connection.execute(
             "SELECT * FROM users WHERE LOWER(email) = LOWER(%s)",
             (email,),
         ).fetchone()
-    return row if row is None else dict(row)
+    return None if row is None else _map_user_row(row)
+
+
+def get_user_auth_by_email(email: str) -> dict[str, Any] | None:
+    """Auth-only lookup that DOES include password_hash, for login.
+
+    Kept separate from `get_user_by_email` so the hash can never leak via
+    a handler that serializes a user dict — only the auth path reaches it.
+    """
+    with get_connection() as connection:
+        row = connection.execute(
+            "SELECT * FROM users WHERE LOWER(email) = LOWER(%s)",
+            (email,),
+        ).fetchone()
+    return None if row is None else dict(row)
 
 
 def get_user_by_id(user_id: str) -> dict[str, Any] | None:
