@@ -281,5 +281,31 @@ def get_user_by_id(user_id: str) -> dict[str, Any] | None:
     return _map_user_row(row)
 
 
+def delete_user(user_id: str) -> bool:
+    """Delete a user and all their data. Returns True if a user was removed.
+
+    completions, grades (via completion), review_schedule, and grade_attempts
+    cascade through their `ON DELETE CASCADE` foreign keys to users(id).
+    auth_attempts is keyed by email (not user_id), so its rows for this
+    account are cleared explicitly — together this removes the account's
+    personal data, satisfying the data-deletion requirement.
+    """
+    with get_connection() as connection:
+        row = connection.execute(
+            "SELECT email FROM users WHERE id = %s", (user_id,)
+        ).fetchone()
+        if row is None:
+            connection.commit()
+            return False
+        email = row["email"]
+        connection.execute("DELETE FROM users WHERE id = %s", (user_id,))
+        connection.execute(
+            "DELETE FROM auth_attempts WHERE attempt_key IN (%s, %s)",
+            (f"login:{email}", f"signup:{email}"),
+        )
+        connection.commit()
+    return True
+
+
 # Path-centric Completions live in backend/app/repositories/completion_repository.py.
 # The legacy term-centric `learning_completions` table is dropped in migration 022.

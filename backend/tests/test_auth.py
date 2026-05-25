@@ -182,3 +182,48 @@ def test_get_user_by_email_omits_password_hash(gated_db) -> None:
     auth = get_user_auth_by_email("leak@example.com")
     assert auth is not None
     assert auth["password_hash"] == "hash-must-not-leak"
+
+
+def test_delete_me_requires_auth() -> None:
+    client = TestClient(app)
+    assert client.delete("/api/v1/auth/me").status_code == 401
+
+
+def test_delete_me_deletes_account(monkeypatch) -> None:
+    captured: dict = {}
+
+    def _delete(user_id: str) -> bool:
+        captured["uid"] = user_id
+        return True
+
+    monkeypatch.setattr("app.main.delete_user", _delete)
+    client = TestClient(app)
+    token = create_access_token("u-del-test")
+    resp = client.delete("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200
+    assert resp.json()["data"]["deleted"] is True
+    assert captured["uid"] == "u-del-test"
+
+
+def test_delete_user_removes_account_and_cascades(gated_db) -> None:
+    from app.repositories import completion_repository, grade_repository
+    from app.repository import delete_user, get_user_by_id
+    from .conftest import seed_path_with_units
+
+    seed = seed_path_with_units(gated_db)
+    user_id, unit_id, crit = seed["user_id"], seed["unit_a_id"], seed["criterion_ids"][0]
+    completion = completion_repository.record_completion(user_id=user_id, unit_id=unit_id)["completion"]
+    grade_repository.upsert_grades(
+        completion_id=completion["id"],
+        grades=[{"criterion_id": crit, "met": True, "confidence": 0.9, "rationale": "ok", "answer_quote": "x"}],
+        flagged=False,
+        user_id=user_id,
+    )
+    assert get_user_by_id(user_id) is not None
+
+    assert delete_user(user_id) is True
+    assert get_user_by_id(user_id) is None
+    # completion (and its grades) cascade-deleted with the user
+    assert grade_repository.list_grades_for_completion(completion["id"], user_id) == []
+    # deleting an already-gone user is a no-op, returns False
+    assert delete_user(user_id) is False
