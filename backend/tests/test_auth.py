@@ -13,6 +13,7 @@ from app.auth import (
     validate_display_name,
     validate_email,
     validate_password,
+    verify_login,
     verify_password,
 )
 
@@ -23,6 +24,18 @@ def test_password_hash_round_trip() -> None:
     assert hashed != password
     assert verify_password(password, hashed)
     assert not verify_password("wrong-password", hashed)
+
+
+def test_verify_login_handles_unknown_user() -> None:
+    # Unknown user (None hash) still returns False, having run bcrypt against
+    # the dummy hash so timing doesn't reveal the account doesn't exist.
+    assert verify_login("anything", None) is False
+
+
+def test_verify_login_checks_real_hash() -> None:
+    hashed = hash_password("correct-horse-battery")
+    assert verify_login("correct-horse-battery", hashed) is True
+    assert verify_login("wrong-password", hashed) is False
 
 
 def test_jwt_round_trip() -> None:

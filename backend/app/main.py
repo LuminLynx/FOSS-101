@@ -15,7 +15,7 @@ from .auth import (
     validate_display_name,
     validate_email,
     validate_password,
-    verify_password,
+    verify_login,
 )
 from .config import validate_production_config
 from .migrations import run_migrations
@@ -196,8 +196,10 @@ def post_login(request: LoginRequest) -> JSONResponse:
     except RateLimitExceededError as exc:
         return _rate_limited_response(exc, message="Too many attempts. Try again later.")
 
+    # verify_login runs bcrypt even when the email is unknown, so the
+    # response time doesn't reveal whether the account exists.
     row = get_user_by_email(email)
-    if row is None or not verify_password(request.password, row["password_hash"]):
+    if not verify_login(request.password, row["password_hash"] if row else None):
         auth_rate_limit_repository.record_auth_attempt(login_key)
         return _envelope_response(
             status_code=401,

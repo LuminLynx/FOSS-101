@@ -36,6 +36,26 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 
+# Precomputed hash used to equalize login timing when the email is unknown:
+# bcrypt verify runs whether or not the account exists, so "no such user"
+# and "wrong password" take the same time, closing an enumeration oracle.
+_DUMMY_PASSWORD_HASH = _pwd_context.hash("not-a-real-password-timing-equalizer")
+
+
+def verify_login(password: str, password_hash: str | None) -> bool:
+    """Verify a login password without leaking account existence via timing.
+
+    When `password_hash` is None (no such user) we still run a bcrypt verify
+    against a fixed dummy hash, so the response takes the same time as a
+    wrong-password attempt on a real account. Always returns False for the
+    unknown-user case.
+    """
+    if password_hash is None:
+        verify_password(password, _DUMMY_PASSWORD_HASH)
+        return False
+    return verify_password(password, password_hash)
+
+
 def normalize_email(email: str) -> str:
     return email.strip().lower()
 
