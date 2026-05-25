@@ -90,7 +90,15 @@ AI_QUOTE_MIN_OVERLAP = float(os.getenv("AI_QUOTE_MIN_OVERLAP", "0.5"))
 # Host allow-list for TrustedHostMiddleware. Comma-separated; default "*"
 # (allow any Host) so dev / CI / health checks aren't blocked. Production
 # should set it to its real domain(s) to reject Host-header spoofing.
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "*").split(",") if h.strip()]
+def _parse_allowed_hosts(raw: str) -> list[str]:
+    # Fall back to allow-all when the value is blank/empty ("" or ","), so a
+    # present-but-empty env var can't hand TrustedHostMiddleware an empty list
+    # and reject every request (a self-inflicted outage).
+    hosts = [h.strip() for h in raw.split(",") if h.strip()]
+    return hosts or ["*"]
+
+
+ALLOWED_HOSTS = _parse_allowed_hosts(os.getenv("ALLOWED_HOSTS", "*"))
 
 
 # Default values that must NOT appear in a production deployment.
