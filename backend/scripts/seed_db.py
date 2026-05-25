@@ -1,11 +1,16 @@
 import argparse
 
-from backend.app.config import SEED_PATH, masked_database_url
+from backend.app.config import SEED_PATH, is_production, masked_database_url
 from backend.app.db import get_connection
 from backend.app.migrations import run_migrations
 
 
 def seed(reset: bool) -> None:
+    if reset and is_production():
+        raise RuntimeError(
+            "Refusing to --reset (TRUNCATE) the database while APP_ENV is "
+            "production. This destructive seed is for dev/test only."
+        )
     run_migrations()
 
     with get_connection() as connection:

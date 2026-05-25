@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Any
 
@@ -39,6 +40,8 @@ from .repository import (
     list_terms_by_category,
     search_terms,
 )
+
+LOGGER = logging.getLogger(__name__)
 
 app = FastAPI(title="AI-101 Backend", version="0.3.0")
 
@@ -437,10 +440,16 @@ def post_grade(
     try:
         grader_output = grade_decision_answer(unit, request.answer)
     except AIServiceError as exc:
+        # Log the detail (which may include raw provider error text) server-side
+        # only; return a generic message so internals aren't leaked to clients.
+        LOGGER.warning("grade failed for unit %s: %s", unit_id, exc)
         return _envelope_response(
             status_code=502,
             data=None,
-            error={"code": exc.code, "message": str(exc)},
+            error={
+                "code": exc.code,
+                "message": "Grading is temporarily unavailable. Please try again.",
+            },
         )
 
     # Only commit a completion + grades if the grader call succeeded.
