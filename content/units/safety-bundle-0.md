@@ -7,7 +7,7 @@ prereq_unit_ids:
   - hallucination-bundle-0
   - tool-use-bundle-0
   - agents-bundle-0
-status: draft
+status: published
 definition: Safety and content moderation is the decision of how to bound a feature's abuse surface — what to moderate, how strict to set the threshold, and where the human sits — three coupled choices whose combination determines whether the feature is safe and usable or safe but useless.
 calibration_tags:
   - claim: "All major providers ship a moderation or safety-filter layer (OpenAI Moderation, Anthropic usage-policy enforcement, Google/Vertex safety filters) that classifies content against harm categories with a tunable threshold."
