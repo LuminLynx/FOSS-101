@@ -62,6 +62,14 @@ GRADE_RATE_LIMIT_WINDOW_SECONDS = int(
     os.getenv("GRADE_RATE_LIMIT_WINDOW_SECONDS", "3600")
 )
 
+# Per-account rate limit for auth endpoints (login/signup), keyed by email
+# rather than client IP (which is the proxy's behind Railway). Caps targeted
+# brute-force of one account; generous enough for honest retries.
+AUTH_RATE_LIMIT_MAX = int(os.getenv("AUTH_RATE_LIMIT_MAX", "10"))
+AUTH_RATE_LIMIT_WINDOW_SECONDS = int(
+    os.getenv("AUTH_RATE_LIMIT_WINDOW_SECONDS", "900")
+)
+
 
 # Default values that must NOT appear in a production deployment.
 # POSTGRES_PASSWORD is intentionally absent from this tuple — it's

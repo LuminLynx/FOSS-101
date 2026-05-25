@@ -59,3 +59,66 @@ def test_validate_display_name_bounds() -> None:
         validate_display_name("A")
     with pytest.raises(AuthError):
         validate_display_name("X" * 100)
+
+
+# ---------------------------------------------------------------------------
+# Per-account rate limiting on the auth endpoints (H2)
+# ---------------------------------------------------------------------------
+
+from fastapi.testclient import TestClient  # noqa: E402
+
+from app.main import app  # noqa: E402
+from app.repositories import auth_rate_limit_repository  # noqa: E402
+from app.repositories.rate_limit_repository import RateLimitExceededError  # noqa: E402
+
+
+def _block(*_args, **_kwargs):
+    raise RateLimitExceededError(retry_after_seconds=30, limit=10, window_seconds=900)
+
+
+def test_login_returns_429_when_rate_limited(monkeypatch) -> None:
+    monkeypatch.setattr(auth_rate_limit_repository, "check_auth_rate_limit", _block)
+    client = TestClient(app)
+    response = client.post(
+        "/api/v1/auth/login", json={"email": "a@b.com", "password": "whatever123"}
+    )
+    assert response.status_code == 429
+    assert response.json()["error"]["code"] == "RATE_LIMITED"
+    assert response.headers["Retry-After"] == "30"
+
+
+def test_signup_returns_429_when_rate_limited(monkeypatch) -> None:
+    monkeypatch.setattr(auth_rate_limit_repository, "check_auth_rate_limit", _block)
+    client = TestClient(app)
+    response = client.post(
+        "/api/v1/auth/signup",
+        json={"email": "a@b.com", "password": "whatever123", "displayName": "Ada"},
+    )
+    assert response.status_code == 429
+    assert response.json()["error"]["code"] == "RATE_LIMITED"
+
+
+def test_auth_rate_limit_blocks_after_cap_then_clears(gated_db) -> None:
+    key = "login:victim@example.com"
+    # Under the cap: check passes, each failure records an attempt.
+    for _ in range(3):
+        auth_rate_limit_repository.check_auth_rate_limit(
+            key, max_attempts=3, window_seconds=900
+        )
+        auth_rate_limit_repository.record_auth_attempt(key)
+    # Now at the cap — the next check is blocked.
+    with pytest.raises(RateLimitExceededError):
+        auth_rate_limit_repository.check_auth_rate_limit(
+            key, max_attempts=3, window_seconds=900
+        )
+    # A successful login clears the counter.
+    auth_rate_limit_repository.clear_auth_attempts(key)
+    auth_rate_limit_repository.check_auth_rate_limit(
+        key, max_attempts=3, window_seconds=900
+    )
+
+    # Per-account isolation: a different email is unaffected.
+    other = "login:someone-else@example.com"
+    auth_rate_limit_repository.check_auth_rate_limit(
+        other, max_attempts=3, window_seconds=900
+    )

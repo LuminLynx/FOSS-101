@@ -20,6 +20,7 @@ from .auth import (
 from .config import validate_production_config
 from .migrations import run_migrations
 from .repositories import (
+    auth_rate_limit_repository,
     completion_repository,
     grade_repository,
     path_repository,
@@ -64,6 +65,16 @@ class LoginRequest(BaseModel):
 def _envelope_response(*, data, error=None, status_code: int = 200) -> JSONResponse:
     payload = {"data": data, "error": error}
     return JSONResponse(content=jsonable_encoder(payload), status_code=status_code)
+
+
+def _rate_limited_response(exc: RateLimitExceededError, *, message: str) -> JSONResponse:
+    response = _envelope_response(
+        status_code=429,
+        data=None,
+        error={"code": "RATE_LIMITED", "message": message},
+    )
+    response.headers["Retry-After"] = str(exc.retry_after_seconds)
+    return response
 
 
 @app.on_event("startup")
@@ -138,6 +149,15 @@ def post_signup(request: SignupRequest) -> JSONResponse:
             error={"code": error.code, "message": str(error)},
         )
 
+    # Per-email throttle, before the expensive bcrypt hash, to bound
+    # repeated probing of a single address.
+    signup_key = f"signup:{email}"
+    try:
+        auth_rate_limit_repository.check_auth_rate_limit(signup_key)
+    except RateLimitExceededError as exc:
+        return _rate_limited_response(exc, message="Too many attempts. Try again later.")
+    auth_rate_limit_repository.record_auth_attempt(signup_key)
+
     if get_user_by_email(email) is not None:
         return _envelope_response(
             status_code=409,
@@ -168,14 +188,26 @@ def post_login(request: LoginRequest) -> JSONResponse:
             error={"code": error.code, "message": str(error)},
         )
 
+    # Per-account throttle: cap failed logins per email so a known account
+    # can't be brute-forced. Checked before the (expensive) password verify.
+    login_key = f"login:{email}"
+    try:
+        auth_rate_limit_repository.check_auth_rate_limit(login_key)
+    except RateLimitExceededError as exc:
+        return _rate_limited_response(exc, message="Too many attempts. Try again later.")
+
     row = get_user_by_email(email)
     if row is None or not verify_password(request.password, row["password_hash"]):
+        auth_rate_limit_repository.record_auth_attempt(login_key)
         return _envelope_response(
             status_code=401,
             data=None,
             error={"code": "INVALID_CREDENTIALS", "message": "Invalid email or password."},
         )
 
+    # Successful login clears the failure counter so honest users aren't
+    # locked out by their own prior typos.
+    auth_rate_limit_repository.clear_auth_attempts(login_key)
     user = {
         "id": row["id"],
         "email": row["email"],
@@ -392,19 +424,13 @@ def post_grade(
     try:
         rate_limit_repository.check_and_record_grade_attempt(current_user_id)
     except RateLimitExceededError as exc:
-        response = _envelope_response(
-            status_code=429,
-            data=None,
-            error={
-                "code": "RATE_LIMITED",
-                "message": (
-                    f"Grade rate limit reached ({exc.limit} per "
-                    f"{exc.window_seconds}s). Try again later."
-                ),
-            },
+        return _rate_limited_response(
+            exc,
+            message=(
+                f"Grade rate limit reached ({exc.limit} per "
+                f"{exc.window_seconds}s). Try again later."
+            ),
         )
-        response.headers["Retry-After"] = str(exc.retry_after_seconds)
-        return response
 
     try:
         grader_output = grade_decision_answer(unit, request.answer)
