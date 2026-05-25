@@ -4,9 +4,9 @@ import re
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+import bcrypt
 import jwt
 from fastapi import Header, HTTPException
-from passlib.context import CryptContext
 
 from .config import JWT_ALGORITHM, JWT_EXPIRATION_DAYS, JWT_SECRET
 
@@ -15,7 +15,11 @@ MIN_PASSWORD_LENGTH = 8
 MIN_DISPLAY_NAME_LENGTH = 2
 MAX_DISPLAY_NAME_LENGTH = 50
 
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# bcrypt only considers the first 72 bytes of the password and (4.x+) raises
+# on longer input. Truncate to that to preserve the classic accept-any-length
+# behavior — and the same truncation passlib applied, so hashes made by the
+# old passlib+bcrypt stack still verify byte-for-byte.
+_BCRYPT_MAX_BYTES = 72
 
 
 class AuthError(Exception):
@@ -25,21 +29,25 @@ class AuthError(Exception):
         self.status_code = status_code
 
 
+def _password_bytes(password: str) -> bytes:
+    return password.encode("utf-8")[:_BCRYPT_MAX_BYTES]
+
+
 def hash_password(password: str) -> str:
-    return _pwd_context.hash(password)
+    return bcrypt.hashpw(_password_bytes(password), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(password: str, password_hash: str) -> bool:
     try:
-        return _pwd_context.verify(password, password_hash)
-    except ValueError:
+        return bcrypt.checkpw(_password_bytes(password), password_hash.encode("utf-8"))
+    except (ValueError, TypeError):
         return False
 
 
 # Precomputed hash used to equalize login timing when the email is unknown:
 # bcrypt verify runs whether or not the account exists, so "no such user"
 # and "wrong password" take the same time, closing an enumeration oracle.
-_DUMMY_PASSWORD_HASH = _pwd_context.hash("not-a-real-password-timing-equalizer")
+_DUMMY_PASSWORD_HASH = hash_password("not-a-real-password-timing-equalizer")
 
 
 def verify_login(password: str, password_hash: str | None) -> bool:
