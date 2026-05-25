@@ -173,18 +173,20 @@ enough to ship to users?*" Units 7–10 are all shipped.
 
 ---
 
-## Production (Units 11–15) — 11–13 shipped, 14–15 locked
+## Production (Units 11–15) — all shipped
 
-"*Can we operate this in front of real users?*" Units 11–13 are
-shipped; Units 14 and 15 are locked.
+"*Can we operate this in front of real users?*" Units 11–15 are all
+shipped and gate-passed (Unit 14 at 98.8%, Unit 15 at 97.6%). This
+closes the Production block and the v1 spine's first 15 units — **15 of
+20 published.**
 
 | # | Unit | Status | Trade-off it teaches | Prereqs |
 |---|---|---|---|---|
 | 11 | **Streaming UX** | ✅ | What to stream (raw tokens / semantic chunks / status only) vs. how to render the streaming state (continuous flow / progressive sections / typed-out) vs. how to handle mid-stream failure (silent retry / partial accept / full restart) — three coupled decisions whose pairings produce three different user feels; mismatched pairings produce a UI the user reads as broken | 1, 3 |
 | 12 | **Tool use / function calling** | ✅ | Tool granularity (many narrow tools / few broad composites) vs. schema strictness (strict validation / lenient acceptance) vs. error-recovery locus (model retries on tool-error / orchestrator catches and re-prompts) — three coupled decisions that determine whether a tool-using LLM feature feels reliable, capable, and debuggable, or feels brittle, narrow, and opaque to ship and operate | 1, 4, 6, 10 |
 | 13 | **Multimodal (vision basics)** | ✅ | Send the raw image to a vision model (flexible, zero pipeline, expensive per image, hard to eval) vs. extract structured signal first with OCR / classical CV (cheap, precise, brittle to inputs it wasn't built for) vs. hybrid (cheap extractor with a VLM fallback on low-confidence) — the PM error is defaulting to "throw the image at the multimodal model" for a stable extraction problem, or building a brittle CV pipeline for genuinely open-ended visual understanding | 1, 4, 8 |
-| 14 | **Agents / multi-step reasoning** | 🔒 | How much to decompose (single call / fixed workflow / model-directed agent loop) vs. how the loop terminates (fixed step budget / model self-assessment / external verifier) vs. where errors are caught (let them compound / per-step validation / end-state check) — the PM error is building a model-directed agent loop for a task that is actually a fixed workflow, paying agent cost, latency, and unpredictability for zero capability gain; that mismatch is the "expensive theater" | 1, 4, 8, 12 |
-| 15 | **Safety + content moderation** | 🔒 | What to moderate (input prompts / model output / both) vs. how strict to set the threshold (the over-refusal vs. under-block precision/recall trade) vs. where the human sits (auto-block / flag-for-review / human-in-the-loop on high-risk actions) — three coupled decisions whose combination determines whether a feature is safe-and-usable or safe-but-useless; the PM error is treating safety as a single content-filter toggle bolted on at launch instead of threat-modeling the feature's specific abuse surface and layering proportionate defenses | 7, 12, 14 |
+| 14 | **Agents / multi-step reasoning** | ✅ | How much to decompose (single call / fixed workflow / model-directed agent loop) vs. how the loop terminates (fixed step budget / model self-assessment / external verifier) vs. where errors are caught (let them compound / per-step validation / end-state check) — the PM error is building a model-directed agent loop for a task that is actually a fixed workflow, paying agent cost, latency, and unpredictability for zero capability gain; that mismatch is the "expensive theater" | 1, 4, 8, 12 |
+| 15 | **Safety + content moderation** | ✅ | What to moderate (input prompts / model output / both) vs. how strict to set the threshold (the over-refusal vs. under-block precision/recall trade) vs. where the human sits (auto-block / flag-for-review / human-in-the-loop on high-risk actions) — three coupled decisions whose combination determines whether a feature is safe-and-usable or safe-but-useless; the PM error is treating safety as a single content-filter toggle bolted on at launch instead of threat-modeling the feature's specific abuse surface and layering proportionate defenses | 7, 12, 14 |
 
 ### Position rationale (Unit 11)
 
@@ -414,29 +416,20 @@ Revisit after closed beta.
 
 ## What this file commits us to
 
-1. **Author Unit 14 (Agents / multi-step reasoning) next.**
-   Units 1–13 are shipped and gate-passed (Unit 13 multimodal
-   passed at 98%, its c2 split reverted at the gate — see
-   docs/RUBRIC_AUDIT.md § Rollout findings; 13/20 published).
-   Unit 15 (Safety) is now locked (below, 2026-05-22), satisfying
-   the one-unit-ahead lock buffer for Unit 14. Unit 14's
-   regression set is authored under the cumulative constraints
-   from UNIT_11_GATE.md / UNIT_12_GATE.md: **no flagged-expected
-   pairs**, **no parenthetical option-lists / markdown headers /
-   quote-led sentences in answer text**, and the
-   **AND-clause-criterion authoring check** (when a pair is
-   intended to meet a criterion containing "AND", verify every
-   conjunct is satisfied explicitly, not just the first — the
-   c2/c3-strict pattern across Units 9–13, reinforced by the
-   c1/c4 audit's HIGH-tier finding that the grader holds the
-   second conjunct strictly on every regime/c1 criterion).
-2. **Lock Unit 15 — done (2026-05-22).** Unit 15 (Safety +
-   content moderation) is locked below with title, trade-off,
-   prereqs, and position rationale, satisfying the
-   one-unit-ahead buffer for Unit 14. The buffer is now settled
-   through the end of the Production block; Units 16–20 stay
-   🟧 placeholder, to be locked from closed-beta signal rather
-   than armchair-locked.
+1. **Production block complete — Units 1–15 all shipped and gate-passed.**
+   Unit 14 (Agents) passed at 98.8% (see docs/UNIT_14_GATE.md) and
+   Unit 15 (Safety) at 97.6% (docs/UNIT_15_GATE.md); both published.
+   **15 of 20 published.** The cumulative authoring constraints these
+   gates established — **no flagged-expected pairs**, **no parenthetical
+   option-lists / markdown headers / quote-led sentences in answer
+   text**, and the **AND-clause-criterion check** (verify every conjunct
+   of an "AND" criterion is satisfied explicitly, not just the first) —
+   carry forward to any future unit authoring.
+2. **Operating block (Units 16–20) stays 🟧 placeholder.** No unit is
+   locked ahead of Unit 15; the one-unit-ahead buffer lapses at the end
+   of the Production block by design. Units 16–20 are to be locked from
+   closed-beta signal, not armchair-locked — and the shipped 1.0 release
+   note commits to exactly that ("the last fifth gets shaped by you").
 3. **Re-read this file at every phase boundary.** What looked obvious
    at outline time may not survive authoring. Document the change.
 4. **Lock each next unit before authoring slot (a).** The discipline
