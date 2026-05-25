@@ -70,6 +70,14 @@ AUTH_RATE_LIMIT_WINDOW_SECONDS = int(
     os.getenv("AUTH_RATE_LIMIT_WINDOW_SECONDS", "900")
 )
 
+# Anthropic client resilience. max_retries lets the SDK ride through
+# transient 429s (it honors the provider's Retry-After), so a rate-limited
+# grader call self-paces and completes instead of erroring — raise it via
+# env when running a regression sweep on a tight tier. timeout bounds a
+# single hung request (per attempt).
+AI_MAX_RETRIES = int(os.getenv("AI_MAX_RETRIES", "5"))
+AI_REQUEST_TIMEOUT_SECONDS = float(os.getenv("AI_REQUEST_TIMEOUT_SECONDS", "60"))
+
 
 # Default values that must NOT appear in a production deployment.
 # POSTGRES_PASSWORD is intentionally absent from this tuple — it's
