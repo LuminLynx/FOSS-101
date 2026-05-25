@@ -225,6 +225,18 @@ def test_validator_grounds_paraphrased_reordered_truncated_quote() -> None:
     assert out.flagged is False, "a grounded paraphrase must not be flagged"
 
 
+def test_validator_flags_quote_inflated_by_repeated_word() -> None:
+    # Multiplicity guard: repeating a word the answer contains only once
+    # must not inflate overlap past the floor (Codex P1).
+    answer = "moderate the threshold"  # "the" appears once
+    payload = {
+        "grades": [_grade(1, answer_quote="the the the quantum matrix")],
+        "flagged": False,
+    }
+    out = _validate_grader_output(payload, expected_criterion_ids={1}, answer=answer)
+    assert out.flagged is True
+
+
 def test_validator_flags_mostly_fabricated_quote() -> None:
     # A quote whose words mostly aren't in the answer is below the overlap
     # floor → flagged, even if it borrows a stray common word.

@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -248,8 +249,15 @@ def _quote_grounded(answer_quote: str, visible_answer: str, *, min_overlap: floa
     quote_tokens = _WORD_RE.findall(answer_quote.lower())
     if not quote_tokens:
         return True
-    answer_tokens = set(_WORD_RE.findall(visible_answer.lower()))
-    hits = sum(1 for t in quote_tokens if t in answer_tokens)
+    # Multiset, not set: a quote token only counts as grounded up to how
+    # many times that word actually appears in the answer, so repeating a
+    # common word ("the the the …") can't inflate the overlap score.
+    available = Counter(_WORD_RE.findall(visible_answer.lower()))
+    hits = 0
+    for token in quote_tokens:
+        if available[token] > 0:
+            available[token] -= 1
+            hits += 1
     return hits / len(quote_tokens) >= min_overlap
 
 
