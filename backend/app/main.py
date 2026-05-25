@@ -33,6 +33,7 @@ from .repositories import (
 from .repositories.rate_limit_repository import RateLimitExceededError
 from .repository import (
     create_user,
+    delete_user,
     get_term_by_id,
     get_user_auth_by_email,
     get_user_by_email,
@@ -238,6 +239,23 @@ def get_me(current_user_id: str = Depends(required_user_id)) -> JSONResponse:
             error={"code": "USER_NOT_FOUND", "message": "Authenticated user no longer exists."},
         )
     return _envelope_response(data=user)
+
+
+@app.delete("/api/v1/auth/me")
+def delete_me(current_user_id: str = Depends(required_user_id)) -> JSONResponse:
+    """Delete the authenticated user's account and all their data.
+
+    Satisfies the app-store account-deletion requirement. Cascades remove
+    completions, grades, review schedule, and grade attempts; the user's
+    auth-attempt rows are cleared too (see repository.delete_user).
+    """
+    if not delete_user(current_user_id):
+        return _envelope_response(
+            status_code=404,
+            data=None,
+            error={"code": "USER_NOT_FOUND", "message": "Authenticated user no longer exists."},
+        )
+    return _envelope_response(data={"deleted": True})
 
 
 @app.get("/api/v1/paths/{path_id}")

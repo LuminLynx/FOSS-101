@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account &amp; Data Deletion — Libella</title>
+  <meta name="description" content="How to delete your Libella account and all associated data.">
+  <link rel="canonical" href="https://luminlynx.github.io/Libella/account-deletion.html">
+  <style>
+    :root { color-scheme: dark; --bg:#0b1020; --panel:#151d36; --text:#f6f8ff;
+            --muted:#b8c2dc; --line:rgba(255,255,255,.15); --accent:#9bb7ff; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+           background:var(--bg); color:var(--text); }
+    main { max-width:720px; margin:0 auto; padding:48px 20px 80px; }
+    h1 { font-size:1.8rem; margin:0 0 .25em; }
+    h2 { font-size:1.15rem; margin:2em 0 .5em; }
+    p, li { color:var(--text); }
+    .muted { color:var(--muted); }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+             padding:20px 24px; margin:18px 0; }
+    a { color:var(--accent); }
+    code { background:rgba(255,255,255,.08); padding:.1em .4em; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Delete your Libella account</h1>
+    <p class="muted">Libella is an Android learning app. Your account is identified
+    by your email address and holds your learning data only.</p>
+
+    <h2>How to request deletion</h2>
+    <div class="panel">
+      <p><strong>In the app:</strong> open <strong>Settings → Delete account</strong>.
+      This permanently deletes your account and all associated data immediately.</p>
+      <p><strong>Without the app:</strong> email
+      <a href="mailto:joaoport@pm.me?subject=Libella%20account%20deletion">joaoport@pm.me</a>
+      from the email address on your account and ask us to delete it. We confirm
+      ownership and delete within <strong>30 days</strong>.</p>
+    </div>
+
+    <h2>What gets deleted</h2>
+    <ul>
+      <li>Your account record (email, password hash, display name).</li>
+      <li>Your learning data — unit completions, grades, and spaced-review schedule.</li>
+      <li>Transient authentication rate-limit records tied to your email.</li>
+    </ul>
+    <p class="muted">Deletion is permanent and cannot be undone. Residual copies in
+    encrypted backups are purged on the normal backup-rotation cycle (within 30 days).
+    We do not sell personal data or share it with third parties for advertising.</p>
+
+    <h2>Questions</h2>
+    <p>Contact <a href="mailto:joaoport@pm.me">joaoport@pm.me</a>.</p>
+  </main>
+</body>
+</html>
