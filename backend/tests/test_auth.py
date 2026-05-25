@@ -26,6 +26,26 @@ def test_password_hash_round_trip() -> None:
     assert not verify_password("wrong-password", hashed)
 
 
+def test_verify_password_accepts_preexisting_bcrypt_hash() -> None:
+    # Backward compatibility: a $2b$ hash stored by the old passlib+bcrypt
+    # stack must still verify after dropping passlib for direct bcrypt.
+    existing = "$2b$12$G9ieOf4j4ziNLbNipYzPhOtiIk3QQsEd/ebI9PrIlsi3ha2HDVXES"
+    assert verify_password("correct-horse-battery", existing)
+    assert not verify_password("wrong", existing)
+
+
+def test_hash_password_handles_overlong_password() -> None:
+    # bcrypt only uses the first 72 bytes; an overlong password must hash and
+    # verify (no ValueError), matching the classic truncation behavior.
+    long_password = "x" * 200
+    hashed = hash_password(long_password)
+    assert verify_password(long_password, hashed)
+
+
+def test_verify_password_returns_false_on_garbage_hash() -> None:
+    assert verify_password("anything", "not-a-bcrypt-hash") is False
+
+
 def test_verify_login_handles_unknown_user() -> None:
     # Unknown user (None hash) still returns False, having run bcrypt against
     # the dummy hash so timing doesn't reveal the account doesn't exist.
