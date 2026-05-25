@@ -8,7 +8,7 @@ from __future__ import annotations
 import pytest
 
 from app import config
-from app.config import ProductionConfigError, validate_production_config
+from app.config import ProductionConfigError, is_production, validate_production_config
 
 
 @pytest.fixture(autouse=True)
@@ -119,8 +119,7 @@ def test_reports_all_problems_at_once(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_staging_env_is_treated_as_non_production(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Only the literal string 'production' triggers the gate. A
-    'staging' env can run with whatever its operator chose — the
+    """A 'staging' env can run with whatever its operator chose — the
     intent is to protect the launch surface, not force every
     environment through prod-grade secret hygiene.
     """
@@ -130,3 +129,26 @@ def test_staging_env_is_treated_as_non_production(monkeypatch: pytest.MonkeyPatc
     monkeypatch.setattr(config, "POSTGRES_PASSWORD", "postgres")
     monkeypatch.setattr(config, "AI_PROVIDER_API_KEY", "")
     validate_production_config()  # should not raise
+
+
+def test_is_production_matches_case_and_whitespace_insensitively(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    for value in ("production", "Production", "PRODUCTION", "  production  "):
+        monkeypatch.setattr(config, "APP_ENV", value)
+        assert is_production() is True, value
+    for value in ("development", "staging", "ci", "prod", ""):
+        monkeypatch.setattr(config, "APP_ENV", value)
+        assert is_production() is False, value
+
+
+def test_gate_fires_for_capitalized_production_typo(monkeypatch: pytest.MonkeyPatch) -> None:
+    # The old exact "== production" check failed open on a capitalized typo;
+    # the gate must now catch it and refuse the default secret.
+    monkeypatch.setattr(config, "APP_ENV", "Production")
+    monkeypatch.setattr(config, "DATABASE_URL", "postgresql://u:p@h:5432/d")
+    monkeypatch.setattr(config, "JWT_SECRET", "change-me-in-production")
+    monkeypatch.setattr(config, "POSTGRES_PASSWORD", "real")
+    monkeypatch.setattr(config, "AI_PROVIDER_API_KEY", "sk-ant-real")
+    with pytest.raises(ProductionConfigError, match="JWT_SECRET"):
+        validate_production_config()

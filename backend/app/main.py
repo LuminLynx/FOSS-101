@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Any
 
@@ -15,11 +16,12 @@ from .auth import (
     validate_display_name,
     validate_email,
     validate_password,
-    verify_password,
+    verify_login,
 )
 from .config import validate_production_config
 from .migrations import run_migrations
 from .repositories import (
+    auth_rate_limit_repository,
     completion_repository,
     grade_repository,
     path_repository,
@@ -38,6 +40,8 @@ from .repository import (
     list_terms_by_category,
     search_terms,
 )
+
+LOGGER = logging.getLogger(__name__)
 
 app = FastAPI(title="AI-101 Backend", version="0.3.0")
 
@@ -64,6 +68,16 @@ class LoginRequest(BaseModel):
 def _envelope_response(*, data, error=None, status_code: int = 200) -> JSONResponse:
     payload = {"data": data, "error": error}
     return JSONResponse(content=jsonable_encoder(payload), status_code=status_code)
+
+
+def _rate_limited_response(exc: RateLimitExceededError, *, message: str) -> JSONResponse:
+    response = _envelope_response(
+        status_code=429,
+        data=None,
+        error={"code": "RATE_LIMITED", "message": message},
+    )
+    response.headers["Retry-After"] = str(exc.retry_after_seconds)
+    return response
 
 
 @app.on_event("startup")
@@ -138,6 +152,14 @@ def post_signup(request: SignupRequest) -> JSONResponse:
             error={"code": error.code, "message": str(error)},
         )
 
+    # Per-email throttle, before the expensive bcrypt hash, to bound
+    # repeated probing of a single address. Atomic check+record.
+    signup_key = f"signup:{email}"
+    try:
+        auth_rate_limit_repository.check_and_record_auth_attempt(signup_key)
+    except RateLimitExceededError as exc:
+        return _rate_limited_response(exc, message="Too many attempts. Try again later.")
+
     if get_user_by_email(email) is not None:
         return _envelope_response(
             status_code=409,
@@ -168,14 +190,28 @@ def post_login(request: LoginRequest) -> JSONResponse:
             error={"code": error.code, "message": str(error)},
         )
 
+    # Per-account throttle: cap login attempts per email so a known account
+    # can't be brute-forced. Atomic check+record before the (expensive)
+    # password verify; a successful login clears the counter below.
+    login_key = f"login:{email}"
+    try:
+        auth_rate_limit_repository.check_and_record_auth_attempt(login_key)
+    except RateLimitExceededError as exc:
+        return _rate_limited_response(exc, message="Too many attempts. Try again later.")
+
+    # verify_login runs bcrypt even when the email is unknown, so the
+    # response time doesn't reveal whether the account exists.
     row = get_user_by_email(email)
-    if row is None or not verify_password(request.password, row["password_hash"]):
+    if not verify_login(request.password, row["password_hash"] if row else None):
         return _envelope_response(
             status_code=401,
             data=None,
             error={"code": "INVALID_CREDENTIALS", "message": "Invalid email or password."},
         )
 
+    # Successful login clears the failure counter so honest users aren't
+    # locked out by their own prior typos.
+    auth_rate_limit_repository.clear_auth_attempts(login_key)
     user = {
         "id": row["id"],
         "email": row["email"],
@@ -392,27 +428,27 @@ def post_grade(
     try:
         rate_limit_repository.check_and_record_grade_attempt(current_user_id)
     except RateLimitExceededError as exc:
-        response = _envelope_response(
-            status_code=429,
-            data=None,
-            error={
-                "code": "RATE_LIMITED",
-                "message": (
-                    f"Grade rate limit reached ({exc.limit} per "
-                    f"{exc.window_seconds}s). Try again later."
-                ),
-            },
+        return _rate_limited_response(
+            exc,
+            message=(
+                f"Grade rate limit reached ({exc.limit} per "
+                f"{exc.window_seconds}s). Try again later."
+            ),
         )
-        response.headers["Retry-After"] = str(exc.retry_after_seconds)
-        return response
 
     try:
         grader_output = grade_decision_answer(unit, request.answer)
     except AIServiceError as exc:
+        # Log the detail (which may include raw provider error text) server-side
+        # only; return a generic message so internals aren't leaked to clients.
+        LOGGER.warning("grade failed for unit %s: %s", unit_id, exc)
         return _envelope_response(
             status_code=502,
             data=None,
-            error={"code": exc.code, "message": str(exc)},
+            error={
+                "code": exc.code,
+                "message": "Grading is temporarily unavailable. Please try again.",
+            },
         )
 
     # Only commit a completion + grades if the grader call succeeded.

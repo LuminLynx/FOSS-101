@@ -13,6 +13,7 @@ from app.auth import (
     validate_display_name,
     validate_email,
     validate_password,
+    verify_login,
     verify_password,
 )
 
@@ -23,6 +24,18 @@ def test_password_hash_round_trip() -> None:
     assert hashed != password
     assert verify_password(password, hashed)
     assert not verify_password("wrong-password", hashed)
+
+
+def test_verify_login_handles_unknown_user() -> None:
+    # Unknown user (None hash) still returns False, having run bcrypt against
+    # the dummy hash so timing doesn't reveal the account doesn't exist.
+    assert verify_login("anything", None) is False
+
+
+def test_verify_login_checks_real_hash() -> None:
+    hashed = hash_password("correct-horse-battery")
+    assert verify_login("correct-horse-battery", hashed) is True
+    assert verify_login("wrong-password", hashed) is False
 
 
 def test_jwt_round_trip() -> None:
@@ -59,3 +72,69 @@ def test_validate_display_name_bounds() -> None:
         validate_display_name("A")
     with pytest.raises(AuthError):
         validate_display_name("X" * 100)
+
+
+# ---------------------------------------------------------------------------
+# Per-account rate limiting on the auth endpoints (H2)
+# ---------------------------------------------------------------------------
+
+from fastapi.testclient import TestClient  # noqa: E402
+
+from app.main import app  # noqa: E402
+from app.repositories import auth_rate_limit_repository  # noqa: E402
+from app.repositories.rate_limit_repository import RateLimitExceededError  # noqa: E402
+
+
+def _block(*_args, **_kwargs):
+    raise RateLimitExceededError(retry_after_seconds=30, limit=10, window_seconds=900)
+
+
+def test_login_returns_429_when_rate_limited(monkeypatch) -> None:
+    monkeypatch.setattr(
+        auth_rate_limit_repository, "check_and_record_auth_attempt", _block
+    )
+    client = TestClient(app)
+    response = client.post(
+        "/api/v1/auth/login", json={"email": "a@b.com", "password": "whatever123"}
+    )
+    assert response.status_code == 429
+    assert response.json()["error"]["code"] == "RATE_LIMITED"
+    assert response.headers["Retry-After"] == "30"
+
+
+def test_signup_returns_429_when_rate_limited(monkeypatch) -> None:
+    monkeypatch.setattr(
+        auth_rate_limit_repository, "check_and_record_auth_attempt", _block
+    )
+    client = TestClient(app)
+    response = client.post(
+        "/api/v1/auth/signup",
+        json={"email": "a@b.com", "password": "whatever123", "displayName": "Ada"},
+    )
+    assert response.status_code == 429
+    assert response.json()["error"]["code"] == "RATE_LIMITED"
+
+
+def test_auth_rate_limit_blocks_after_cap_then_clears(gated_db) -> None:
+    key = "login:victim@example.com"
+    # check+record is atomic: each call records one attempt; the cap+1-th
+    # call is blocked without recording.
+    for _ in range(3):
+        auth_rate_limit_repository.check_and_record_auth_attempt(
+            key, max_attempts=3, window_seconds=900
+        )
+    with pytest.raises(RateLimitExceededError):
+        auth_rate_limit_repository.check_and_record_auth_attempt(
+            key, max_attempts=3, window_seconds=900
+        )
+    # A successful login clears the counter.
+    auth_rate_limit_repository.clear_auth_attempts(key)
+    auth_rate_limit_repository.check_and_record_auth_attempt(
+        key, max_attempts=3, window_seconds=900
+    )
+
+    # Per-account isolation: a different email is unaffected.
+    other = "login:someone-else@example.com"
+    auth_rate_limit_repository.check_and_record_auth_attempt(
+        other, max_attempts=3, window_seconds=900
+    )

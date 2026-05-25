@@ -330,6 +330,8 @@ def test_grade_endpoint_returns_502_when_grader_fails(
     )
     assert response.status_code == 502
     assert response.json()["error"]["code"] == "AI_REQUEST_FAILED"
+    # M4: the raw internal exception text must not leak to the client.
+    assert "synthetic failure" not in response.json()["error"]["message"]
 
 
 def test_grade_endpoint_persists_completion_and_grades(

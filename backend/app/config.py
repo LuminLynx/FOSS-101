@@ -62,6 +62,14 @@ GRADE_RATE_LIMIT_WINDOW_SECONDS = int(
     os.getenv("GRADE_RATE_LIMIT_WINDOW_SECONDS", "3600")
 )
 
+# Per-account rate limit for auth endpoints (login/signup), keyed by email
+# rather than client IP (which is the proxy's behind Railway). Caps targeted
+# brute-force of one account; generous enough for honest retries.
+AUTH_RATE_LIMIT_MAX = int(os.getenv("AUTH_RATE_LIMIT_MAX", "10"))
+AUTH_RATE_LIMIT_WINDOW_SECONDS = int(
+    os.getenv("AUTH_RATE_LIMIT_WINDOW_SECONDS", "900")
+)
+
 # Anthropic client resilience. max_retries lets the SDK ride through
 # transient 429s (it honors the provider's Retry-After), so a rate-limited
 # grader call self-paces and completes instead of erroring — raise it via
@@ -91,15 +99,28 @@ class ProductionConfigError(RuntimeError):
     """
 
 
+def is_production() -> bool:
+    """True when APP_ENV names the production environment.
+
+    Matched case- and whitespace-insensitively so a typo like
+    "Production" or " production " can't silently slip past the secrets
+    gate (the previous exact `== "production"` check failed open on any
+    near-miss). Other names (development, test, ci, staging, …) remain
+    non-production by design — the gate protects the launch surface, not
+    every environment.
+    """
+    return APP_ENV.strip().lower() == "production"
+
+
 def validate_production_config() -> None:
     """Refuse to start in production with default secrets.
 
     Called from `main.py`'s startup hook. In any non-production
-    environment (development, test, ci, staging — anything other than
-    the literal string "production") this is a no-op so local work and
+    environment (development, test, ci, staging — anything that isn't the
+    production env per `is_production`) this is a no-op so local work and
     test runs aren't blocked.
     """
-    if APP_ENV != "production":
+    if not is_production():
         return
 
     problems: list[str] = []
