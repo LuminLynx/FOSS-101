@@ -147,3 +147,19 @@ ON CONFLICT (id) DO UPDATE SET
     related_terms = EXCLUDED.related_terms,
     example_usage = EXCLUDED.example_usage,
     updated_at = EXCLUDED.updated_at;
+
+-- Rebuild term_relations from related_terms AFTER all terms exist. The per-row
+-- sync trigger (migration 004) only links references whose target row already
+-- exists at insert time, so forward references in the bulk inserts above (and
+-- in the original 16) would otherwise be dropped. repository.py prefers the
+-- relation table over the CSV fallback, so this backfill is what makes
+-- seeAlso / relatedTerms complete after seeding.
+DELETE FROM term_relations;
+INSERT INTO term_relations (term_id, related_term_id)
+SELECT t.id, related.id
+FROM terms t
+JOIN LATERAL UNNEST(STRING_TO_ARRAY(t.related_terms, ',')) AS rel_id ON TRUE
+JOIN terms AS related ON related.id = TRIM(rel_id)
+WHERE TRIM(rel_id) <> ''
+  AND t.id <> related.id
+ON CONFLICT (term_id, related_term_id) DO NOTHING;
