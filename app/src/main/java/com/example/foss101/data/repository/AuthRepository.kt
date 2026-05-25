@@ -14,6 +14,7 @@ interface AuthRepository {
     fun isLoggedIn(): Boolean
     fun token(): String?
     fun logout()
+    suspend fun deleteAccount()
 }
 
 class ApiAuthRepository(
@@ -65,6 +66,12 @@ class ApiAuthRepository(
     override fun token(): String? = tokenStorage.getToken()
 
     override fun logout() {
+        tokenStorage.clear()
+    }
+
+    override suspend fun deleteAccount() {
+        val token = tokenStorage.getToken() ?: return
+        authApiService.deleteAccount(token)
         tokenStorage.clear()
     }
 

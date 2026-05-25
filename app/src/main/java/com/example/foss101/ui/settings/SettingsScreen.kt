@@ -24,20 +24,25 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.BrightnessAuto
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,6 +71,9 @@ fun SettingsScreen(
 ) {
     var currentUser by remember { mutableStateOf<User?>(authRepository.currentUser()) }
     val themeMode by themePreferenceStore.mode.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+    var deleting by remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
         currentUser = authRepository.currentUser()
@@ -91,7 +99,8 @@ fun SettingsScreen(
                     onSignOut = {
                         authRepository.logout()
                         currentUser = null
-                    }
+                    },
+                    onDeleteAccount = { showDeleteConfirm = true }
                 )
             }
 
@@ -123,6 +132,44 @@ fun SettingsScreen(
                 )
             }
         }
+
+        if (showDeleteConfirm) {
+            AlertDialog(
+                onDismissRequest = { if (!deleting) showDeleteConfirm = false },
+                title = { Text("Delete account?") },
+                text = {
+                    Text(
+                        "This permanently deletes your account and all your data — " +
+                            "completions, grades, and review schedule. This cannot be undone."
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        enabled = !deleting,
+                        onClick = {
+                            deleting = true
+                            scope.launch {
+                                try {
+                                    authRepository.deleteAccount()
+                                    currentUser = null
+                                } catch (_: Exception) {
+                                    // Deletion failed; leave the account intact.
+                                } finally {
+                                    deleting = false
+                                    showDeleteConfirm = false
+                                }
+                            }
+                        }
+                    ) { Text(if (deleting) "Deleting…" else "Delete") }
+                },
+                dismissButton = {
+                    TextButton(
+                        enabled = !deleting,
+                        onClick = { showDeleteConfirm = false }
+                    ) { Text("Cancel") }
+                }
+            )
+        }
     }
 }
 
@@ -131,7 +178,8 @@ private fun AccountSection(
     user: User?,
     onSignIn: () -> Unit,
     onSignUp: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    onDeleteAccount: () -> Unit
 ) {
     if (user != null) {
         SettingsRow(
@@ -145,6 +193,13 @@ private fun AccountSection(
             title = "Sign out",
             description = "End this session on this device",
             onClick = onSignOut
+        )
+        Divider()
+        SettingsRow(
+            icon = Icons.Filled.DeleteForever,
+            title = "Delete account",
+            description = "Permanently delete your account and all data",
+            onClick = onDeleteAccount
         )
     } else {
         SettingsRow(
