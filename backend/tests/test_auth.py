@@ -90,7 +90,9 @@ def _block(*_args, **_kwargs):
 
 
 def test_login_returns_429_when_rate_limited(monkeypatch) -> None:
-    monkeypatch.setattr(auth_rate_limit_repository, "check_auth_rate_limit", _block)
+    monkeypatch.setattr(
+        auth_rate_limit_repository, "check_and_record_auth_attempt", _block
+    )
     client = TestClient(app)
     response = client.post(
         "/api/v1/auth/login", json={"email": "a@b.com", "password": "whatever123"}
@@ -101,7 +103,9 @@ def test_login_returns_429_when_rate_limited(monkeypatch) -> None:
 
 
 def test_signup_returns_429_when_rate_limited(monkeypatch) -> None:
-    monkeypatch.setattr(auth_rate_limit_repository, "check_auth_rate_limit", _block)
+    monkeypatch.setattr(
+        auth_rate_limit_repository, "check_and_record_auth_attempt", _block
+    )
     client = TestClient(app)
     response = client.post(
         "/api/v1/auth/signup",
@@ -113,25 +117,24 @@ def test_signup_returns_429_when_rate_limited(monkeypatch) -> None:
 
 def test_auth_rate_limit_blocks_after_cap_then_clears(gated_db) -> None:
     key = "login:victim@example.com"
-    # Under the cap: check passes, each failure records an attempt.
+    # check+record is atomic: each call records one attempt; the cap+1-th
+    # call is blocked without recording.
     for _ in range(3):
-        auth_rate_limit_repository.check_auth_rate_limit(
+        auth_rate_limit_repository.check_and_record_auth_attempt(
             key, max_attempts=3, window_seconds=900
         )
-        auth_rate_limit_repository.record_auth_attempt(key)
-    # Now at the cap — the next check is blocked.
     with pytest.raises(RateLimitExceededError):
-        auth_rate_limit_repository.check_auth_rate_limit(
+        auth_rate_limit_repository.check_and_record_auth_attempt(
             key, max_attempts=3, window_seconds=900
         )
     # A successful login clears the counter.
     auth_rate_limit_repository.clear_auth_attempts(key)
-    auth_rate_limit_repository.check_auth_rate_limit(
+    auth_rate_limit_repository.check_and_record_auth_attempt(
         key, max_attempts=3, window_seconds=900
     )
 
     # Per-account isolation: a different email is unaffected.
     other = "login:someone-else@example.com"
-    auth_rate_limit_repository.check_auth_rate_limit(
+    auth_rate_limit_repository.check_and_record_auth_attempt(
         other, max_attempts=3, window_seconds=900
     )

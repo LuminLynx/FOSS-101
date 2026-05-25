@@ -23,3 +23,8 @@ CREATE TABLE IF NOT EXISTS auth_attempts (
 
 CREATE INDEX IF NOT EXISTS idx_auth_attempts_key_time
     ON auth_attempts(attempt_key, attempted_at DESC);
+
+-- Supports the global expired-row prune (DELETE WHERE attempted_at < cutoff),
+-- which the per-key index above can't serve (key is its leading column).
+CREATE INDEX IF NOT EXISTS idx_auth_attempts_time
+    ON auth_attempts(attempted_at);

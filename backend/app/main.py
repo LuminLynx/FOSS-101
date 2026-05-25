@@ -153,13 +153,12 @@ def post_signup(request: SignupRequest) -> JSONResponse:
         )
 
     # Per-email throttle, before the expensive bcrypt hash, to bound
-    # repeated probing of a single address.
+    # repeated probing of a single address. Atomic check+record.
     signup_key = f"signup:{email}"
     try:
-        auth_rate_limit_repository.check_auth_rate_limit(signup_key)
+        auth_rate_limit_repository.check_and_record_auth_attempt(signup_key)
     except RateLimitExceededError as exc:
         return _rate_limited_response(exc, message="Too many attempts. Try again later.")
-    auth_rate_limit_repository.record_auth_attempt(signup_key)
 
     if get_user_by_email(email) is not None:
         return _envelope_response(
@@ -191,11 +190,12 @@ def post_login(request: LoginRequest) -> JSONResponse:
             error={"code": error.code, "message": str(error)},
         )
 
-    # Per-account throttle: cap failed logins per email so a known account
-    # can't be brute-forced. Checked before the (expensive) password verify.
+    # Per-account throttle: cap login attempts per email so a known account
+    # can't be brute-forced. Atomic check+record before the (expensive)
+    # password verify; a successful login clears the counter below.
     login_key = f"login:{email}"
     try:
-        auth_rate_limit_repository.check_auth_rate_limit(login_key)
+        auth_rate_limit_repository.check_and_record_auth_attempt(login_key)
     except RateLimitExceededError as exc:
         return _rate_limited_response(exc, message="Too many attempts. Try again later.")
 
@@ -203,7 +203,6 @@ def post_login(request: LoginRequest) -> JSONResponse:
     # response time doesn't reveal whether the account exists.
     row = get_user_by_email(email)
     if not verify_login(request.password, row["password_hash"] if row else None):
-        auth_rate_limit_repository.record_auth_attempt(login_key)
         return _envelope_response(
             status_code=401,
             data=None,
