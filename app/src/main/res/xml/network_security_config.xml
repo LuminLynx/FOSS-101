@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Block cleartext (HTTP) traffic app-wide. All API calls go to the HTTPS
+     backend; making the guarantee explicit (rather than relying on the
+     SDK-26 platform default) keeps it version-proof. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
