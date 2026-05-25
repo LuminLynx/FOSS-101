@@ -1,56 +1,174 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Account &amp; Data Deletion — Libella</title>
-  <meta name="description" content="How to delete your Libella account and all associated data.">
-  <link rel="canonical" href="https://luminlynx.github.io/Libella/account-deletion.html">
-  <style>
-    :root { color-scheme: dark; --bg:#0b1020; --panel:#151d36; --text:#f6f8ff;
-            --muted:#b8c2dc; --line:rgba(255,255,255,.15); --accent:#9bb7ff; }
-    * { box-sizing: border-box; }
-    body { margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-           background:var(--bg); color:var(--text); }
-    main { max-width:720px; margin:0 auto; padding:48px 20px 80px; }
-    h1 { font-size:1.8rem; margin:0 0 .25em; }
-    h2 { font-size:1.15rem; margin:2em 0 .5em; }
-    p, li { color:var(--text); }
-    .muted { color:var(--muted); }
-    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px;
-             padding:20px 24px; margin:18px 0; }
-    a { color:var(--accent); }
-    code { background:rgba(255,255,255,.08); padding:.1em .4em; border-radius:6px; }
-  </style>
+<meta charset="utf-8" />
+<title>Account &amp; Data Deletion — Libella</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="How to delete your Libella account and all associated data." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://luminlynx.github.io/Libella/account-deletion.html" />
+<link rel="icon" href="assets/libella-mark.svg" />
+
+<link rel="stylesheet" href="colors_and_type.css" />
+
+<style>
+  html { color-scheme: light dark; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper-0); color: var(--ink-1);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  a { color: var(--oxblood); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* ─── Top nav (shared with index.html) ──────────────────── */
+  nav.top {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper-0);
+    border-bottom: 1px solid var(--hair-1);
+  }
+  nav.top .row { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .wordmark { display: flex; align-items: center; gap: 10px; }
+  .wordmark img { width: 22px; height: 22px; display: block; }
+  .wordmark .name {
+    font-family: var(--font-display); font-size: 18px; font-weight: 500;
+    color: var(--ink-1); letter-spacing: -0.012em;
+  }
+  nav .grow { flex: 1; }
+  nav a.link {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-2);
+  }
+  nav a.link:hover { color: var(--ink-1); text-decoration: none; }
+
+  /* ─── Article ───────────────────────────────────────────── */
+  .article { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  .article .eyebrow {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.16em; color: var(--ink-3);
+    margin: 64px 0 16px;
+  }
+  .article h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 52px); line-height: 1.06;
+    font-weight: 400; letter-spacing: -0.018em;
+    margin: 0 0 16px; text-wrap: balance;
+  }
+  .article h2 {
+    font-family: var(--font-display); font-size: 24px; line-height: 1.2;
+    font-weight: 500; margin: 44px 0 12px; color: var(--ink-1);
+  }
+  .article p {
+    font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+    color: var(--ink-1); margin: 0 0 16px; max-width: 64ch;
+  }
+  .article ul { margin: 0 0 16px; padding-left: 22px; max-width: 64ch; }
+  .article li {
+    font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+    color: var(--ink-1); margin: 0 0 8px;
+  }
+  .article .muted { color: var(--ink-2); }
+  .article strong { font-weight: 600; color: var(--ink-1); }
+
+  .callout {
+    background: var(--paper-2); border: 1px solid var(--hair-1);
+    border-radius: 4px; padding: 20px 24px; margin: 20px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  code {
+    font-family: var(--font-mono); font-size: 0.92em;
+    background: var(--mineral-tint); color: var(--mineral);
+    padding: 0.1em 0.4em; border-radius: 2px;
+  }
+
+  /* ─── Footer (shared with index.html) ───────────────────── */
+  footer {
+    border-top: 1px solid var(--hair-1);
+    margin-top: 80px; padding: 32px 0;
+    font-family: var(--font-ui); font-size: 12px; color: var(--ink-3);
+  }
+  footer .row { display: flex; align-items: center; gap: 24px; }
+  footer .grow { flex: 1; }
+
+  @media (max-width: 880px) {
+    nav .link.hide-md { display: none; }
+    .article .eyebrow { margin-top: 48px; }
+  }
+</style>
 </head>
+
 <body>
-  <main>
-    <h1>Delete your Libella account</h1>
-    <p class="muted">Libella is an Android learning app. Your account is identified
-    by your email address and holds your learning data only.</p>
 
-    <h2>How to request deletion</h2>
-    <div class="panel">
-      <p><strong>In the app:</strong> open <strong>Settings → Delete account</strong>.
-      This permanently deletes your account and all associated data immediately.</p>
-      <p><strong>Without the app:</strong> email
-      <a href="mailto:joaoport@pm.me?subject=Libella%20account%20deletion">joaoport@pm.me</a>
-      from the email address on your account and ask us to delete it. We confirm
-      ownership and delete within <strong>30 days</strong>.</p>
-    </div>
+<nav class="top">
+  <div class="wrap row">
+    <a class="wordmark" href="index.html">
+      <picture>
+        <source srcset="assets/libella-mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img src="assets/libella-mark.svg" alt="" />
+      </picture>
+      <span class="name">Libella</span>
+    </a>
+    <div class="grow"></div>
+    <a class="link hide-md" href="index.html#path">The path</a>
+    <a class="link" href="index.html">Home</a>
+    <a class="link hide-md" href="https://github.com/LuminLynx/Libella">GitHub</a>
+  </div>
+</nav>
 
-    <h2>What gets deleted</h2>
-    <ul>
-      <li>Your account record (email, password hash, display name).</li>
-      <li>Your learning data — unit completions, grades, and spaced-review schedule.</li>
-      <li>Transient authentication rate-limit records tied to your email.</li>
-    </ul>
-    <p class="muted">Deletion is permanent and cannot be undone. Residual copies in
-    encrypted backups are purged on the normal backup-rotation cycle (within 30 days).
-    We do not sell personal data or share it with third parties for advertising.</p>
+<main class="article">
+  <div class="eyebrow">Account &amp; data</div>
+  <h1>Delete your Libella account</h1>
+  <p class="muted">
+    Libella is an Android learning app. Your account is identified by your
+    email address and holds your learning data only.
+  </p>
 
-    <h2>Questions</h2>
-    <p>Contact <a href="mailto:joaoport@pm.me">joaoport@pm.me</a>.</p>
-  </main>
+  <h2>How to request deletion</h2>
+  <div class="callout">
+    <p><strong>In the app:</strong> open <strong>Settings → Delete account</strong>.
+    This permanently deletes your account and all associated data immediately.</p>
+    <p><strong>Without the app:</strong> email
+    <a href="mailto:joaoport@pm.me?subject=Libella%20account%20deletion">joaoport@pm.me</a>
+    from the email address on your account and ask us to delete it. We confirm
+    ownership and delete within <strong>30 days</strong>.</p>
+  </div>
+
+  <h2>What gets deleted</h2>
+  <ul>
+    <li>Your account record (email, password hash, display name).</li>
+    <li>Your learning data — unit completions, grades, and spaced-review schedule.</li>
+    <li>Transient authentication rate-limit records tied to your email.</li>
+  </ul>
+  <p class="muted">
+    Deletion is permanent and cannot be undone. Residual copies in encrypted
+    backups are purged on the normal backup-rotation cycle (within 30 days).
+    We do not sell personal data or share it with third parties for advertising.
+  </p>
+
+  <h2>Questions</h2>
+  <p>Contact <a href="mailto:joaoport@pm.me">joaoport@pm.me</a>.</p>
+</main>
+
+<footer>
+  <div class="wrap row">
+    <a class="wordmark" href="index.html">
+      <picture>
+        <source srcset="assets/libella-mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img src="assets/libella-mark.svg" alt="" />
+      </picture>
+      <span class="name" style="font-size: 16px;">Libella</span>
+    </a>
+    <div class="grow"></div>
+    <a href="https://github.com/LuminLynx/Libella">github.com/LuminLynx/Libella</a>
+    <span>·</span>
+    <span>GPL-3.0</span>
+  </div>
+</footer>
+
 </body>
 </html>
