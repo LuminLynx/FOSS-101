@@ -51,7 +51,11 @@ AI_MODEL = os.getenv("AI_MODEL", "claude-sonnet-4-6")
 # validate_production_config).
 JWT_SECRET = os.getenv("JWT_SECRET", "change-me-in-production")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-JWT_EXPIRATION_DAYS = int(os.getenv("JWT_EXPIRATION_DAYS", "30"))
+# Tokens are stateless with no server-side revocation, so the TTL is the only
+# bound on a lost/stolen token's lifetime. Keep it short (7 days) to limit that
+# window; env-overridable. (Instant revocation / logout-all is deferred — see
+# the P2 backlog — until there's a refresh flow or higher-sensitivity data.)
+JWT_EXPIRATION_DAYS = int(os.getenv("JWT_EXPIRATION_DAYS", "7"))
 
 # Per-user grade rate limit (OWASP LLM10 — unbounded consumption). Each
 # grade call is a paid model call; cap attempts per user over a sliding
