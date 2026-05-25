@@ -105,6 +105,7 @@ def test_get_unit_returns_404_envelope(
 def test_post_completion_returns_404_for_unknown_unit(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     def _raise(*_args: Any, **_kwargs: Any) -> Any:
         raise completion_repository.UnitNotFoundError("missing")
 
@@ -146,6 +147,7 @@ def test_get_path_returns_data_envelope(
 def test_post_completion_returns_201_for_new_and_200_for_repeat(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     state = {"called": 0}
 
     def _record(user_id: str, unit_id: str) -> dict[str, Any]:
@@ -397,3 +399,16 @@ def test_review_schedule_naive_due_before_returns_400(
     )
     assert response.status_code == 400
     assert response.json()["error"]["code"] == "INVALID_DUE_BEFORE"
+
+
+def test_post_completion_rejects_deleted_account(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
+) -> None:
+    # A valid token whose account was deleted must get a clean 401, not an
+    # FK 500 (stateless JWT outlives the account; the write guard catches it).
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: None)
+    response = client.post(
+        "/api/v1/completions", json={"unitId": "u1"}, headers=auth_header
+    )
+    assert response.status_code == 401
+    assert response.json()["error"]["code"] == "AUTH_REQUIRED"
