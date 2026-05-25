@@ -317,6 +317,7 @@ def test_grade_endpoint_requires_auth(client: TestClient) -> None:
 def test_grade_endpoint_returns_404_for_unknown_unit(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     monkeypatch.setattr(unit_repository, "get_unit", lambda unit_id: None)
     response = client.post(
         "/api/v1/units/no-such-unit/grade",
@@ -330,6 +331,7 @@ def test_grade_endpoint_returns_404_for_unknown_unit(
 def test_grade_endpoint_returns_409_when_unit_has_no_rubric(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     monkeypatch.setattr(
         unit_repository,
         "get_unit",
@@ -347,6 +349,7 @@ def test_grade_endpoint_returns_409_when_unit_has_no_rubric(
 def test_grade_endpoint_returns_502_when_grader_fails(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     monkeypatch.setattr(
         unit_repository,
         "get_unit",
@@ -378,6 +381,7 @@ def test_grade_endpoint_returns_502_when_grader_fails(
 def test_grade_endpoint_persists_completion_and_grades(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     captured: dict[str, Any] = {}
 
     monkeypatch.setattr(
@@ -469,6 +473,7 @@ def test_grade_endpoint_persists_completion_and_grades(
 def test_grade_endpoint_returns_429_when_rate_limited(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, auth_header: dict[str, str]
 ) -> None:
+    monkeypatch.setattr("app.main.get_user_by_id", lambda uid: {"id": uid})
     monkeypatch.setattr(
         unit_repository,
         "get_unit",

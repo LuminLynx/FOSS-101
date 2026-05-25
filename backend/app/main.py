@@ -87,6 +87,14 @@ def _rate_limited_response(exc: RateLimitExceededError, *, message: str) -> JSON
     return response
 
 
+def _account_gone_response() -> JSONResponse:
+    return _envelope_response(
+        status_code=401,
+        data=None,
+        error={"code": "AUTH_REQUIRED", "message": "Account no longer exists."},
+    )
+
+
 @app.on_event("startup")
 def on_startup() -> None:
     # Refuse to start in production with default secrets. No-op in dev /
@@ -290,6 +298,10 @@ def post_completion(
     request: CompletionRequest,
     current_user_id: str = Depends(required_user_id),
 ) -> JSONResponse:
+    # A token can outlive its account (stateless JWT, no revocation). Reject a
+    # deleted user here so the write returns a clean 401 instead of an FK 500.
+    if get_user_by_id(current_user_id) is None:
+        return _account_gone_response()
     try:
         result = completion_repository.record_completion(
             user_id=current_user_id,
@@ -428,6 +440,11 @@ def post_grade(
     with confidence + rationale + answer-quote. The unit's rubric and
     decision prompt must already be authored (chunk 6 ingest).
     """
+    # Reject a token whose account was deleted before it does any DB write
+    # (the grade rate-limit row and the completion both FK-reference the user).
+    if get_user_by_id(current_user_id) is None:
+        return _account_gone_response()
+
     unit = unit_repository.get_unit(unit_id)
     if unit is None:
         return _envelope_response(
