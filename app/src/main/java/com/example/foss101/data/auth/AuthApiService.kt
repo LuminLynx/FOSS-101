@@ -13,6 +13,7 @@ interface AuthApiService {
     suspend fun signup(email: String, password: String, displayName: String): AuthSession
     suspend fun login(email: String, password: String): AuthSession
     suspend fun fetchMe(token: String): User
+    suspend fun deleteAccount(token: String)
 }
 
 class AuthApiException(
@@ -59,6 +60,12 @@ private class HttpAuthApiService(
             email = data.optString("email"),
             displayName = data.optString("displayName")
         )
+    }
+
+    override suspend fun deleteAccount(token: String) {
+        withContext(Dispatchers.IO) {
+            request("DELETE", "api/v1/auth/me", payload = null, token = token)
+        }
     }
 
     private fun parseAuthSession(envelope: JSONObject): AuthSession {
