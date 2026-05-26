@@ -1,6 +1,6 @@
 # Libella
 
-![Status](https://img.shields.io/badge/status-Phase%203%20in%20progress-blue)
+![Status](https://img.shields.io/badge/status-Phase%203%20%C2%B7%20launch%20prep-blue)
 ![Units](https://img.shields.io/badge/units-15%20of%2020%20published-purple)
 ![Platform](https://img.shields.io/badge/platform-Android-green)
 ![Backend](https://img.shields.io/badge/backend-FastAPI-teal)
