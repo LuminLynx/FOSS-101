@@ -65,7 +65,10 @@ fun AppNav() {
             GlossaryLibraryScreen(repository = glossaryRepository)
         }
         composable("about") {
-            AboutScreen()
+            AboutScreen(
+                authRepository = authRepository,
+                onAccountDeleted = { navController.popBackStack() }
+            )
         }
         composable("settings") {
             SettingsScreen(
