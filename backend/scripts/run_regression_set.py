@@ -1,6 +1,6 @@
 """Regression-set runner — Phase 2 gate evidence.
 
-Per docs/STRATEGY.md § T2-C and EXECUTION.md § Phase 2 exit criteria:
+Per docs/strategy/STRATEGY.md § T2-C and EXECUTION.md § Phase 2 exit criteria:
 every published unit ships with a regression set (>= 20 pairs for
 flagship) used to verify the grader stays calibrated. This script
 loads a YAML regression set, runs each pair through the live grader,
@@ -361,7 +361,7 @@ def main(argv: list[str]) -> int:
         metavar="PCT",
         help=(
             "fail (exit 1) if per-criterion agreement is strictly below PCT "
-            "(0-100). Per docs/PHASE_2_GATE.md the recommended gate bar is "
+            "(0-100). Per docs/gates/PHASE_2_GATE.md the recommended gate bar is "
             "80. Ignored under --check. The report is still printed."
         ),
     )

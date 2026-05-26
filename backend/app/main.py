@@ -104,7 +104,7 @@ def on_startup() -> None:
     # race-safe under horizontal scale, but the recommended deploy
     # pattern is still to run `python -m backend.scripts.migrate` as
     # a release/pre-deploy command and have this be a no-op verification.
-    # See docs/BACKEND_BEST_PRACTICES.md.
+    # See docs/guides/BACKEND_BEST_PRACTICES.md.
     run_migrations()
 
 
@@ -436,7 +436,7 @@ def post_grade(
 ) -> JSONResponse:
     """F4 — grade the user's open-ended decision-prompt answer.
 
-    Per docs/STRATEGY.md § Loop step 4 + T2: per-criterion Met/Not Met
+    Per docs/strategy/STRATEGY.md § Loop step 4 + T2: per-criterion Met/Not Met
     with confidence + rationale + answer-quote. The unit's rubric and
     decision prompt must already be authored (chunk 6 ingest).
     """

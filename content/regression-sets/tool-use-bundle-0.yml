@@ -14,11 +14,11 @@
 #     NO quote-led sentences (Unit 11 lesson).
 #   * English-only per docs/curriculum/v1-path-outline.md.
 #
-# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md):
+# RUBRIC SPLIT (2026-05-21, per docs/audits/RUBRIC_AUDIT.md):
 # Criterion 2 was a HIGH-severity AND-clause bundling the
 # "mismatched-combination failure mechanism" with the meta-claim
 # "the decisions constrain each other" — identical shape to Unit
-# 11, which split cleanly (docs/UNIT_11_C2_SPLIT_GATE.md). c2 is
+# 11, which split cleanly (docs/gates/UNIT_11_C2_SPLIT_GATE.md). c2 is
 # now mechanism-only; the constrain-each-other meta-claim is its
 # own criterion at position 3; old map+PM (was c3) renumbered to
 # position 4. Rubric grows 3 -> 4. Pairs re-judged strict-AND.
@@ -58,7 +58,7 @@
 #      defaults, skipping the recovery decision)." (was position 3)
 #
 # Authoring distribution (21 pairs; pre-split three-criterion
-# shape, post-Unit-12-gate realignment per docs/UNIT_12_GATE.md,
+# shape, post-Unit-12-gate realignment per docs/gates/UNIT_12_GATE.md,
 # 2026-05-17 — preserved as historical record):
 #   * 6 pairs all-three-met (varied English voices, no
 #     parenthetical option-lists)
@@ -94,7 +94,7 @@
 #   Check: 6 + 3 + 1 + 3 + 6 + 2 = 21.
 #   * 0 pairs flagged-expected — retired per UNIT_11_GATE.md
 #
-# T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
+# T2-B locked interpretation (per docs/gates/PHASE_2_GATE.md and PR #72):
 # flagged = grader uncertainty, NOT "answer is bad." Off-topic
 # answers the grader can confidently grade all-not-met are
 # gradable — flagged: false.
@@ -126,7 +126,7 @@
 # cause as Unit 9 c2-strict, Unit 10 c2-strict, Unit 11 c3-strict
 # — rubric criteria with conjunctive AND-clauses authored too
 # leniently. Four of the last four gated units. Escalated in
-# docs/UNIT_12_GATE.md from a someday-note to a live authoring-
+# docs/gates/UNIT_12_GATE.md from a someday-note to a live authoring-
 # checklist item (split AND-clause criteria into separately-
 # scored sub-criteria in the next bundle-1 rubric pass).
 #
@@ -140,7 +140,7 @@ unit_id: tool-use-bundle-0
 description: |
   Phase 3 / Unit 12 flagship gate set. Authored 2026-05-17;
   realigned 2026-05-17 after the initial gate run per
-  docs/UNIT_12_GATE.md. 21 pairs against the locked T2-B reading.
+  docs/gates/UNIT_12_GATE.md. 21 pairs against the locked T2-B reading.
   First set authored under the UNIT_11_GATE.md carried-forward
   constraints: zero flagged-expected pairs, no parenthetical
   option-lists in answer text, no markdown headers, no quote-led
@@ -154,13 +154,13 @@ description: |
   UNIT_12_GATE.md to a live authoring-checklist item. See header
   for full triage.
 
-  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md): criterion 2 split
+  2026-05-21 c2 split (per docs/audits/RUBRIC_AUDIT.md): criterion 2 split
   into c2 (mechanism only) and a new c3 (the "decisions constrain
   each other" meta-claim); old c3 (map + PM error) renumbered to
   position 4. Identical shape to Unit 11, which split cleanly.
   Pairs re-judged strict-AND; surfaced latent-c3 credit on
   p006/p008/p010; watch-pairs p009/p011/p021 paper-judged c3=F.
-  GATE PASSED 2026-05-21 (docs/UNIT_12_C2_SPLIT_GATE.md): 100%
+  GATE PASSED 2026-05-21 (docs/gates/UNIT_12_C2_SPLIT_GATE.md): 100%
   per-criterion agreement (84/84), 21/21 fully passed, zero errors,
   zero disagreements — the cleanest run in the rollout. All three
   watch-pairs confirmed c3=F (no c1/c3 overlap); all three surfaced
@@ -392,7 +392,7 @@ pairs:
       flagged: false
 
   - id: p008
-    label: Single criterion (c2) — explains the mechanism but the matched-combination map gestures vaguely at the PM error instead of naming it (c3 realigned True→False 2026-05-17 per docs/UNIT_12_GATE.md c3-strict pattern)
+    label: Single criterion (c2) — explains the mechanism but the matched-combination map gestures vaguely at the PM error instead of naming it (c3 realigned True→False 2026-05-17 per docs/gates/UNIT_12_GATE.md c3-strict pattern)
     answer: |
       The thing that will bite the team is the interaction
       between how forgiving the tools are and what happens when
@@ -476,7 +476,7 @@ pairs:
       flagged: false
 
   - id: p011
-    label: Single criterion (c1) — names the three coupled decisions but dismisses recovery-locus as an implementation detail, committing the recovery-skip error c3 warns against (c3 realigned True→False 2026-05-17 per docs/UNIT_12_GATE.md c3-strict pattern)
+    label: Single criterion (c1) — names the three coupled decisions but dismisses recovery-locus as an implementation detail, committing the recovery-skip error c3 warns against (c3 realigned True→False 2026-05-17 per docs/gates/UNIT_12_GATE.md c3-strict pattern)
     answer: |
       Tool use is three coupled decisions: tool granularity,
       schema strictness, and error-recovery locus. The
@@ -773,7 +773,7 @@ pairs:
       flagged: false
 
   - id: p021
-    label: Single criterion (c1) — coupling named but the stakes mapping omits why-stakes-drive-the-choice and the specific PM error, failing c3 (c3 realigned True→False 2026-05-17 per docs/UNIT_12_GATE.md c3-strict pattern)
+    label: Single criterion (c1) — coupling named but the stakes mapping omits why-stakes-drive-the-choice and the specific PM error, failing c3 (c3 realigned True→False 2026-05-17 per docs/gates/UNIT_12_GATE.md c3-strict pattern)
     answer: |
       Tool use is three coupled decisions: tool granularity,
       schema strictness, and error-recovery locus. They are

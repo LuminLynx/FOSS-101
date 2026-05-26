@@ -1,6 +1,6 @@
 """F4 LLM grader — Anthropic Claude Sonnet 4.6 with prompt caching.
 
-Implements the grader contract from docs/STRATEGY.md § T2:
+Implements the grader contract from docs/strategy/STRATEGY.md § T2:
 
   * **T2-A** Per-criterion checklist (Met/Not Met). No holistic score.
   * **T2-B** Flagged-or-graded confidence. If the grader is uncertain

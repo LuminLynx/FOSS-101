@@ -78,7 +78,7 @@
 #   * 0 flagged-expected
 #   Check: 6 + 3 + 2 + 2 + 6 + 2 = 21.
 #
-# T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
+# T2-B locked interpretation (per docs/gates/PHASE_2_GATE.md and PR #72):
 # flagged = grader uncertainty, NOT "answer is bad." Off-topic
 # answers the grader can confidently grade all-not-met are
 # gradable — flagged: false.
@@ -86,7 +86,7 @@
 # Sources for the unit were web-verified per the source-verification
 # discipline in docs/curriculum/v1-path-outline.md (2026-05-24).
 #
-# GATE: PENDING. Per docs/REGRESSION_GATE.md a full live run at
+# GATE: PENDING. Per docs/gates/REGRESSION_GATE.md a full live run at
 # --threshold 80 is required before Unit 15 flips draft -> published.
 # Structural validators (run_regression_set --check,
 # lint_unit_markdown) pass; the operator runs the live grader gate.

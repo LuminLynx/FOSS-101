@@ -1,6 +1,6 @@
 """ReviewRepository — writes/reads against the `review_schedule` table.
 
-Implements F5 (Loop step 6, "Return") per docs/F5_SPACED_REVIEW.md.
+Implements F5 (Loop step 6, "Return") per docs/guides/F5_SPACED_REVIEW.md.
 Decisions locked in that doc; the load-bearing ones here:
 
 - D1: algorithm is interval-doubling on the explicit ladder

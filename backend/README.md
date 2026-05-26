@@ -4,9 +4,9 @@ FastAPI + PostgreSQL backend for the FOSS-101 / Libella project.
 
 > **Status:** transitional. The original term-glossary backend has been
 > stripped of cut features (contribution flow, AI Learning Layer cache,
-> ask-glossary, scenario/challenge generators) per `docs/AUDIT.md`. The
-> path-centric data model and grader (per `docs/STRATEGY.md` +
-> `docs/EXECUTION.md`) land in subsequent Phase 1 / Phase 2 PRs.
+> ask-glossary, scenario/challenge generators) per `docs/audits/AUDIT.md`. The
+> path-centric data model and grader (per `docs/strategy/STRATEGY.md` +
+> `docs/roadmap/EXECUTION.md`) land in subsequent Phase 1 / Phase 2 PRs.
 
 ## Stable API endpoints
 

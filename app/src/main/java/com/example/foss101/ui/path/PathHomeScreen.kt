@@ -76,7 +76,7 @@ fun PathHomeScreen(
     // no flags, no `remember`/`rememberSaveable` guards. Cost: one extra
     // path GET + completions GET per resume. Acceptable for v1; aligns
     // with Google's "VM exposes state, UI drives effects" guidance for
-    // Compose state production. See docs/ANDROID_BEST_PRACTICES.md.
+    // Compose state production. See docs/guides/ANDROID_BEST_PRACTICES.md.
     LifecycleResumeEffect(Unit) {
         viewModel.load()
         onPauseOrDispose { }

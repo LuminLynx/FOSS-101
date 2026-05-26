@@ -1,6 +1,6 @@
 # Regression-set template — copy to <unit_id>.yml and author pairs.
 #
-# Per docs/STRATEGY.md § T2-C, every published unit ships with a
+# Per docs/strategy/STRATEGY.md § T2-C, every published unit ships with a
 # regression set used to verify the grader stays calibrated:
 #
 #   - flagship units: >= 20 pairs

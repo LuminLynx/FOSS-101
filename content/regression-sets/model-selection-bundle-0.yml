@@ -34,12 +34,12 @@
 # Haiku 4.5 $1/$5 per M). Per-PR cost arithmetic uses
 # 8k input + 1.5k output workload for the code-review bot.
 #
-# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# RUBRIC SPLIT (2026-05-21, per docs/audits/RUBRIC_AUDIT.md, MEDIUM
 # batch): criterion 2 split into c2 (name the failure mode) and
 # a new c3 (explain the mechanism); old c3 (regime distinction)
 # renumbered to position 4. Rubric grows 3 -> 4.
 #
-# Applied PRESERVE-BY-DEFAULT (docs/REGRESSION_GATE.md): faithful
+# Applied PRESERVE-BY-DEFAULT (docs/gates/REGRESSION_GATE.md): faithful
 # decomposition of the locked Opus-authored values — every
 # old-c2=T pair inherits c2=T AND c3=T (Opus judged both halves
 # when it bundled them); the three old-c2=F pairs (p002, p009,
@@ -75,7 +75,7 @@
 #      cost/quality envelope." (was position 3)
 #
 # Authoring distribution (21 pairs; pre-split three-criterion
-# shape, post-Unit-5-gate realignment per docs/UNIT_5_GATE.md —
+# shape, post-Unit-5-gate realignment per docs/gates/UNIT_5_GATE.md —
 # preserved as historical record):
 #   * 9 pairs all-three-met (varied voices)
 #       p001, p005, p007, p008, p014, p016 (pt),
@@ -149,7 +149,7 @@ unit_id: model-selection-bundle-0
 description: |
   Phase 3 / Unit 5 standard gate set. Authored 2026-05-11;
   realigned 2026-05-11 after the initial gate run per
-  docs/UNIT_5_GATE.md. 21 pairs against the AND-structured
+  docs/gates/UNIT_5_GATE.md. 21 pairs against the AND-structured
   rubric. Two authoring errors on c1 (p008, p014 — both
   grader-lenient when concrete per-axis arithmetic
   implicitly enumerates axes), one authoring error on c2
@@ -158,7 +158,7 @@ description: |
   disagreement (p009 flagged — length heuristic). Zero
   flagged-expected pairs. See header for full triage.
 
-  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  2026-05-21 c2 split (per docs/audits/RUBRIC_AUDIT.md, MEDIUM batch):
   criterion 2 split into c2 (name the failure mode) and a new c3
   (explain the mechanism); old c3 (regime) renumbered to position
   4. Applied preserve-by-default: faithful decomposition of the

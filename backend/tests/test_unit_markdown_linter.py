@@ -1,7 +1,7 @@
 """Tests for backend/scripts/lint_unit_markdown.py.
 
 Each broken fixture exercises one named failure mode from
-docs/EXECUTION.md Phase 1:
+docs/roadmap/EXECUTION.md Phase 1:
   - missing slot
   - malformed calibration tier
   - undated source

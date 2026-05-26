@@ -84,16 +84,16 @@
 #   * 0 flagged-expected (retired per UNIT_11_GATE.md)
 #   Check: 6 + 3 + 1 + 3 + 6 + 2 = 21.
 #
-# T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
+# T2-B locked interpretation (per docs/gates/PHASE_2_GATE.md and PR #72):
 # flagged = grader uncertainty, NOT "answer is bad." Off-topic
 # answers the grader can confidently grade all-not-met are
 # gradable — flagged: false.
 #
-# GATE PASSED 2026-05-24 (docs/UNIT_14_GATE.md). Full live run
+# GATE PASSED 2026-05-24 (docs/gates/UNIT_14_GATE.md). Full live run
 # against the Sonnet 4.6 grader: 83/84 = 98.8% per-criterion
 # (--threshold 80), 19/21 fully passed, 20/21 flagged-correct, 0
 # errors. Zero realignments, zero rewrites. Two preserved
-# disagreements (gold standard kept, per docs/REGRESSION_GATE.md):
+# disagreements (gold standard kept, per docs/gates/REGRESSION_GATE.md):
 #   * p010 c3 — grader strict-reads the model-directed-loop ->
 #     external-guard constraint as not-met where the Opus value
 #     credits it. Reproducible (2/2 on isolated --pair re-run), but
@@ -127,7 +127,7 @@ description: |
   per-criterion (83/84); all three watch-pairs returned c3=false
   (clean split). Two preserved disagreements (p010 c3 reproducible-
   strict-on-borderline, p011 flag) — zero realignments. See
-  docs/UNIT_14_GATE.md.
+  docs/gates/UNIT_14_GATE.md.
 
 pairs:
   - id: p001

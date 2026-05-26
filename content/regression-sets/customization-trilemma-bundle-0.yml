@@ -6,11 +6,11 @@
 # tokenization-bundle-0.yml + context-window-bundle-0.yml (the two
 # Phase 2/3 gate-passing references).
 #
-# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# RUBRIC SPLIT (2026-05-21, per docs/audits/RUBRIC_AUDIT.md, MEDIUM
 # batch): criterion 2 split into c2 (name the failure mode) and a
 # new c3 (name/explain the mechanism); old c3 (regime) renumbered
 # to position 4. Rubric grows 3 -> 4. Applied PRESERVE-BY-DEFAULT
-# (docs/REGRESSION_GATE.md): faithful decomposition of the locked
+# (docs/gates/REGRESSION_GATE.md): faithful decomposition of the locked
 # Opus values — every old-c2=T pair inherits c2=T AND c3=T. All
 # five old-c2=F pairs (p007/p008/p009/p011/p021) describe correct
 # mappings without naming a MIS-MATCH failure mode at all, so
@@ -44,7 +44,7 @@
 #      approaches (RAG + prompting as typical default)." (was position 3)
 #
 # Authoring distribution (21 pairs; pre-split three-criterion
-# shape, post-Unit-9-gate per docs/UNIT_9_GATE.md — preserved as
+# shape, post-Unit-9-gate per docs/gates/UNIT_9_GATE.md — preserved as
 # historical record):
 #   * 6 pairs all-three-met (varied English voices)
 #       p001, p002, p005, p016 (long-narrative, rewritten 2026-05-14),
@@ -78,7 +78,7 @@
 #   No c2=T/c3=F differential pairs — the old-c2=F pairs describe
 #   correct mappings without naming a mismatch failure mode at all.
 #
-# T2-B locked interpretation (per docs/PHASE_2_GATE.md and PR #72):
+# T2-B locked interpretation (per docs/gates/PHASE_2_GATE.md and PR #72):
 # flagged = grader *uncertainty*, NOT "answer is bad." Off-topic
 # answers the grader can confidently grade as all Not-Met are
 # gradable — flagged: false. Thin/punting answers the grader cannot
@@ -108,7 +108,7 @@
 #     voice with markdown-style section labels caused the grader to
 #     emit a malformed payload, twice in isolation re-run). Fix:
 #     rewrite p016 with flowing-prose voice (no section-header-
-#     shaped labels). Documented in docs/UNIT_9_GATE.md as a known
+#     shaped labels). Documented in docs/gates/UNIT_9_GATE.md as a known
 #     authoring constraint (avoid markdown headings inside answer
 #     text — they appear to break the grader's structured-output
 #     discipline).
@@ -116,7 +116,7 @@
 # Seven realignments total — p008 c1 + c2, p011 c1, p015 flag, p017
 # c1, p019 c1, p021 c2 — plus one rewrite (p016). Zero preserved
 # disagreements; different from Unit 2 (which preserved p008 c1 +
-# p010 c2). See docs/UNIT_9_GATE.md for the rationale of preserving
+# p010 c2). See docs/gates/UNIT_9_GATE.md for the rationale of preserving
 # none.
 #
 # Cross-unit observation worth recording: the c1-lenient pattern
@@ -145,7 +145,7 @@ unit_id: customization-trilemma-bundle-0
 description: |
   Phase 3 / Unit 9 flagship gate set. Authored 2026-05-14;
   realigned 2026-05-14 after the initial gate run per
-  docs/UNIT_9_GATE.md. 21 pairs against the locked T2-B reading
+  docs/gates/UNIT_9_GATE.md. 21 pairs against the locked T2-B reading
   (flagged = grader uncertainty, NOT off-topic-but-gradable).
   Seven expected-value realignments plus one rewrite (p016 — the
   original structured-PM-doc voice with markdown-style headers
@@ -155,7 +155,7 @@ description: |
   rather than held as live YAML disagreements. See header for
   full triage.
 
-  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  2026-05-21 c2 split (per docs/audits/RUBRIC_AUDIT.md, MEDIUM batch):
   criterion 2 split into c2 (name the failure mode) and a new c3
   (name/explain the mechanism); old c3 (regime) renumbered to
   position 4. Preserve-by-default: faithful decomposition of the
@@ -163,7 +163,7 @@ description: |
   pairs describe correct mappings without naming a mismatch
   failure mode → c2=F,c3=F (no differential pairs). No
   realignments. p014 flagged-expected preserved. Gate-exempt
-  (faithful split, zero realignments per docs/REGRESSION_GATE.md).
+  (faithful split, zero realignments per docs/gates/REGRESSION_GATE.md).
   This completes the MEDIUM-severity c2-split batch (Units 2-9).
 
 pairs:

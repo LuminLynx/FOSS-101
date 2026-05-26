@@ -25,7 +25,7 @@
 #      at 4 emojis to stay safely below the T2-D structural-
 #      validation failure threshold.
 #
-# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# RUBRIC SPLIT (2026-05-21, per docs/audits/RUBRIC_AUDIT.md, MEDIUM
 # batch): criterion 2 split into c2 (name the failure mode) and
 # a new c3 (explain the mechanism); old c3 (regime distinction)
 # renumbered to position 4. Rubric grows 3 -> 4.
@@ -45,7 +45,7 @@
 # realigned c3->F at the gate but RESTORED to c3=T at the 2026-05-21
 # cleanup (their old-c2 was T → faithful c3=T; the Sonnet c3=F is a
 # documented calibration gap, not ground truth — see
-# docs/REGRESSION_GATE.md). c3 (why a method fails) is distinct from
+# docs/gates/REGRESSION_GATE.md). c3 (why a method fails) is distinct from
 # c4 (which method for which regime) — no fusion risk.
 #
 # Position-to-criterion mapping (after 2026-05-21 c2 split):
@@ -72,7 +72,7 @@
 #      the historically grader-strict criterion)
 #
 # Authoring distribution (21 pairs; pre-split three-criterion
-# shape, post-Unit-4-gate realignment per docs/UNIT_4_GATE.md —
+# shape, post-Unit-4-gate realignment per docs/gates/UNIT_4_GATE.md —
 # preserved as historical record):
 #   * 6 pairs all-three-met (varied voices)
 #       p001, p002, p005, p008, p017 (pseudocode),
@@ -139,13 +139,13 @@ unit_id: evals-bundle-0
 description: |
   Phase 3 / Unit 4 standard gate set. Authored 2026-05-10;
   realigned 2026-05-11 after the initial gate run per
-  docs/UNIT_4_GATE.md. 21 pairs against the AND-structured
+  docs/gates/UNIT_4_GATE.md. 21 pairs against the AND-structured
   rubric. Two authoring errors on c1 (p008, p011) and three
   c3 grader-strict realignments (p014, p016, p021). One
   preserved disagreement (p011 flagged — length heuristic).
   Zero flagged-expected pairs. See header for full triage.
 
-  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  2026-05-21 c2 split (per docs/audits/RUBRIC_AUDIT.md, MEDIUM batch):
   criterion 2 split into c2 (name the failure mode) and a new c3
   (explain the mechanism); old c3 (regime, the historically
   grader-strict criterion) renumbered to position 4. Unit-4
@@ -153,11 +153,11 @@ description: |
   content (already grader-credited), so the strictness stays in
   c4 (regime), whose F values on p006/p016/p021 carry forward.
   Only p007 is the c2=T/c3=F differential. GATE PASSED 2026-05-21
-  (docs/UNIT_4_C2_SPLIT_GATE.md): 94% raw. p007 confirmed (PASS
+  (docs/gates/UNIT_4_C2_SPLIT_GATE.md): 94% raw. p007 confirmed (PASS
   4/4). At the gate I realigned p017 c3->F, p021 c3->F + c4->T;
   the 2026-05-21 CLEANUP RESTORED those (p017/p021 c3->T, p021
   c4->F) per the grader/gold-standard principle
-  (docs/REGRESSION_GATE.md) — faithful Opus old-c2=T → c3=T, and the
+  (docs/gates/REGRESSION_GATE.md) — faithful Opus old-c2=T → c3=T, and the
   locked regime value c4=F. The Sonnet c3=F (p017/p021) and c4=T
   (p021) reads are documented calibration gaps. Two preserved
   grader-lenient disagreements remain (p011 c2, p014 c1 — deferred

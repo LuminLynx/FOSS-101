@@ -417,8 +417,8 @@ Revisit after closed beta.
 ## What this file commits us to
 
 1. **Production block complete — Units 1–15 all shipped and gate-passed.**
-   Unit 14 (Agents) passed at 98.8% (see docs/UNIT_14_GATE.md) and
-   Unit 15 (Safety) at 97.6% (docs/UNIT_15_GATE.md); both published.
+   Unit 14 (Agents) passed at 98.8% (see docs/gates/UNIT_14_GATE.md) and
+   Unit 15 (Safety) at 97.6% (docs/gates/UNIT_15_GATE.md); both published.
    **15 of 20 published.** The cumulative authoring constraints these
    gates established — **no flagged-expected pairs**, **no parenthetical
    option-lists / markdown headers / quote-led sentences in answer
@@ -547,7 +547,7 @@ subscribed:
   webhook for an event the session caused itself):** skip
   silently.
 - **Deliberate-borderline disagreement (the regression-set
-  pattern documented in `docs/UNIT_2_GATE.md` and successors):**
+  pattern documented in `docs/gates/UNIT_2_GATE.md` and successors):**
   reply to the comment explaining the rationale and pointing at
   the YAML header / gate-doc reference; no YAML change.
 

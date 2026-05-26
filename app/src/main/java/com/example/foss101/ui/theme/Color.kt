@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 // Editorial / reference-document palette. Values transcribed 1:1 from the
 // design system token source (design handoff colors_and_type.css) and
-// docs/DESIGN_BRIEF.md. Warm paper + warm ink, hairline rules in warm taupe,
+// docs/roadmap/DESIGN_BRIEF.md. Warm paper + warm ink, hairline rules in warm taupe,
 // restrained marginal-ink accents (oxblood / sage / mineral). Completion is
 // oxblood, not green — the brief is explicit that nothing uses a "success green".
 
