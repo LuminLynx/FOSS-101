@@ -15,13 +15,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,10 +38,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.foss101.BuildConfig
 import com.example.foss101.R
+import com.example.foss101.data.repository.AuthRepository
 import com.example.foss101.ui.components.AppScreenScaffold
 import com.example.foss101.ui.components.SectionHeader
 import com.example.foss101.ui.components.screenContentPadding
 import com.example.foss101.ui.theme.LibellaTheme
+import kotlinx.coroutines.launch
 
 private const val FEEDBACK_EMAIL = "libella-llm@pm.me"
 private const val TAGLINE =
@@ -44,8 +54,16 @@ private const val PRODUCT_DESCRIPTION =
         "production trade-offs beyond — taught one trade-off at a time."
 
 @Composable
-fun AboutScreen() {
+fun AboutScreen(
+    authRepository: AuthRepository,
+    onAccountDeleted: () -> Unit
+) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var signedIn by remember { mutableStateOf(authRepository.isLoggedIn()) }
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+    var deleting by remember { mutableStateOf(false) }
+
     AppScreenScaffold(title = "About", subtitle = "Libella") { contentPadding ->
         Column(
             modifier = Modifier
@@ -82,42 +100,99 @@ fun AboutScreen() {
             )
 
             SectionHeader(title = "Feedback")
-            Card(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(2.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { sendFeedback(context) }
-                        .padding(horizontal = 14.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MailOutline,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+                ActionCard(
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Filled.MailOutline,
+                    label = "Send feedback",
+                    onClick = { sendFeedback(context) }
+                )
+                if (signedIn) {
+                    ActionCard(
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Filled.DeleteForever,
+                        label = "Delete account",
+                        onClick = { showDeleteConfirm = true }
                     )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Send feedback",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = FEEDBACK_EMAIL,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                 }
             }
+        }
+
+        if (showDeleteConfirm) {
+            AlertDialog(
+                onDismissRequest = { if (!deleting) showDeleteConfirm = false },
+                title = { Text("Delete account?") },
+                text = {
+                    Text(
+                        "This permanently deletes your account and all your data — " +
+                            "completions, grades, and review schedule. This cannot be undone."
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        enabled = !deleting,
+                        onClick = {
+                            deleting = true
+                            scope.launch {
+                                try {
+                                    authRepository.deleteAccount()
+                                    signedIn = false
+                                    showDeleteConfirm = false
+                                    onAccountDeleted()
+                                } catch (_: Exception) {
+                                    // Deletion failed; leave the account intact.
+                                } finally {
+                                    deleting = false
+                                }
+                            }
+                        }
+                    ) { Text(if (deleting) "Deleting…" else "Delete") }
+                },
+                dismissButton = {
+                    TextButton(
+                        enabled = !deleting,
+                        onClick = { showDeleteConfirm = false }
+                    ) { Text("Cancel") }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ActionCard(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 18.dp, horizontal = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Text(text = label, style = MaterialTheme.typography.titleMedium)
         }
     }
 }
