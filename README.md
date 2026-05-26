@@ -53,7 +53,7 @@ Current state, per the project docs:
 - F5 Spaced Review is implemented (review schedule, endpoints, Continue-surface integration).
 - F6 Path Overview is not started.
 - Authoring is the pacing constraint.
-- Beta / public-launch preparation has begun: the marketing landing page, privacy policy, and in-app + web account deletion are live; app-store packaging and a closed beta remain.
+- Some launch-prep has shipped early, in parallel with authoring: the marketing landing page, privacy policy, and in-app + web account deletion are live. Phase 4 launch-readiness formally opens after the Phase 3 exit gate.
 
 This is an in-development product, not a finished public release.
 
@@ -266,7 +266,7 @@ The current source of truth for what survives, changes, or gets removed is `docs
 
 ## Public launch status
 
-Libella has not publicly launched, but Phase 4 / launch preparation has begun.
+Libella has not publicly launched, and Phase 4 launch-readiness has not formally opened — it follows the Phase 3 exit gate. That said, some launch-prep items have shipped early, in parallel with Phase 3 authoring.
 
 Done or live:
 
