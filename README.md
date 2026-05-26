@@ -49,12 +49,11 @@ In progress:
 
 Current state, per the project docs:
 
-- 15 of 20 units are published.
-- Units 1–15 are published; units 16–20 are placeholders, to be locked from real-user signal.
+- 15 of 20 units are published; units 16–20 are placeholders, to be locked from real-user signal.
 - F5 Spaced Review is implemented (review schedule, endpoints, Continue-surface integration).
 - F6 Path Overview is not started.
 - Authoring is the pacing constraint.
-- Phase 4 public-launch readiness has not started.
+- Beta / public-launch preparation has begun: the marketing landing page, privacy policy, and in-app + web account deletion are live; app-store packaging and a closed beta remain.
 
 This is an in-development product, not a finished public release.
 
@@ -267,16 +266,20 @@ The current source of truth for what survives, changes, or gets removed is `docs
 
 ## Public launch status
 
-Libella has not reached public launch readiness.
+Libella has not publicly launched, but Phase 4 / launch preparation has begun.
 
-Phase 4 is expected to cover:
+Done or live:
 
-- trademark review for the Libella name;
-- read-only web preview;
-- landing-page and marketing copy;
-- beta cohort recruitment;
-- cost dashboards;
-- app-store preparation.
+- Marketing landing page (auto light/dark).
+- Privacy policy and account-deletion page (web), plus in-app account deletion.
+
+Remaining before a closed beta / public launch:
+
+- Trademark review for the Libella name.
+- Read-only web preview.
+- Beta cohort recruitment and the closed-test window.
+- Cost dashboards.
+- App-store packaging: signed release build, store listing, screenshots, content rating.
 
 Until then, this repo should be understood as an active product-development repository.
 
