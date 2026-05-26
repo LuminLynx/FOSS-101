@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.foss101"
+    namespace = "com.perpenda"
     compileSdk = 35
 
     defaultConfig {
         buildConfigField("String", "API_BASE_URL", "\"https://aware-wholeness-production-d771.up.railway.app/\"")
-        applicationId = "com.example.foss101"
+        applicationId = "com.perpenda"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

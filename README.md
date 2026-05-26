@@ -1,4 +1,4 @@
-# Libella
+# Perpenda
 
 ![Status](https://img.shields.io/badge/status-Phase%204-blue)
 ![Units](https://img.shields.io/badge/units-15%20of%2020%20published-purple)
@@ -7,17 +7,17 @@
 ![Database](https://img.shields.io/badge/database-PostgreSQL-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-orange)
 
-Libella is a mobile-native learning product for product-side professionals who need to become AI-fluent enough to make AI product decisions, not become machine-learning engineers.
+Perpenda is a mobile-native learning product for product-side professionals who need to become AI-fluent enough to make AI product decisions, not become machine-learning engineers.
 
 The product teaches LLM systems through trade-offs: what a concept changes, what it costs, when it breaks, and how a product decision-maker should reason about it.
 
-> Development note: this repository began as **FOSS-101 / AI-101**, a glossary-oriented Android app. The canonical strategy now reshapes it into **Libella**, a path-centric learning product. Some package names, app labels, legacy glossary files, and repo history still reflect that transition.
+> Development note: this repository began as **FOSS-101 / AI-101**, a glossary-oriented Android app. The canonical strategy now reshapes it into **Perpenda**, a path-centric learning product. Some package names, app labels, legacy glossary files, and repo history still reflect that transition.
 
 ---
 
 ## Product vision
 
-Libella helps product professionals become AI-fluent enough to lead the decisions their teams now have to make.
+Perpenda helps product professionals become AI-fluent enough to lead the decisions their teams now have to make.
 
 The intended audience is product-side professionals with real stakes in AI literacy:
 
@@ -30,13 +30,13 @@ The intended audience is product-side professionals with real stakes in AI liter
 
 The goal is **decision-grade competence**: enough fluency to make build / buy / skip decisions, talk credibly with engineers, and recognize trade-offs and failure modes in AI-backed products.
 
-Libella is not a math-first ML course, a code-first engineering curriculum, a glossary-first reference app, or a hype-feed about AI news.
+Perpenda is not a math-first ML course, a code-first engineering curriculum, a glossary-first reference app, or a hype-feed about AI news.
 
 ---
 
 ## Current development status
 
-Libella is currently in **Phase 4 — launch readiness**.
+Perpenda is currently in **Phase 4 — launch readiness**.
 
 Completed:
 
@@ -116,7 +116,7 @@ See `docs/curriculum/v1-path-outline.md` for the maintained source of truth.
 
 ## Product principles
 
-Libella is guided by five product principles:
+Perpenda is guided by five product principles:
 
 1. **Decisions before mechanism** — teach what to do with a concept before diving into how it works.
 2. **Calibrate, don't bluff** — claims should be sourced, confidence-tagged, and honest about uncertainty.
@@ -249,7 +249,7 @@ This is part of the product's reliability moat, not an optional test harness.
 
 ## Legacy / transition notes
 
-Some old glossary-oriented features are intentionally being demoted or removed as the product moves from FOSS-101 / AI-101 toward Libella.
+Some old glossary-oriented features are intentionally being demoted or removed as the product moves from FOSS-101 / AI-101 toward Perpenda.
 
 Examples of legacy or demoted surfaces:
 
@@ -265,7 +265,7 @@ The current source of truth for what survives, changes, or gets removed is `docs
 
 ## Public launch status
 
-Libella has not publicly launched. Phase 4 launch-readiness is in progress.
+Perpenda has not publicly launched. Phase 4 launch-readiness is in progress.
 
 Done or live:
 
@@ -274,7 +274,7 @@ Done or live:
 
 Remaining before a closed beta / public launch:
 
-- Trademark review for the Libella name.
+- Trademark review for the Perpenda name.
 - Read-only web preview.
 - Beta cohort recruitment and the closed-test window.
 - Cost dashboards.
