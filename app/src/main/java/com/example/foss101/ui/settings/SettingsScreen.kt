@@ -99,8 +99,7 @@ fun SettingsScreen(
                     onSignOut = {
                         authRepository.logout()
                         currentUser = null
-                    },
-                    onDeleteAccount = { showDeleteConfirm = true }
+                    }
                 )
             }
 
@@ -130,6 +129,15 @@ fun SettingsScreen(
                     description = "AI-fluent enough to lead the decisions their teams now have to make",
                     onClick = { onNavigate("about") }
                 )
+                if (currentUser != null) {
+                    Divider()
+                    SettingsRow(
+                        icon = Icons.Filled.DeleteForever,
+                        title = "Delete account",
+                        description = "Permanently delete your account and all data",
+                        onClick = { showDeleteConfirm = true }
+                    )
+                }
             }
         }
 
@@ -178,8 +186,7 @@ private fun AccountSection(
     user: User?,
     onSignIn: () -> Unit,
     onSignUp: () -> Unit,
-    onSignOut: () -> Unit,
-    onDeleteAccount: () -> Unit
+    onSignOut: () -> Unit
 ) {
     if (user != null) {
         SettingsRow(
@@ -193,13 +200,6 @@ private fun AccountSection(
             title = "Sign out",
             description = "End this session on this device",
             onClick = onSignOut
-        )
-        Divider()
-        SettingsRow(
-            icon = Icons.Filled.DeleteForever,
-            title = "Delete account",
-            description = "Permanently delete your account and all data",
-            onClick = onDeleteAccount
         )
     } else {
         SettingsRow(
