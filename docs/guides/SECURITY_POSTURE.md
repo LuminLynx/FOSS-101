@@ -1,8 +1,8 @@
 # Security Posture
 
-**Status:** Living document. Describes *how* Libella reasons about security,
+**Status:** Living document. Describes *how* Perpenda reasons about security,
 not a live list of weaknesses.
-**Scope:** The Libella Android client, its FastAPI backend, and the
+**Scope:** The Perpenda Android client, its FastAPI backend, and the
 Claude-based grader (F4).
 **Anchored to:** [`STRATEGY.md`](../strategy/STRATEGY.md), [`PHASE_2_GATE.md`](../gates/PHASE_2_GATE.md),
 [`REGRESSION_GATE.md`](../gates/REGRESSION_GATE.md).
@@ -17,7 +17,7 @@ public; this file is written on the assumption that an adversary reads it.
 
 ## 0. Why this exists
 
-Libella runs an LLM in a position of trust: the grader (F4) reads a learner's
+Perpenda runs an LLM in a position of trust: the grader (F4) reads a learner's
 free-text answer and decides whether rubric criteria are met. The moment an
 LLM consumes untrusted input and its output drives a stored decision, the
 system inherits a class of failure modes that ordinary CRUD apps do not have.
@@ -75,7 +75,7 @@ We use the OWASP Top 10 for LLM Applications as the shared vocabulary for
 what can go wrong. Each contributor working on an LLM surface is expected to
 ask which of these apply:
 
-| ID | Category | How it shows up in Libella |
+| ID | Category | How it shows up in Perpenda |
 | --- | --- | --- |
 | LLM01 | Prompt Injection | A learner answer (direct) or looked-up record (indirect) tries to steer the grader. |
 | LLM02 | Sensitive Information Disclosure | The grader must not leak rubric internals, other learners' data, or system context. |
@@ -143,7 +143,7 @@ and managed as a secret — not described in a public document.
 
 ## 5. Responsible disclosure
 
-If you believe you've found a security issue in Libella, please report it
+If you believe you've found a security issue in Perpenda, please report it
 privately rather than opening a public issue or PR that describes the
 weakness.
 

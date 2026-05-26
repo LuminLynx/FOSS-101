@@ -1,4 +1,4 @@
-# Libella — Execution Plan
+# Perpenda — Execution Plan
 
 **Status:** Phase plan, locked. (recorded 2026-05-04)
 **Anchored to:** [`docs/strategy/STRATEGY.md`](../strategy/STRATEGY.md) — read first if you are new to the project.
@@ -182,7 +182,7 @@ Total elapsed: realistically 5–8 months. The critical path is authoring 20 uni
 - Phase 3 complete.
 
 **Work.**
-- **Trademark check on Libella** with counsel. Resolve clean / oppose-risk / fallback. Per `STRATEGY.md` Naming, the primary risk to weigh is Libelle IT Group (different spelling, different industry).
+- **Trademark clearance for Perpenda** with counsel. The name moved off the original codename *Libella* during this pass — too close to *Libelle IT Group* — to **Perpenda**, which shows zero detections on USPTO / TMview / WIPO / Play (`perpenda.com` registered). Final counsel sign-off still required before launch.
 - **Q4 web surface** — read-only preview, shareable unit links, no auth. Stripped-down, marketing-flavored. Reuses unit content from the same DB as the Android app.
 - **Landing page / marketing copy** aligned to the Value Proposition. Use the *external (kind)* register, not the *internal (harsh)* one.
 - **Beta cohort recruitment.** Target 20–50 α-PM users with real stakes — ideally a mix of career-switchers, current PMs, founders, and product-adjacent execs.

@@ -217,12 +217,14 @@ Then Phase 3 formally closes. In practice, Phase 4 launch-readiness (Track 2) ha
 Per `docs/roadmap/EXECUTION.md` § Phase 4. Most of this is **not coding
 work**.
 
-### Trademark check on Libella
+### Trademark clearance for Perpenda
 
 **Workstream.** External — attorney engagement, not internal
 code. STRATEGY § Naming flags it as non-optional before public
-launch. Primary risk to weigh: *Libelle IT Group* (different
-spelling, different industry).
+launch. The original codename *Libella* was set aside during this
+pass — too close to *Libelle IT Group* — for **Perpenda**, which
+shows zero detections on USPTO / TMview / WIPO / Play
+(`perpenda.com` registered). Final counsel sign-off still pending.
 
 **Estimate.** Calendar wait + attorney fee. Not on the engineering
 critical path; start it now — Phase 4 launch-readiness is underway, and clearance can

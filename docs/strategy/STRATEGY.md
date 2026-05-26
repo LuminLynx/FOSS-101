@@ -1,6 +1,6 @@
-# Libella — Product Strategy
+# Perpenda — Product Strategy
 
-**Codename:** Libella
+**Name:** Perpenda *(originally codenamed Libella)*
 **Status:** Locked top-down strategy (recorded 2026-05-04)
 **Supersedes:** Any earlier strategic framing in this repo. The bottom-up tactical breakdown in `ROADMAP.md` complements but does not override this document.
 
@@ -10,7 +10,7 @@ This document is the canonical source of truth for product strategy. It was prod
 
 ## 1. Vision
 
-> *Libella makes product professionals AI-fluent enough to lead the decisions their teams now have to make.*
+> *Perpenda makes product professionals AI-fluent enough to lead the decisions their teams now have to make.*
 
 The vision is one breath. It names the audience, the change, and quietly carries the urgency from the Problem.
 
@@ -48,7 +48,7 @@ Two registers, both true, used in different contexts:
 
 > **For** product professionals with stakes in AI-shaping decisions
 > **Who** need to be fluent enough to decide, not fluent enough to build
-> **Libella** is a **mobile-native learning path**
+> **Perpenda** is a **mobile-native learning path**
 > **That** turns scattered AI exposure into **decision-grade competence**
 > **Unlike** engineer-flavored courses, scattered newsletters, or AI chatbots used as tutors
 > **It** teaches every concept through its trade-offs, with every claim sourced and calibrated
@@ -252,21 +252,17 @@ Authoring throughput, not engineering, is the real pacing constraint. Engineerin
 
 ## Naming
 
-**Codename: Libella.**
+**Name: Perpenda.** *(Originally codenamed Libella; renamed during the Phase 4 trademark pass — see below.)*
 
-Latin *libella* — a small balance, spirit level, scales. The instrument that tells you what's true and level. Object-as-metaphor for **P2 (calibrate, don't bluff)** — the moat. Three syllables, easy to pronounce, easy to spell, novel in the AI/learning namespace.
+Latin *perpendere* — "to weigh carefully, to ponder" (English *perpend*, archaic, = to weigh in the mind). It stays in the same balance / level / weigh family as the original codename — so the level mark and design carry over untouched — but it names directly what the product builds: **deliberate, weighed product decisions**. Object-as-metaphor for **P2 (calibrate, don't bluff)** — the moat.
 
-**Status.** Locked as codename. **Public brand candidacy pending professional trademark check before launch.** A web search is not a substitute for trademark counsel.
+**Status.** Zero detections across USPTO, EUIPO/TMview, WIPO, and the Play Store; `perpenda.com` registered. Final professional trademark clearance with counsel before public launch (a database search is not a substitute for counsel).
 
-**Known adjacencies for counsel to weigh:**
+**Why not Libella (the original codename).** *Libella* (Latin: small balance / spirit level) carried the same calibration metaphor, but the trademark pass found **Libelle IT Group** too close — one letter apart, near-homophone, adjacent tech space — so the name was set aside before any public use.
 
-- *Libelle IT Group* — different spelling, different industry (SAP automation)
-- *Libra* / *Libra AI* / *LibLib AI* — different words but phonetic neighborhood
-- A minor non-AI corporate hit on ZoomInfo (no clear category)
-- General Latin/scientific use of *libella* (does not block trademark in tech/learning class)
+**Cut from the shortlist (with reasons, for posterity):**
 
-**Cut from final shortlist (with reasons, for posterity):**
-
+- *Libella* — set aside; *Libelle IT Group* collision (above).
 - *Plumb* — `useplumb.com` is a funded AI workflow product
 - *Cogent / Cogens* — Cogent is already an AI learning platform; namespace saturated
 - *Verdict* — `verdictai.ai`, Haize Labs Verdict framework, multiple legal-AI products
@@ -284,7 +280,7 @@ Latin *libella* — a small balance, spirit level, scales. The instrument that t
 
 These are not blockers for the strategy. They are separate workstreams that can use this document as their anchor.
 
-1. **Trademark / domain availability check** for Libella. Real attorney; not optional before public launch.
+1. **Trademark / domain availability check** for Perpenda. `perpenda.com` registered; zero detections on USPTO / TMview / WIPO / Play. Final attorney clearance still required before public launch.
 2. **LLM provider final confirmation** under Architecture Q3. Anthropic Claude Sonnet 4.6 is the strong preferred choice; final lock pending.
 3. **T1 staffing path.** Can the founder reasonably author 20 units + regression sets over 4–6 months solo? If not, Q2 (author model) needs revisiting — paid contributor or stricter LLM-assist discipline.
 4. **Repo cleanup pass.** The current Android app, backend, and `ROADMAP.md` reflect earlier framings. A separate audit should mark which existing code/data is reusable, which is dead, and which needs to be rebuilt against this strategy.

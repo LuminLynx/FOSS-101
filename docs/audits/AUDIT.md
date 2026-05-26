@@ -19,7 +19,7 @@ proceed without `pg_dump` archive (§5 #8 option (a) confirmed). All other
 sign-offs match the audit's own recommendations.
 
 This audit walks the FOSS-101 repo and classifies every meaningful module/file
-against the locked Libella strategy as one of:
+against the locked Perpenda strategy as one of:
 
 - **KEEP** — survives near as-is under the new strategy.
 - **RESHAPE** — the asset (code, data, or UI) has reusable substance but must
@@ -185,7 +185,7 @@ Tokenization. Bundle 0 has reusable raw material for the bite…").
 | `res/values/strings.xml` | KEEP | Today contains exactly one entry: `<string name="app_name">FOSS 101</string>`. **All user-facing copy is currently hardcoded inline in Compose composables** (e.g. `Text("AI Learning Layer")` inside `HomeScreen.kt`, scenario/challenge UX strings inside `TermDetailsScreen.kt`, term-draft form labels inside `TermDraftScreen.kt`, contribution scoring strings inside the contribution-flow viewmodels). Because those composables themselves are DELETE / RESHAPE per §1.3 / §1.6 / §1.7 / §1.4, the strings vanish with them. No surgical sweep of `strings.xml` needed *now*. |
 | **Watch-item for Phase 1** | — | When Phase 1 begins extracting hardcoded copy into `strings.xml` (a likely a11y / future-i18n step alongside the path-centric reshape), the categories that must **not** carry over from the old surfaces are: (a) AI Tools menu items (*"AI Learning Layer"*, *"Ask Glossary"*, *"Trend Watcher"*); (b) scenario / challenge UX copy (preset-picker labels, scenario card titles, challenge prompts); (c) term-draft form labels (*"Submit term"*, contributor-confirmation strings); (d) contribution scoring strings (*"You earned N points"*, contributor-summary copy). These are surfaces of cut features; their copy does not get a second life in v1. |
 | **Localization** | — | No `res/values-*/` directories exist (no localized resource sets). No translations to retire, no localization implications from the cut. If localization is ever added, it begins fresh against the path-centric vocabulary, not the old soul's. |
-| `app_name` itself | KEEP, **rename watch-item for Phase 4** | `app_name = "FOSS 101"` will need to flip to `"Libella"` (or whatever the trademark check clears under `STRATEGY.md` § Naming) at the Phase 4 launch-readiness gate. Not a Phase 0 concern. |
+| `app_name` itself | KEEP, **rename watch-item for Phase 4** | `app_name = "FOSS 101"` will need to flip to its trademark-cleared name (**Perpenda** — see `STRATEGY.md` § Naming) at the Phase 4 launch-readiness gate. Not a Phase 0 concern. |
 
 ### 1.15 CI / CD pipelines — **ABSENT (state explicitly)**
 
