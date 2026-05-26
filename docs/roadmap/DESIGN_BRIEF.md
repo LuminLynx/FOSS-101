@@ -1,4 +1,4 @@
-# Design Brief — Libella app, the real screens
+# Design Brief — Perpenda app, the real screens
 
 > **What this is.** A faithful, code-grounded inventory of every
 > screen the app actually has, what real data each one holds, and
