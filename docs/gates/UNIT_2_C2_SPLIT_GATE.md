@@ -2,12 +2,12 @@
 
 **Status:** Passed 2026-05-21. Split kept. **The 3 gate realignments were reverted at the 2026-05-21 cleanup — see correction below.**
 **Unit:** `context-window-bundle-0` (position 2)
-**Change under gate:** the criterion-2 SPLIT from `docs/RUBRIC_AUDIT.md` (PR #155), first of the MEDIUM-severity batch — old bundled c2 ("names a concrete failure mode AND identifies the mechanism behind it") split into name-only c2 + a new c3 (explain the mechanism); old regime-distinction criterion renumbered to c4. Rubric grew 3 → 4.
-**Procedure:** `docs/REGRESSION_GATE.md` (operator-run, local grader).
+**Change under gate:** the criterion-2 SPLIT from `docs/audits/RUBRIC_AUDIT.md` (PR #155), first of the MEDIUM-severity batch — old bundled c2 ("names a concrete failure mode AND identifies the mechanism behind it") split into name-only c2 + a new c3 (explain the mechanism); old regime-distinction criterion renumbered to c4. Rubric grew 3 → 4.
+**Procedure:** `docs/gates/REGRESSION_GATE.md` (operator-run, local grader).
 
 ## 2026-05-21 cleanup correction (read first)
 
-The three realignments recorded below (p007/p017/p021 c3 → false) were **reverted.** They were made to match the Sonnet grader's strict read, but per the grader/gold-standard principle now in `docs/REGRESSION_GATE.md` — the content was authored by the more capable **Opus 4.7**, the grader is **Sonnet 4.6** — that was backwards. The faithful decomposition of Opus's locked `old-c2=true` is `c3=true` (Opus judged the mechanism present when it bundled name+mechanism). All three were **restored to c3=true**, and the Sonnet `c3=false` reads are now **documented calibration gaps**, not ground truth.
+The three realignments recorded below (p007/p017/p021 c3 → false) were **reverted.** They were made to match the Sonnet grader's strict read, but per the grader/gold-standard principle now in `docs/gates/REGRESSION_GATE.md` — the content was authored by the more capable **Opus 4.7**, the grader is **Sonnet 4.6** — that was backwards. The faithful decomposition of Opus's locked `old-c2=true` is `c3=true` (Opus judged the mechanism present when it bundled name+mechanism). All three were **restored to c3=true**, and the Sonnet `c3=false` reads are now **documented calibration gaps**, not ground truth.
 
 Consequence: this set has **no c2=T/c3=F differential pairs** — the coverage gap the gate appeared to close is reopened (it was an artifact of adopting Sonnet's read). A future authoring pass could add one clean "names-without-explaining" pair if that coverage is wanted. The realignment narrative below is retained as a record of what was done and undone.
 

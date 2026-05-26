@@ -411,10 +411,10 @@ unit gets re-gated.
 - Diagnostic script: `backend/scripts/_inspect_pairs.py` on
   throwaway branch `claude/unit-6-gate-diagnostics`
   (deleted post-triage).
-- Prior gate precedents: `docs/UNIT_5_GATE.md`,
-  `docs/UNIT_4_GATE.md`, `docs/UNIT_3_GATE.md`,
-  `docs/UNIT_2_GATE.md`, `docs/PHASE_2_GATE.md`.
+- Prior gate precedents: `docs/gates/UNIT_5_GATE.md`,
+  `docs/gates/UNIT_4_GATE.md`, `docs/gates/UNIT_3_GATE.md`,
+  `docs/gates/UNIT_2_GATE.md`, `docs/gates/PHASE_2_GATE.md`.
 - Rubric source: `content/units/prompt-design-bundle-0.md`
   slot 8.
-- T2-B locked interpretation: `docs/PHASE_2_GATE.md`
+- T2-B locked interpretation: `docs/gates/PHASE_2_GATE.md`
   § Realignment (PR #72) and STRATEGY.md § T2-B.

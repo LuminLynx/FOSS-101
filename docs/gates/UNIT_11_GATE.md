@@ -1,8 +1,8 @@
 # Unit 11 Gate — Streaming UX
 
 > **Per-unit gate audit** for `streaming-ux-bundle-0` (Phase 3,
-> Unit 11). Mirrors the structure of `docs/UNIT_10_GATE.md` and
-> `docs/UNIT_9_GATE.md` — per-unit gates ship as recurring,
+> Unit 11). Mirrors the structure of `docs/gates/UNIT_10_GATE.md` and
+> `docs/gates/UNIT_9_GATE.md` — per-unit gates ship as recurring,
 > independently reviewable artifacts.
 
 ---
@@ -59,7 +59,7 @@ precedent (same fix, same outcome) holds for p014.
 Units 2, 9, and 10 all showed the same pattern: verbose-*punt*
 answers authored as flagged-expected get **confidently graded
 all-not-met** — the grader has enough signal to resolve them, so
-it never flags. `docs/UNIT_10_GATE.md` left an open question:
+it never flags. `docs/gates/UNIT_10_GATE.md` left an open question:
 *would a genuine one-criterion ambiguity (not a punt) trigger the
 flag?* and flagged it for a decision after two more occurrences.
 
@@ -251,7 +251,7 @@ present — no shell exports.
 
 ## Decision-gate questions
 
-From `docs/EXECUTION.md`:
+From `docs/roadmap/EXECUTION.md`:
 
 > *Is the grader trustworthy enough to ship under P2?*
 > *Is the per-call cost sustainable at projected scale?*

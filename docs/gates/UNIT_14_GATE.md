@@ -1,7 +1,7 @@
 # Unit 14 Gate — Agents / multi-step reasoning
 
 > **Per-unit gate audit** for `agents-bundle-0` (Phase 3, Unit 14).
-> Mirrors the structure of `docs/UNIT_12_GATE.md` and prior
+> Mirrors the structure of `docs/gates/UNIT_12_GATE.md` and prior
 > per-unit gates.
 
 ---
@@ -15,7 +15,7 @@ Sonnet 4.6 grader on 2026-05-24 and hit **98.8% per-criterion
 agreement (83/84)** on the first run — above the 80% publish
 threshold. **Zero realignments, zero rewrites.** Two preserved
 disagreements (p010 c3, p011 flag), both held to the gold standard
-per `docs/REGRESSION_GATE.md`. Unit 14 was authored against the
+per `docs/gates/REGRESSION_GATE.md`. Unit 14 was authored against the
 post-c2-split 4-criterion rubric from the start, so no retroactive
 split was needed.
 
@@ -94,7 +94,7 @@ constrain each other," which is why the grader strict-reads it as
 not-met.
 
 **Disposition: preserve `c3=true`.** This is a reproducible *stricter*
-Sonnet read on a *genuine borderline* — `docs/REGRESSION_GATE.md` is
+Sonnet read on a *genuine borderline* — `docs/gates/REGRESSION_GATE.md` is
 explicit that this is **not** grounds to flip the Opus-authored value
 down; reproducibility makes it a *cleaner documented calibration gap*,
 not a realign. Same family as Unit 11 p014 (vague-coupling c1) and
@@ -130,7 +130,7 @@ required.
 
 The two preserved disagreements (p010 c3 reproducible-strict, p011
 flag) are inputs to the deferred c1/c3/c4 follow-up audit
-(`docs/RUBRIC_AUDIT_C1_C4.md`), not action items for this gate.
+(`docs/audits/RUBRIC_AUDIT_C1_C4.md`), not action items for this gate.
 
 ---
 
@@ -142,8 +142,8 @@ flag) are inputs to the deferred c1/c3/c4 follow-up audit
   `draft` → `published` in this PR).
 - Grader: `backend/app/ai_service.py` (T2-D guardrails).
 - Runner: `backend/scripts/run_regression_set.py`.
-- Authoring blueprint / template: `docs/UNIT_12_GATE.md` +
-  `docs/UNIT_11_GATE.md` (the "three coupled decisions" references).
-- Gate procedure: `docs/REGRESSION_GATE.md`.
+- Authoring blueprint / template: `docs/gates/UNIT_12_GATE.md` +
+  `docs/gates/UNIT_11_GATE.md` (the "three coupled decisions" references).
+- Gate procedure: `docs/gates/REGRESSION_GATE.md`.
 - Preserve-by-default / gold-standard principle:
-  `docs/REGRESSION_GATE.md` § The grader vs. the gold standard.
+  `docs/gates/REGRESSION_GATE.md` § The grader vs. the gold standard.

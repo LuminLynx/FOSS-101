@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * Backed by a plain SharedPreferences file — this is non-sensitive UI state, so
  * unlike the encrypted auth prefs it is intentionally left eligible for
  * auto-backup, letting the preference migrate with the user's device
- * (see docs/ANDROID_BEST_PRACTICES.md § 1).
+ * (see docs/guides/ANDROID_BEST_PRACTICES.md § 1).
  */
 class ThemePreferenceStore(context: Context) {
 

@@ -32,11 +32,11 @@
 #      (4% audit rate, 500/day, 8000-employee target,
 #      ~50 errors/day at full launch).
 #
-# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# RUBRIC SPLIT (2026-05-21, per docs/audits/RUBRIC_AUDIT.md, MEDIUM
 # batch): criterion 2 split into c2 (name the failure mode) and
 # a new c3 (explain the mechanism); old c3 (regime) renumbered
 # to position 4. Rubric grows 3 -> 4. Applied PRESERVE-BY-DEFAULT
-# (docs/REGRESSION_GATE.md): faithful decomposition of the locked
+# (docs/gates/REGRESSION_GATE.md): faithful decomposition of the locked
 # Opus values — every old-c2=T pair inherits c2=T AND c3=T. Of the
 # old-c2=F pairs: p007 NAMES a failure mode (mitigation-only) without
 # the volume-compound mechanism, so c2=T / c3=F (the lone differential,
@@ -73,7 +73,7 @@
 #      (was position 3)
 #
 # Authoring distribution (21 pairs; pre-split three-criterion
-# shape, post-Unit-7-gate per docs/UNIT_7_GATE.md — preserved as
+# shape, post-Unit-7-gate per docs/gates/UNIT_7_GATE.md — preserved as
 # historical record):
 #   * 8 pairs all-three-met (varied voices)
 #       p001, p002, p005, p008, p016 (pt),
@@ -136,7 +136,7 @@ unit_id: hallucination-bundle-0
 description: |
   Phase 3 / Unit 7 standard gate set. Authored 2026-05-12;
   realigned 2026-05-13 after the initial gate run per
-  docs/UNIT_7_GATE.md. 21 pairs against the AND-structured
+  docs/gates/UNIT_7_GATE.md. 21 pairs against the AND-structured
   rubric. One deliberate borderline remaining (p007 c2).
   p014's c1 borderline (two-of-three axes tightening)
   failed empirically — c1 still crossed grader-lenient,
@@ -147,7 +147,7 @@ description: |
   (p018; 2-unit-confirmed). Zero flagged-expected pairs.
   See header for full triage.
 
-  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  2026-05-21 c2 split (per docs/audits/RUBRIC_AUDIT.md, MEDIUM batch):
   criterion 2 split into c2 (name the failure mode) and a new c3
   (explain the mechanism); old c3 (regime) renumbered to position
   4. Preserve-by-default: faithful decomposition of the locked
@@ -155,7 +155,7 @@ description: |
   (names mitigation-only failure without the volume-compound
   mechanism → c2=T,c3=F); p009/p011 name no failure mode →
   c2=F,c3=F. No realignments. Gate-exempt (faithful split, zero
-  realignments per docs/REGRESSION_GATE.md). Known-bad p018 ERROR
+  realignments per docs/gates/REGRESSION_GATE.md). Known-bad p018 ERROR
   unaffected.
 
 pairs:

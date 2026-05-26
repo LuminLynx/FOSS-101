@@ -1,7 +1,7 @@
 # Phase 1: complete
 
 > **Phase 1 closeout.** Chunks 1–7 have all landed. The Phase 1 exit
-> criteria from `docs/EXECUTION.md` are met:
+> criteria from `docs/roadmap/EXECUTION.md` are met:
 >
 > - Path-centric data model on Postgres (migrations 016–021, plus 022
 >   retiring `learning_completions`).
@@ -22,8 +22,8 @@
 ## What's next: Phase 2
 
 The next chunk opens **Phase 2 — the grader (F4).** That's a
-separate planning pass against `docs/STRATEGY.md` (Loop step 3 and
-the T2-A / T2-B principles) and `docs/AUDIT.md` § the grader. The
+separate planning pass against `docs/strategy/STRATEGY.md` (Loop step 3 and
+the T2-A / T2-B principles) and `docs/audits/AUDIT.md` § the grader. The
 shape:
 
 - Decision-prompt answers from F2 are graded against the unit's
@@ -73,7 +73,7 @@ the post-chunk delta from spec is visible in one place.
 | #63 | Bug fix | Unit reader loads completion state from cache on open; clean back-stack handling on auth-expired redirect. |
 | **#64** | **Extension** | Cross-device completion sync. **Adds `GET /api/v1/completions`** — not in chunk 7's spec, which deferred this as "v1 cache is fine." Doesn't contradict any locked decision; goes beyond. Phase 2 will inherit the same shape for grades. |
 | #65 | Bug fix | Encrypted-prefs crash on restored installs. Added Play-Store-aligned backup rules + recovery in `EncryptedTokenStorage`. |
-| #66 | Bug fix + new doc | Path-home reload on every resume so cross-device sync runs after sign-in. **Added `docs/ANDROID_BEST_PRACTICES.md`** capturing Android-specific decisions for Play Store readiness — see that file for the full ledger and maintenance discipline. |
+| #66 | Bug fix + new doc | Path-home reload on every resume so cross-device sync runs after sign-in. **Added `docs/guides/ANDROID_BEST_PRACTICES.md`** capturing Android-specific decisions for Play Store readiness — see that file for the full ledger and maintenance discipline. |
 
 **Net spec impact:**
 - Two corrections of chunk-7 drift (#60, #62) brought us back to spec.

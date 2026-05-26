@@ -2,9 +2,9 @@
 
 > **Scope.** Forward-looking plan for what happens after each unit
 > publishes through public launch. Synthesizes
-> `docs/STRATEGY.md` § Features and § Phase 3/4 work clusters,
-> `docs/EXECUTION.md` Phase 3 + Phase 4, the Phase 4 launch-
-> readiness checklist in `docs/BACKEND_BEST_PRACTICES.md`, and
+> `docs/strategy/STRATEGY.md` § Features and § Phase 3/4 work clusters,
+> `docs/roadmap/EXECUTION.md` Phase 3 + Phase 4, the Phase 4 launch-
+> readiness checklist in `docs/guides/BACKEND_BEST_PRACTICES.md`, and
 > several decisions surfaced mid-session that hadn't been written
 > to disk yet.
 >
@@ -58,7 +58,7 @@ launch:
 2. **Phase 4 launch-readiness** — trademark, web preview, beta
    cohort, dashboards, app store.
 3. **Backend launch-readiness items** — deferred per
-   `docs/BACKEND_BEST_PRACTICES.md` §  *Launch-readiness checklist*.
+   `docs/guides/BACKEND_BEST_PRACTICES.md` §  *Launch-readiness checklist*.
 
 Authoring tracks 10–20 continues in parallel with track 1 (Phase
 3 engineering). The handoff established that *"authoring is the
@@ -70,7 +70,7 @@ the remaining 11 unit-authoring cycles.
 
 ## Track 1 — Phase 3 engineering (start whenever)
 
-Per `docs/EXECUTION.md` § Phase 3 work cluster.
+Per `docs/roadmap/EXECUTION.md` § Phase 3 work cluster.
 
 ### F6 — Path overview / "you are here"
 
@@ -195,7 +195,7 @@ Tools, Trend Watcher, contribution flows).
 
 ### Phase 3 exit gate
 
-Per `docs/EXECUTION.md` § Phase 3 decision gate:
+Per `docs/roadmap/EXECUTION.md` § Phase 3 decision gate:
 
 - All 20 units published, each with the required regression-set
   tier met (≥ 20 flagship, ≥ 10 standard, never zero).
@@ -214,7 +214,7 @@ Then Phase 4 opens.
 
 ## Track 2 — Phase 4 launch-readiness
 
-Per `docs/EXECUTION.md` § Phase 4. Most of this is **not coding
+Per `docs/roadmap/EXECUTION.md` § Phase 4. Most of this is **not coding
 work**.
 
 ### Trademark check on Libella
@@ -284,7 +284,7 @@ keywords, app icon at multiple sizes. Aligned to positioning.
 
 ### Phase 4 exit gate
 
-Per `docs/EXECUTION.md` § Phase 4:
+Per `docs/roadmap/EXECUTION.md` § Phase 4:
 
 - Trademark cleared (or fallback name committed, or launch
   deferred).
@@ -298,7 +298,7 @@ Per `docs/EXECUTION.md` § Phase 4:
 
 ## Track 3 — Backend launch-readiness items
 
-Per `docs/BACKEND_BEST_PRACTICES.md` § Launch-readiness checklist
+Per `docs/guides/BACKEND_BEST_PRACTICES.md` § Launch-readiness checklist
 (Phase 4). Deferred items, not load-bearing for closed beta but
 should be revisited at the Phase 4 boundary:
 
@@ -416,11 +416,11 @@ synthesis that previously lived only in a chat transcript and
 was therefore vulnerable to session loss. The synthesis pulls
 from:
 
-- `docs/STRATEGY.md` § Features, § Architecture Q4, § Open
+- `docs/strategy/STRATEGY.md` § Features, § Architecture Q4, § Open
   sub-decisions.
-- `docs/EXECUTION.md` § Phase 3, § Phase 4, § Critical path.
-- `docs/AUDIT.md` § 2.4 (new endpoints), § 2.7 (new tables).
-- `docs/BACKEND_BEST_PRACTICES.md` § Launch-readiness checklist.
+- `docs/roadmap/EXECUTION.md` § Phase 3, § Phase 4, § Critical path.
+- `docs/audits/AUDIT.md` § 2.4 (new endpoints), § 2.7 (new tables).
+- `docs/guides/BACKEND_BEST_PRACTICES.md` § Launch-readiness checklist.
 - `docs/curriculum/v1-path-outline.md` — Units 16–20 placeholder
   rationale + the process retrospectives that establish the
   *"lock before authoring begins"* pattern this doc extends to

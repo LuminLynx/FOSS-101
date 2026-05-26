@@ -1,7 +1,7 @@
 # Libella — Execution Plan
 
 **Status:** Phase plan, locked. (recorded 2026-05-04)
-**Anchored to:** [`docs/STRATEGY.md`](./STRATEGY.md) — read first if you are new to the project.
+**Anchored to:** [`docs/strategy/STRATEGY.md`](../strategy/STRATEGY.md) — read first if you are new to the project.
 **Companion doc:** [`ROADMAP.md`](../ROADMAP.md) — bottom-up tactical breakdown for the *old* glossary product. Partially superseded.
 
 This document translates strategy into sequenced phases. It does **not** commit to dates. Each phase has explicit entry criteria, work clusters, exit criteria, and a decision gate. Phases run as long as they need to. Time estimates, when given, are orientation only.
@@ -49,7 +49,7 @@ Total elapsed: realistically 5–8 months. The critical path is authoring 20 uni
 - Audit `ROADMAP.md`. Mark phases obsolete / reusable / re-point. Stale phases should be explicitly noted, not silently kept.
 
 **Exit criteria.**
-- A written audit at `docs/AUDIT.md` (or appended here as Phase 0 output) that classifies every meaningful module/file as **keep / reshape / delete**.
+- A written audit at `docs/audits/AUDIT.md` (or appended here as Phase 0 output) that classifies every meaningful module/file as **keep / reshape / delete**.
 - Cut list approved by founder.
 
 **Decision gate.**
@@ -225,16 +225,16 @@ If at any point the project is asked to compress its timeline, the *only* lever 
 
 If you are a new chat session reading this for the first time:
 
-1. **Read `docs/STRATEGY.md` in full first.** Strategy is anchored there, not here.
+1. **Read `docs/strategy/STRATEGY.md` in full first.** Strategy is anchored there, not here.
 2. **Then read this doc.** Identify the current phase by checking entry/exit criteria against the actual repo state. Run `git log --oneline -20` to see recent activity.
 3. **Open sub-decisions** are listed in `STRATEGY.md` § *"Open sub-decisions / what remains"*. This doc tracks which phase resolves each.
 4. **Locked decisions are not up for re-debate** unless flagged explicitly as a strategy revision. The wedge (P1 + P2 primary) and the soul (learning, not retrieval) are load-bearing. Change them with care.
 5. **The user has lived through losing prior chat sessions to API errors.** Documentation is their resilience strategy. Treat both `STRATEGY.md` and `EXECUTION.md` as the canonical record; treat chat history as ephemeral.
-6. **Android-specific implementation decisions** (backup rules, encrypted prefs, Compose state-production pattern, JWT propagation, per-user cache scoping, etc.) live in `docs/ANDROID_BEST_PRACTICES.md`. That file is complementary to this one, not a substitute — strategy stays in `STRATEGY.md`, execution sequencing here, Android platform decisions there. Cross-reference it when working on the Android client or preparing for a Play Store release.
-7. **Backend-specific implementation decisions** (production-secret enforcement, migration deploy pattern, F4 grader guardrails, prompt caching, grade-row replacement semantics, launch-readiness checklist) live in `docs/BACKEND_BEST_PRACTICES.md`. Same complementary relationship as item 6. Cross-reference it when touching the API surface, Postgres schema, or anything in the deployed Railway service.
+6. **Android-specific implementation decisions** (backup rules, encrypted prefs, Compose state-production pattern, JWT propagation, per-user cache scoping, etc.) live in `docs/guides/ANDROID_BEST_PRACTICES.md`. That file is complementary to this one, not a substitute — strategy stays in `STRATEGY.md`, execution sequencing here, Android platform decisions there. Cross-reference it when working on the Android client or preparing for a Play Store release.
+7. **Backend-specific implementation decisions** (production-secret enforcement, migration deploy pattern, F4 grader guardrails, prompt caching, grade-row replacement semantics, launch-readiness checklist) live in `docs/guides/BACKEND_BEST_PRACTICES.md`. Same complementary relationship as item 6. Cross-reference it when touching the API surface, Postgres schema, or anything in the deployed Railway service.
 
 ---
 
 ## Provenance
 
-This document was produced as the execution-plan companion to `docs/STRATEGY.md`. It translates locked strategy into sequenced phases without committing to dates. Phases are intentionally coarse; in-phase task management belongs in your tracker of choice (issues, project board, etc.), not in this document.
+This document was produced as the execution-plan companion to `docs/strategy/STRATEGY.md`. It translates locked strategy into sequenced phases without committing to dates. Phases are intentionally coarse; in-phase task management belongs in your tracker of choice (issues, project board, etc.), not in this document.

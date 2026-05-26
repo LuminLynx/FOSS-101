@@ -1,7 +1,7 @@
 # Unit 15 Gate — Safety + content moderation
 
 > **Per-unit gate audit** for `safety-bundle-0` (Phase 3, Unit 15).
-> Mirrors `docs/UNIT_14_GATE.md` and prior per-unit gates. Closes the
+> Mirrors `docs/gates/UNIT_14_GATE.md` and prior per-unit gates. Closes the
 > Production block (Units 11–15) and the v1 spine's first 15 units.
 
 ---
@@ -14,7 +14,7 @@ The 21-pair regression set hit **97.6% per-criterion agreement (82/84)**
 against the live Sonnet 4.6 grader — above the 80% publish threshold —
 with **0 errored pairs**. Two preserved per-criterion disagreements
 (p011 c3, p021 c3), both held to the gold standard per
-`docs/REGRESSION_GATE.md`. Authored against the post-c2-split
+`docs/gates/REGRESSION_GATE.md`. Authored against the post-c2-split
 4-criterion rubric from the start; no retroactive split needed.
 
 | Criterion | Required | Run (21 pairs) | Verdict |
@@ -90,7 +90,7 @@ the grader strict-reads c3 as not-met.
 
 **Disposition: preserve `c3=true`.** This is the same reproducible
 grader-strict-on-borderline pattern as Unit 14 p010 and Unit 11 p014 —
-`docs/REGRESSION_GATE.md` is explicit that a stricter Sonnet read on a
+`docs/gates/REGRESSION_GATE.md` is explicit that a stricter Sonnet read on a
 genuine borderline is **not** grounds to flip the Opus-authored value
 down. The c1/c3 split is otherwise clean (the surfaced-c3 pairs return
 `c3=true`), so the criterion fires in both directions. Logged as a
@@ -129,7 +129,7 @@ continues into the Operating block.
 
 The three preserved disagreements (p011/p021 c3 reproducible-strict, p003
 flag) are inputs to the deferred c1/c3/c4 follow-up audit
-(`docs/RUBRIC_AUDIT_C1_C4.md`), not action items for this gate.
+(`docs/audits/RUBRIC_AUDIT_C1_C4.md`), not action items for this gate.
 
 ---
 
@@ -143,6 +143,6 @@ flag) are inputs to the deferred c1/c3/c4 follow-up audit
 - Quote-grounding fix recorded here: PR #202 (H1, flag-on-unverified) +
   PR #204 (token-overlap loosening that resolved the over-flagging).
 - Runner: `backend/scripts/run_regression_set.py`.
-- Gate procedure: `docs/REGRESSION_GATE.md`.
+- Gate procedure: `docs/gates/REGRESSION_GATE.md`.
 - Preserve-by-default / gold-standard principle:
-  `docs/REGRESSION_GATE.md` § The grader vs. the gold standard.
+  `docs/gates/REGRESSION_GATE.md` § The grader vs. the gold standard.

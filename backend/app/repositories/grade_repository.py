@@ -1,6 +1,6 @@
 """GradeRepository — writes/reads against the `grades` table.
 
-Per docs/STRATEGY.md § T2-A, grades are per-criterion (Met / Not Met
+Per docs/strategy/STRATEGY.md § T2-A, grades are per-criterion (Met / Not Met
 with confidence + rationale + answer-quote), never holistic. The
 schema lives in migration 019:
 

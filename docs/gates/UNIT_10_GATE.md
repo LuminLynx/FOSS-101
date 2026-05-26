@@ -1,8 +1,8 @@
 # Unit 10 Gate — Vector search & RAG fundamentals
 
 > **Per-unit gate audit** for `vector-search-rag-bundle-0` (Phase 3,
-> Unit 10). Mirrors the structure of `docs/UNIT_9_GATE.md` and
-> `docs/UNIT_2_GATE.md` — per-unit gates ship as recurring,
+> Unit 10). Mirrors the structure of `docs/gates/UNIT_9_GATE.md` and
+> `docs/gates/UNIT_2_GATE.md` — per-unit gates ship as recurring,
 > independently reviewable artifacts.
 
 ---
@@ -17,7 +17,7 @@ publish threshold). Four YAML expected-value realignments landed
 hit **100% per-criterion agreement (63/63) with zero errors and
 21/21 flagged-correct** — the third 100% gate run in the path
 (after Unit 4 and Unit 8; both also hit 100% on re-run per
-`docs/UNIT_4_GATE.md` and `docs/UNIT_8_GATE.md`).
+`docs/gates/UNIT_4_GATE.md` and `docs/gates/UNIT_8_GATE.md`).
 The unit was already published on author (PR #110, `status:
 published`); no flip required in the realignment PR. **Zero
 preserved disagreements for Unit 10**, continuing the Unit 9
@@ -35,7 +35,7 @@ precedent.
 
 21 pairs through the live grader (Anthropic Claude Sonnet 4.6,
 prompt caching on rubric per STRATEGY.md § T2-E) on production
-Railway. Same environment as `docs/UNIT_9_GATE.md`.
+Railway. Same environment as `docs/gates/UNIT_9_GATE.md`.
 
 ```
 Pairs scored:               21
@@ -206,7 +206,7 @@ unambiguously wrong from the grader's spec-faithful viewpoint.
 
 ## Decision-gate questions
 
-The gate prompt from `docs/EXECUTION.md`:
+The gate prompt from `docs/roadmap/EXECUTION.md`:
 
 > *Is the grader trustworthy enough to ship under P2?*
 > *Is the per-call cost sustainable at projected scale?*

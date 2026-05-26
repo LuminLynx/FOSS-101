@@ -1,7 +1,7 @@
 # Phase 0 — Cleanup Audit
 
 **Status:** **Founder-signed 2026-05-04.** All 8 open calls in §5 resolved; Phase 0 decision gate met. Phase 1 may begin.
-**Anchored to:** [`STRATEGY.md`](./STRATEGY.md) and [`EXECUTION.md`](./EXECUTION.md).
+**Anchored to:** [`STRATEGY.md`](../strategy/STRATEGY.md) and [`EXECUTION.md`](../roadmap/EXECUTION.md).
 **Branch:** `claude/phase-0-signoff-S1gnd` (this sign-off pass) — supersedes `claude/audit-revision-I7CvQ` (revision pass) which superseded `claude/cleanup-audit-YUHEh` (original).
 **Revision summary:** Original draft on `claude/cleanup-audit-YUHEh`. The first revision pass
 addressed review push-backs without re-litigating locked strategy: explicit
@@ -365,9 +365,9 @@ forward step each time):
 | `.gitignore` | KEEP, polish | Tracks `docs/test.kt` and the gradle-cache tarball; fine. |
 | `.gitkeep` (root and `docs/roadmap`, `docs/workflow`) | KEEP | Harmless. |
 | `scripts/claude/capture-gradle-cache.sh` `restore-gradle-cache.sh` | KEEP | Web-session gradle-cache plumbing; inherits. |
-| `docs/STRATEGY.md` | KEEP | Canonical. |
-| `docs/EXECUTION.md` | KEEP | Canonical. |
-| `docs/AUDIT.md` (this file) | KEEP | This file. |
+| `docs/strategy/STRATEGY.md` | KEEP | Canonical. |
+| `docs/roadmap/EXECUTION.md` | KEEP | Canonical. |
+| `docs/audits/AUDIT.md` (this file) | KEEP | This file. |
 | `ROADMAP.md` (root) | RESHAPE → archive | Already self-marked as superseded; either move under `docs/roadmap/` and rename to `ARCHIVE_ROADMAP.md` or delete the duplicate `docs/roadmap/ROADMAP.md`. Recommend: keep one copy under `docs/roadmap/` with an *Archived* header; delete the root duplicate. |
 | `docs/roadmap/ROADMAP.md` | RESHAPE → archive (single canonical archived copy of the old roadmap) | Same body as root ROADMAP.md, no top-of-file supersession note. Pick one location, mark archived, drop the other. |
 | `docs/architecture/BACKEND_DATABASE_SCOPE.md` | DELETE | Begins with "No user accounts. No chat / AI tools. Online-first. Content managed manually." Most decisions are obsolete or contradicted by the new strategy (we *do* have user accounts; we *do* have an LLM grader). The misalignment is worse than no doc at all. |

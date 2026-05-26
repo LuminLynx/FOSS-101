@@ -2,8 +2,8 @@
 
 **Status:** Passed 2026-05-21. Split kept.
 **Unit:** `tool-use-bundle-0` (position 12)
-**Change under gate:** the criterion-2 SPLIT from `docs/RUBRIC_AUDIT.md` (PR #154) — old bundled c2 ("mismatched-combination failure mechanism AND the decisions constrain each other") split into mechanism-only c2 + a new c3 (constrain-each-other meta-claim); old map+PM criterion renumbered to c4. Rubric grew 3 → 4.
-**Procedure:** `docs/REGRESSION_GATE.md` (operator-run, local grader).
+**Change under gate:** the criterion-2 SPLIT from `docs/audits/RUBRIC_AUDIT.md` (PR #154) — old bundled c2 ("mismatched-combination failure mechanism AND the decisions constrain each other") split into mechanism-only c2 + a new c3 (constrain-each-other meta-claim); old map+PM criterion renumbered to c4. Rubric grew 3 → 4.
+**Procedure:** `docs/gates/REGRESSION_GATE.md` (operator-run, local grader).
 
 ## Decision
 

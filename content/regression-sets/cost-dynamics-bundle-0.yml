@@ -30,11 +30,11 @@
 #      ($0.0225/ticket, $1,125/day, $410k/year, projected
 #      $655k/year, 50k→80k tickets/day).
 #
-# RUBRIC SPLIT (2026-05-21, per docs/RUBRIC_AUDIT.md, MEDIUM
+# RUBRIC SPLIT (2026-05-21, per docs/audits/RUBRIC_AUDIT.md, MEDIUM
 # batch): criterion 2 split into c2 (name the failure mode) and
 # a new c3 (explain the mechanism); old c3 (regime) renumbered
 # to position 4. Rubric grows 3 -> 4. Applied PRESERVE-BY-DEFAULT
-# (docs/REGRESSION_GATE.md): faithful decomposition of the locked
+# (docs/gates/REGRESSION_GATE.md): faithful decomposition of the locked
 # Opus values — every old-c2=T pair inherits c2=T AND c3=T. Of the
 # old-c2=F pairs: p007 NAMES single-axis failure modes ("caching
 # alone misses the batch discount") without the mechanism, so c2=T
@@ -74,7 +74,7 @@
 #      steady-state floor), not picking one." (was position 3)
 #
 # Authoring distribution (21 pairs; pre-split three-criterion
-# shape, post-Unit-8-gate per docs/UNIT_8_GATE.md — preserved as
+# shape, post-Unit-8-gate per docs/gates/UNIT_8_GATE.md — preserved as
 # historical record):
 #   * 8 pairs all-three-met
 #       p001, p002, p005, p014, p016 (pt),
@@ -148,7 +148,7 @@ unit_id: cost-dynamics-bundle-0
 description: |
   Phase 3 / Unit 8 standard gate set. Authored 2026-05-13;
   realigned 2026-05-13 after the initial gate run per
-  docs/UNIT_8_GATE.md. 21 pairs against the AND-structured
+  docs/gates/UNIT_8_GATE.md. 21 pairs against the AND-structured
   rubric. Two realignments — p007 c1 → false (grader-
   strict on missing annualization anchor; AND-clause-2
   failure) and p014 c1 → true (grader-lenient on
@@ -158,7 +158,7 @@ description: |
   realignment. Zero flagged-expected pairs. See header
   for full triage.
 
-  2026-05-21 c2 split (per docs/RUBRIC_AUDIT.md, MEDIUM batch):
+  2026-05-21 c2 split (per docs/audits/RUBRIC_AUDIT.md, MEDIUM batch):
   criterion 2 split into c2 (name the failure mode) and a new c3
   (explain the mechanism); old c3 (regime) renumbered to position
   4. Preserve-by-default: faithful decomposition of locked Opus
@@ -166,7 +166,7 @@ description: |
   (names single-axis failures without the mechanism → c2=T,c3=F,
   with c1 also false); p009/p011 name no failure mode → c2=F,c3=F.
   No realignments. Gate-exempt (faithful split, zero realignments
-  per docs/REGRESSION_GATE.md).
+  per docs/gates/REGRESSION_GATE.md).
 
 pairs:
   - id: p001

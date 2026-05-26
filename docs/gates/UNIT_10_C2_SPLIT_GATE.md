@@ -2,8 +2,8 @@
 
 **Status:** Passed 2026-05-21. Split kept.
 **Unit:** `vector-search-rag-bundle-0` (position 10)
-**Change under gate:** the criterion-2 SPLIT from `docs/RUBRIC_AUDIT.md` (PR #146) — old bundled c2 ("mechanism AND the three failure modes need different fixes") split into mechanism-only c2 + a new c3 (different-fixes meta-claim); old signals criterion renumbered to c4. Rubric grew 3 → 4.
-**Procedure:** `docs/REGRESSION_GATE.md` (operator-run, local grader).
+**Change under gate:** the criterion-2 SPLIT from `docs/audits/RUBRIC_AUDIT.md` (PR #146) — old bundled c2 ("mechanism AND the three failure modes need different fixes") split into mechanism-only c2 + a new c3 (different-fixes meta-claim); old signals criterion renumbered to c4. Rubric grew 3 → 4.
+**Procedure:** `docs/gates/REGRESSION_GATE.md` (operator-run, local grader).
 
 ## Decision
 

@@ -1,7 +1,7 @@
 # Phase 2 Gate — passed 2026-05-09
 
 > **Durable record** of the P2.5 ship/iterate decision per
-> `docs/EXECUTION.md` § Phase 2 ("STOP AND EVALUATE"). The gate is
+> `docs/roadmap/EXECUTION.md` § Phase 2 ("STOP AND EVALUATE"). The gate is
 > the load-bearing decision for the entire product — STRATEGY.md
 > calls it "the make-or-break phase for the wedge." This document
 > captures the evidence the decision was made on so future
@@ -13,7 +13,7 @@
 
 **Phase 2 closed. Grader shipped under P2 calibration discipline.**
 
-The grader meets all three exit criteria from `docs/EXECUTION.md`
+The grader meets all three exit criteria from `docs/roadmap/EXECUTION.md`
 § Phase 2:
 
 | Criterion | Required | Observed | Verdict |
@@ -99,7 +99,7 @@ disagreements; they are deliberately retained.
 
 ## Decision-gate questions
 
-The gate prompt from `docs/EXECUTION.md`:
+The gate prompt from `docs/roadmap/EXECUTION.md`:
 
 > *Is the grader trustworthy enough to ship under P2?*
 > *Is the per-call cost sustainable at projected scale?*
@@ -136,7 +136,7 @@ The gate prompt from `docs/EXECUTION.md`:
 Prompt-cache hit ratio observed at 3.8× input tokens (cache reads
 42k vs input 11k). T2-E's "load-bearing on unit economics"
 assumption is validated. The launch-readiness checklist in
-`docs/BACKEND_BEST_PRACTICES.md` includes the cache-hit-rate alarm
+`docs/guides/BACKEND_BEST_PRACTICES.md` includes the cache-hit-rate alarm
 threshold (< 70%) per EXECUTION.md.
 
 ### 3. UX honors the Loop arc (Decide → Calibrate)?
@@ -162,7 +162,7 @@ threshold (< 70%) per EXECUTION.md.
 
 ## What this unlocks
 
-Phase 3 opens per `docs/EXECUTION.md`:
+Phase 3 opens per `docs/roadmap/EXECUTION.md`:
 
 - **Author the remaining 19 units** (T1 in STRATEGY.md). Each ships
   with ≥ 10 (standard) or ≥ 20 (flagship) regression pairs per
@@ -175,7 +175,7 @@ Phase 3 opens per `docs/EXECUTION.md`:
   production, not engineering, exactly as STRATEGY.md predicted.
 
 The Phase 4 launch-readiness checklist in
-`docs/BACKEND_BEST_PRACTICES.md` is unchanged: token refresh + jti
+`docs/guides/BACKEND_BEST_PRACTICES.md` is unchanged: token refresh + jti
 revocation, connection pooling, flavor-based base URLs, streaming
 rationale (TT2). These get done at the Phase 4 boundary.
 

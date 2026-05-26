@@ -8,7 +8,7 @@
 ## Decisions locked (2026-05-20)
 
 - **Approach:** SPLIT. Every flagged criterion in this audit is split into two criteria. Rubrics for Units 2–9 grow from 3 → 4 criteria. Units 10–13 use SPLIT as well (Option A — new criterion) rather than the Option B "move meta-claim into existing c3" path, for cross-unit consistency.
-- **Regression backfill:** every unit's regression set is re-run end-to-end before its PR merges. No spot-checks. Operator procedure in `docs/REGRESSION_GATE.md`. *(Narrowed 2026-05-21: a faithful preserve-by-default split with zero realignments is exempt from the pre-merge gate — see `docs/REGRESSION_GATE.md` § When the pre-merge gate is required vs. optional. The gate stays required for any change that realigns expected values.)*
+- **Regression backfill:** every unit's regression set is re-run end-to-end before its PR merges. No spot-checks. Operator procedure in `docs/gates/REGRESSION_GATE.md`. *(Narrowed 2026-05-21: a faithful preserve-by-default split with zero realignments is exempt from the pre-merge gate — see `docs/gates/REGRESSION_GATE.md` § When the pre-merge gate is required vs. optional. The gate stays required for any change that realigns expected values.)*
 - **PR cadence:** one PR per unit (pilot first, then batched if the pilot is clean). Each PR includes the rubric edit, `ingest_units` re-run, regression-set updates, and a regression-run report.
 - **C1 / c3 follow-up:** deferred. Separate audit doc after this sweep lands, not folded into per-unit PRs.
 

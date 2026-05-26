@@ -2,8 +2,8 @@
 
 **Status:** Passed 2026-05-21. Split kept (zero realignments).
 **Unit:** `latency-bundle-0` (position 3)
-**Change under gate:** the criterion-2 SPLIT from `docs/RUBRIC_AUDIT.md` (PR #157), second of the MEDIUM-severity batch — old bundled c2 ("names a concrete failure mode AND explains the mechanism") split into name-only c2 + a new c3 (explain the mechanism); old regime criterion renumbered to c4. Rubric grew 3 → 4.
-**Procedure:** `docs/REGRESSION_GATE.md` (operator-run, local grader).
+**Change under gate:** the criterion-2 SPLIT from `docs/audits/RUBRIC_AUDIT.md` (PR #157), second of the MEDIUM-severity batch — old bundled c2 ("names a concrete failure mode AND explains the mechanism") split into name-only c2 + a new c3 (explain the mechanism); old regime criterion renumbered to c4. Rubric grew 3 → 4.
+**Procedure:** `docs/gates/REGRESSION_GATE.md` (operator-run, local grader).
 
 ## Decision
 

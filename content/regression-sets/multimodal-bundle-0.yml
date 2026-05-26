@@ -7,7 +7,7 @@
 #     answers regardless of shape (refuted across Units
 #     2/9/10/11/12). Off-topic answers the grader can confidently
 #     grade all-not-met are gradable — flagged: false (T2-B
-#     locked reading, docs/PHASE_2_GATE.md / PR #72).
+#     locked reading, docs/gates/PHASE_2_GATE.md / PR #72).
 #   * NO parenthetical option-lists in answer text — never
 #     "approach (VLM, extract-first, or hybrid)" inside an
 #     answer; write it as prose. This was the deterministic
@@ -16,7 +16,7 @@
 #     NO quote-led sentences (Unit 11 lesson).
 #   * English-only per docs/curriculum/v1-path-outline.md.
 #   * AND-clause-criterion authoring check (escalated in
-#     docs/UNIT_12_GATE.md to a live checklist item): every
+#     docs/gates/UNIT_12_GATE.md to a live checklist item): every
 #     rubric criterion here is an AND. Partial/borderline pairs
 #     are authored so the expected value matches the grader's
 #     STRICT reading — both conjuncts must hold for met:true —

@@ -1,7 +1,7 @@
 """Integration tests for ReviewRepository — F5 spaced review
 (Postgres-gated on TEST_DATABASE_URL).
 
-Covers docs/F5_SPACED_REVIEW.md decisions D1/D3/D6 and the
+Covers docs/guides/F5_SPACED_REVIEW.md decisions D1/D3/D6 and the
 seed-on-completion hook (the only cross-repository call in
 completion_repository).
 """

@@ -1,7 +1,7 @@
 # Regression-set operator gate
 
 **Status:** Documented 2026-05-20
-**Locks:** `docs/RUBRIC_AUDIT.md` § Decisions locked (full regression re-run before merge); `docs/PHASE_2_GATE.md` (per-criterion agreement ≥ 80%).
+**Locks:** `docs/audits/RUBRIC_AUDIT.md` § Decisions locked (full regression re-run before merge); `docs/gates/PHASE_2_GATE.md` (per-criterion agreement ≥ 80%).
 **Enforcement:** Operator-local, not CI.
 
 ## Why this exists
@@ -80,4 +80,4 @@ These catch ~all structural breakage. The operator gate above is the live-grader
 
 ## Cost reference
 
-Per `docs/PHASE_2_GATE.md`: ≈ $0.009 / grade call with prompt-cache hit. A 21-pair set ≈ $0.20 / run. The c2-split SPLIT rollout (Units 10–13 HIGH + Units 2–9 MEDIUM) is bounded by ~$2.50 total even with re-runs.
+Per `docs/gates/PHASE_2_GATE.md`: ≈ $0.009 / grade call with prompt-cache hit. A 21-pair set ≈ $0.20 / run. The c2-split SPLIT rollout (Units 10–13 HIGH + Units 2–9 MEDIUM) is bounded by ~$2.50 total even with re-runs.

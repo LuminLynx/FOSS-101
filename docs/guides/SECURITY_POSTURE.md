@@ -4,8 +4,8 @@
 not a live list of weaknesses.
 **Scope:** The Libella Android client, its FastAPI backend, and the
 Claude-based grader (F4).
-**Anchored to:** [`STRATEGY.md`](./STRATEGY.md), [`PHASE_2_GATE.md`](./PHASE_2_GATE.md),
-[`REGRESSION_GATE.md`](./REGRESSION_GATE.md).
+**Anchored to:** [`STRATEGY.md`](../strategy/STRATEGY.md), [`PHASE_2_GATE.md`](../gates/PHASE_2_GATE.md),
+[`REGRESSION_GATE.md`](../gates/REGRESSION_GATE.md).
 
 This document is deliberately **posture-level, not a recipe**. It states the
 principles we hold and the threat categories we design against. It does **not**

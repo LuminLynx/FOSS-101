@@ -1,7 +1,7 @@
 # Unit 5 Gate — Model selection
 
 > **Per-unit gate audit** for `model-selection-bundle-0` (Phase
-> 3, Unit 5). Mirrors the structure of `docs/UNIT_4_GATE.md`
+> 3, Unit 5). Mirrors the structure of `docs/gates/UNIT_4_GATE.md`
 > and prior per-unit gates.
 
 ---
@@ -381,11 +381,11 @@ leniency) becomes input for a future rubric-tightening pass
 - Diagnostic script: `backend/scripts/_inspect_pairs.py` on
   throwaway branch `claude/unit-5-gate-diagnostics` (deleted
   post-triage).
-- Unit 4 gate precedent: `docs/UNIT_4_GATE.md`.
-- Unit 3 gate precedent: `docs/UNIT_3_GATE.md`.
-- Unit 2 gate precedent: `docs/UNIT_2_GATE.md`.
-- Phase 2 gate precedent: `docs/PHASE_2_GATE.md`.
+- Unit 4 gate precedent: `docs/gates/UNIT_4_GATE.md`.
+- Unit 3 gate precedent: `docs/gates/UNIT_3_GATE.md`.
+- Unit 2 gate precedent: `docs/gates/UNIT_2_GATE.md`.
+- Phase 2 gate precedent: `docs/gates/PHASE_2_GATE.md`.
 - Rubric source: `content/units/model-selection-bundle-0.md`
   slot 8.
-- T2-B locked interpretation: `docs/PHASE_2_GATE.md`
+- T2-B locked interpretation: `docs/gates/PHASE_2_GATE.md`
   § Realignment (PR #72) and STRATEGY.md § T2-B.

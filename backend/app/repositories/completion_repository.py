@@ -10,7 +10,7 @@ by the grader service in Phase 2; this repository is intentionally
 narrow to the completion event itself.
 
 F5 (spaced review): a NEW completion seeds the first review via
-review_repository.seed_review (docs/F5_SPACED_REVIEW.md D3). This is
+review_repository.seed_review (docs/guides/F5_SPACED_REVIEW.md D3). This is
 the only cross-repository call here; it runs after the completion is
 durably committed and is idempotent, so it cannot lose a completion.
 """

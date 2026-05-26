@@ -1,8 +1,8 @@
 # Unit 12 Gate — Tool use / function calling
 
 > **Per-unit gate audit** for `tool-use-bundle-0` (Phase 3,
-> Unit 12). Mirrors the structure of `docs/UNIT_11_GATE.md` and
-> `docs/UNIT_10_GATE.md` — per-unit gates ship as recurring,
+> Unit 12). Mirrors the structure of `docs/gates/UNIT_11_GATE.md` and
+> `docs/gates/UNIT_10_GATE.md` — per-unit gates ship as recurring,
 > independently reviewable artifacts.
 
 ---
@@ -173,7 +173,7 @@ same move on the distribution axis.
 
 ## Decision-gate questions
 
-From `docs/EXECUTION.md`:
+From `docs/roadmap/EXECUTION.md`:
 
 > *Is the grader trustworthy enough to ship under P2?*
 > *Is the per-call cost sustainable at projected scale?*

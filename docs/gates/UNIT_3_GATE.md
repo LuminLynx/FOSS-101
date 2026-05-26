@@ -1,8 +1,8 @@
 # Unit 3 Gate — Latency
 
 > **Per-unit gate audit** for `latency-bundle-0` (Phase 3, Unit 3).
-> Mirrors the structure of `docs/UNIT_2_GATE.md` and
-> `docs/PHASE_2_GATE.md`.
+> Mirrors the structure of `docs/gates/UNIT_2_GATE.md` and
+> `docs/gates/PHASE_2_GATE.md`.
 
 ---
 
@@ -427,8 +427,8 @@ rubric language gets re-read against accumulated gate evidence.
 - Diagnostic script: `backend/scripts/_inspect_pairs.py` on
   throwaway branch `claude/unit-3-gate-diagnostics` (deleted
   post-triage).
-- Unit 2 gate precedent: `docs/UNIT_2_GATE.md`.
-- Phase 2 gate precedent: `docs/PHASE_2_GATE.md`.
+- Unit 2 gate precedent: `docs/gates/UNIT_2_GATE.md`.
+- Phase 2 gate precedent: `docs/gates/PHASE_2_GATE.md`.
 - Rubric source: `content/units/latency-bundle-0.md` slot 8.
-- T2-B locked interpretation: `docs/PHASE_2_GATE.md` § Realignment
+- T2-B locked interpretation: `docs/gates/PHASE_2_GATE.md` § Realignment
   (PR #72) and STRATEGY.md § T2-B.

@@ -3,7 +3,7 @@
 **Status:** Inventory complete (step 1–3 below). Grader-diagnosis (step 4): the **HIGH tier is closed** — Units 10, 11, 12, 13 all run, all "leave, don't split" (no lenient bundling anywhere; see § Step-4 findings + § HIGH-tier closeout). The MEDIUM c1 units 5–9 remain operator-local and pending.
 **Date:** 2026-05-21
 **Scope:** All 13 published / authored units in `content/units/`
-**Predecessor:** `docs/RUBRIC_AUDIT.md` (the criterion-2 sweep). This is the deferred c1/c3 follow-up promised there (`RUBRIC_AUDIT.md:13`, `:91`).
+**Predecessor:** `docs/audits/RUBRIC_AUDIT.md` (the criterion-2 sweep). This is the deferred c1/c3 follow-up promised there (`RUBRIC_AUDIT.md:13`, `:91`).
 
 ## Why this doc exists
 

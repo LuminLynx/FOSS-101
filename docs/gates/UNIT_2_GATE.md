@@ -1,7 +1,7 @@
 # Unit 2 Gate — Context Window
 
 > **Per-unit gate audit** for `context-window-bundle-0` (Phase 3,
-> Unit 2). Mirrors the structure of `docs/PHASE_2_GATE.md` but is
+> Unit 2). Mirrors the structure of `docs/gates/PHASE_2_GATE.md` but is
 > scoped to one unit, per the discipline that Phase 3 ships
 > per-unit gates as recurring, independently reviewable artifacts.
 
@@ -32,7 +32,7 @@ block publication. Unit 2 is live on the canonical Phase 1 path.
 
 21 pairs through the live grader (Anthropic Claude Sonnet 4.6,
 prompt caching on rubric per STRATEGY.md § T2-E) on production
-Railway. Same environment as `docs/PHASE_2_GATE.md`.
+Railway. Same environment as `docs/gates/PHASE_2_GATE.md`.
 
 ```
 Pairs scored:               21
@@ -377,7 +377,7 @@ accumulated gate evidence.
 - Diagnostic script: `backend/scripts/_inspect_pairs.py` on
   throwaway branch `claude/unit-2-gate-diagnostics` (deleted
   post-triage).
-- Phase 2 gate precedent: `docs/PHASE_2_GATE.md`.
+- Phase 2 gate precedent: `docs/gates/PHASE_2_GATE.md`.
 - Rubric source: `content/units/context-window-bundle-0.md` slot 8.
-- T2-B locked interpretation: `docs/PHASE_2_GATE.md` § Realignment
+- T2-B locked interpretation: `docs/gates/PHASE_2_GATE.md` § Realignment
   (PR #72) and STRATEGY.md § T2-B.

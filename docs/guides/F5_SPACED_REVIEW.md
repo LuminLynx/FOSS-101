@@ -2,12 +2,12 @@
 
 > **What this is.** The decision-locking design doc for F5 (Loop
 > step 6, "Return") — the same "lock decisions in F5_*.md before
-> implementation" discipline `docs/PHASE_3_4_ROADMAP.md` mandates
+> implementation" discipline `docs/roadmap/PHASE_3_4_ROADMAP.md` mandates
 > for F6. Implementation PRs do not begin until this doc is
 > approved.
 >
 > **Grounding.** Every decision below is tied to quoted text in
-> `docs/STRATEGY.md` / `docs/EXECUTION.md` or to the verified
+> `docs/strategy/STRATEGY.md` / `docs/roadmap/EXECUTION.md` or to the verified
 > schema in `backend/db/migrations/020_add_review_schedule.sql`.
 > Where the source underspecifies, that is stated explicitly and
 > the doc-faithful default is taken — nothing is inferred

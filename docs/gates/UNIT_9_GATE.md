@@ -1,8 +1,8 @@
 # Unit 9 Gate — Fine-tuning vs. Prompting vs. RAG
 
 > **Per-unit gate audit** for `customization-trilemma-bundle-0`
-> (Phase 3, Unit 9). Mirrors the structure of `docs/PHASE_2_GATE.md`
-> and `docs/UNIT_2_GATE.md` — per-unit gates ship as recurring,
+> (Phase 3, Unit 9). Mirrors the structure of `docs/gates/PHASE_2_GATE.md`
+> and `docs/gates/UNIT_2_GATE.md` — per-unit gates ship as recurring,
 > independently reviewable artifacts.
 
 ---
@@ -34,8 +34,8 @@ for Unit 9** — different from Unit 2 which preserved two.
 
 21 pairs through the live grader (Anthropic Claude Sonnet 4.6,
 prompt caching on rubric per STRATEGY.md § T2-E) on production
-Railway. Same environment as `docs/PHASE_2_GATE.md` and
-`docs/UNIT_2_GATE.md`.
+Railway. Same environment as `docs/gates/PHASE_2_GATE.md` and
+`docs/gates/UNIT_2_GATE.md`.
 
 ```
 Pairs scored:               21
@@ -250,7 +250,7 @@ disagreement may not survive a second look.
 
 ## Decision-gate questions
 
-The gate prompt from `docs/EXECUTION.md`:
+The gate prompt from `docs/roadmap/EXECUTION.md`:
 
 > *Is the grader trustworthy enough to ship under P2?*
 > *Is the per-call cost sustainable at projected scale?*
