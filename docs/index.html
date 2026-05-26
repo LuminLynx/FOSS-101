@@ -192,7 +192,7 @@
   }
   .screen .img {
     background: var(--paper-2); border: 1px solid var(--hair-1);
-    overflow: hidden; aspect-ratio: 412 / 720;
+    overflow: hidden; aspect-ratio: 1220 / 2712;
   }
   .screen .img picture { display: block; width: 100%; height: 100%; }
   .screen .img img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
@@ -394,12 +394,12 @@
     <div class="band-eyebrow">The app</div>
     <h2 class="band-h">A briefing, not a course app.</h2>
     <p class="lede">
-      Four product screens. Editorial typography, hairline rules, no
-      decorative imagery, no progress bars within a unit. The visual
-      restraint is the design stance — and it makes the writing earn
-      its space.
+      Two core screens — the path home and the unit reader. Editorial
+      typography, hairline rules, no decorative imagery, no progress bars
+      within a unit. The visual restraint is the design stance — and it
+      makes the writing earn its space.
     </p>
-    <div class="strip">
+    <div class="strip" style="grid-template-columns: repeat(2, 1fr); max-width: 720px; margin: 32px auto 0;">
       <div class="screen">
         <div class="img">
           <picture>
@@ -419,16 +419,6 @@
         </div>
         <div class="cap">02 · Unit reader</div>
         <div class="blurb">One scroll. Same order, every unit. Definition, bite, framing, depth, prompt, calibration, sources.</div>
-      </div>
-      <div class="screen">
-        <div class="img"><img src="app-store/screens/03-settings.png" alt="Libella settings" /></div>
-        <div class="cap">03 · Settings</div>
-        <div class="blurb">Four sections — account, library, appearance, about. What's not here is the feature.</div>
-      </div>
-      <div class="screen">
-        <div class="img"><img src="app-store/screens/04-auth.png" alt="Libella auth" /></div>
-        <div class="cap">04 · Sign in</div>
-        <div class="blurb">Email and password. Your unit grades and review schedule sync across devices.</div>
       </div>
     </div>
   </div>
