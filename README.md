@@ -1,7 +1,7 @@
 # Libella
 
 ![Status](https://img.shields.io/badge/status-Phase%203%20in%20progress-blue)
-![Units](https://img.shields.io/badge/units-12%20of%2020%20published-purple)
+![Units](https://img.shields.io/badge/units-15%20of%2020%20published-purple)
 ![Platform](https://img.shields.io/badge/platform-Android-green)
 ![Backend](https://img.shields.io/badge/backend-FastAPI-teal)
 ![Database](https://img.shields.io/badge/database-PostgreSQL-blue)
@@ -49,8 +49,8 @@ In progress:
 
 Current state, per the project docs:
 
-- 12 of 20 units are published.
-- Unit 13 is authored; units 14–20 remain to be authored.
+- 15 of 20 units are published.
+- Units 1–15 are published; units 16–20 are placeholders, to be locked from real-user signal.
 - F5 Spaced Review is implemented (review schedule, endpoints, Continue-surface integration).
 - F6 Path Overview is not started.
 - Authoring is the pacing constraint.
@@ -60,9 +60,9 @@ This is an in-development product, not a finished public release.
 
 Canonical status docs:
 
-- `docs/STRATEGY.md` — product strategy and locked decisions.
-- `docs/EXECUTION.md` — phase plan and sequencing.
-- `docs/PHASE_3_4_ROADMAP.md` — current Phase 3 / Phase 4 roadmap.
+- `docs/strategy/STRATEGY.md` — product strategy and locked decisions.
+- `docs/roadmap/EXECUTION.md` — phase plan and sequencing.
+- `docs/roadmap/PHASE_3_4_ROADMAP.md` — current Phase 3 / Phase 4 roadmap.
 - `docs/curriculum/v1-path-outline.md` — the canonical 20-unit path outline.
 
 ---
@@ -90,7 +90,7 @@ The canonical v1 path is **LLM Systems for PMs**.
 
 The path is designed to teach product professionals how to reason about LLM-backed products through concrete product trade-offs.
 
-Published units:
+Published units (1–15):
 
 1. Tokenization
 2. Context Window
@@ -104,12 +104,12 @@ Published units:
 10. Vector search / RAG fundamentals
 11. Streaming UX
 12. Tool use / function calling
-
-Locked / planned units include:
-
-13. Multimodal basics (authored, gate pending)
+13. Multimodal (vision basics)
 14. Agents / multi-step reasoning
 15. Safety + content moderation
+
+Locked / planned units:
+
 16–20. Operating-phase units, to be locked from real-user signal
 
 See `docs/curriculum/v1-path-outline.md` for the maintained source of truth.
@@ -161,8 +161,8 @@ The repo contains an Android client, a FastAPI backend, PostgreSQL migrations, a
 - PostgreSQL migration discipline
 - Prompt-caching strategy for grader unit economics
 
-Backend decisions are documented in `docs/BACKEND_BEST_PRACTICES.md`.
-Android decisions are documented in `docs/ANDROID_BEST_PRACTICES.md`.
+Backend decisions are documented in `docs/guides/BACKEND_BEST_PRACTICES.md`.
+Android decisions are documented in `docs/guides/ANDROID_BEST_PRACTICES.md`.
 
 ---
 
@@ -181,12 +181,12 @@ scripts/                     Project utility scripts
 Important docs:
 
 ```text
-docs/STRATEGY.md                         Product strategy
-docs/EXECUTION.md                        Phase plan
-docs/AUDIT.md                            Phase 0 cleanup audit and keep/reshape/delete map
-docs/PHASE_3_4_ROADMAP.md                Phase 3/4 roadmap
-docs/ANDROID_BEST_PRACTICES.md           Android implementation decisions
-docs/BACKEND_BEST_PRACTICES.md           Backend implementation decisions
+docs/strategy/STRATEGY.md                Product strategy
+docs/roadmap/EXECUTION.md                Phase plan
+docs/audits/AUDIT.md                     Phase 0 cleanup audit and keep/reshape/delete map
+docs/roadmap/PHASE_3_4_ROADMAP.md        Phase 3/4 roadmap
+docs/guides/ANDROID_BEST_PRACTICES.md    Android implementation decisions
+docs/guides/BACKEND_BEST_PRACTICES.md    Backend implementation decisions
 docs/curriculum/v1-path-outline.md       Canonical v1 unit sequence
 ```
 
@@ -261,7 +261,7 @@ Examples of legacy or demoted surfaces:
 - AI Learning Layer style-picker flows
 - Glossary-first home screen patterns
 
-The current source of truth for what survives, changes, or gets removed is `docs/AUDIT.md`.
+The current source of truth for what survives, changes, or gets removed is `docs/audits/AUDIT.md`.
 
 ---
 
