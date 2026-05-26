@@ -100,24 +100,21 @@ fun AboutScreen(
             )
 
             SectionHeader(title = "Feedback")
-            Row(
+            ActionCard(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+                icon = Icons.Filled.MailOutline,
+                title = "Send feedback",
+                subtitle = FEEDBACK_EMAIL,
+                onClick = { sendFeedback(context) }
+            )
+            if (signedIn) {
                 ActionCard(
-                    modifier = Modifier.weight(1f),
-                    icon = Icons.Filled.MailOutline,
-                    label = "Send feedback",
-                    onClick = { sendFeedback(context) }
+                    modifier = Modifier.fillMaxWidth(),
+                    icon = Icons.Filled.DeleteForever,
+                    title = "Delete account",
+                    subtitle = "Permanently delete your account and all data",
+                    onClick = { showDeleteConfirm = true }
                 )
-                if (signedIn) {
-                    ActionCard(
-                        modifier = Modifier.weight(1f),
-                        icon = Icons.Filled.DeleteForever,
-                        label = "Delete account",
-                        onClick = { showDeleteConfirm = true }
-                    )
-                }
             }
         }
 
@@ -165,7 +162,8 @@ fun AboutScreen(
 @Composable
 private fun ActionCard(
     icon: ImageVector,
-    label: String,
+    title: String,
+    subtitle: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -179,20 +177,27 @@ private fun ActionCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
-                .padding(vertical = 18.dp, horizontal = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
-            Text(text = label, style = MaterialTheme.typography.titleMedium)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = title, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
