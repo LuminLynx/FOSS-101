@@ -24,7 +24,7 @@
 
 - **Phase 1 complete** (Foundation — spine of the loop).
 - **Phase 2 complete** (Unit-1 pilot — grader proven, gate passed).
-- **Phase 3 in progress** — 15 of 20 units published (units 16–20 are placeholders, to be locked from real-user signal). F5
+- **Phase 4 launch-readiness in progress** — Phase 3 spine substantially complete; 15 of 20 units published (units 16–20 are placeholders, to be locked from real-user signal). F5
   implemented; F6 not started. Authoring is the pacing constraint
   per STRATEGY.md T1.
 

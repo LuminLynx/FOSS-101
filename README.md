@@ -1,6 +1,6 @@
 # Libella
 
-![Status](https://img.shields.io/badge/status-Phase%203%20%C2%B7%20launch%20prep-blue)
+![Status](https://img.shields.io/badge/status-Phase%204-blue)
 ![Units](https://img.shields.io/badge/units-15%20of%2020%20published-purple)
 ![Platform](https://img.shields.io/badge/platform-Android-green)
 ![Backend](https://img.shields.io/badge/backend-FastAPI-teal)
@@ -36,7 +36,7 @@ Libella is not a math-first ML course, a code-first engineering curriculum, a gl
 
 ## Current development status
 
-Libella is currently in **Phase 3 — Full v1**.
+Libella is currently in **Phase 4 — launch readiness**.
 
 Completed:
 
@@ -45,15 +45,14 @@ Completed:
 
 In progress:
 
-- **Phase 3: Full v1** — authoring the complete 20-unit path and completing the remaining spine / sidewall features.
+- **Phase 4: Launch readiness** — app-store packaging, beta prep, and the public-facing surfaces. The Phase 3 spine is substantially complete (15 of 20 units, F5 Spaced Review); F6 Path Overview and units 16–20 carry over in parallel.
 
 Current state, per the project docs:
 
 - 15 of 20 units are published; units 16–20 are placeholders, to be locked from real-user signal.
 - F5 Spaced Review is implemented (review schedule, endpoints, Continue-surface integration).
-- F6 Path Overview is not started.
-- Authoring is the pacing constraint.
-- Some launch-prep has shipped early, in parallel with authoring: the marketing landing page, privacy policy, and in-app + web account deletion are live. Phase 4 launch-readiness formally opens after the Phase 3 exit gate.
+- F6 Path Overview is not started (carries over from Phase 3).
+- Phase 4 launch-readiness is the active focus: the marketing landing page, privacy policy, and in-app + web account deletion are live; app-store packaging and a closed beta remain.
 
 This is an in-development product, not a finished public release.
 
@@ -266,7 +265,7 @@ The current source of truth for what survives, changes, or gets removed is `docs
 
 ## Public launch status
 
-Libella has not publicly launched, and Phase 4 launch-readiness has not formally opened — it follows the Phase 3 exit gate. That said, some launch-prep items have shipped early, in parallel with Phase 3 authoring.
+Libella has not publicly launched. Phase 4 launch-readiness is in progress.
 
 Done or live:
 
