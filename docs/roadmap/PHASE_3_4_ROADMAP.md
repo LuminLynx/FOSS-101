@@ -208,7 +208,7 @@ Per `docs/roadmap/EXECUTION.md` § Phase 3 decision gate:
   read, not a checkbox.
 - Editorial quality bar held across every unit.
 
-Then Phase 4 opens.
+Then Phase 3 formally closes. In practice, Phase 4 launch-readiness (Track 2) has already begun in parallel — the public-facing surfaces (privacy policy, account deletion, landing page) and app-store prep do not depend on the final units.
 
 ---
 
@@ -225,7 +225,7 @@ launch. Primary risk to weigh: *Libelle IT Group* (different
 spelling, different industry).
 
 **Estimate.** Calendar wait + attorney fee. Not on the engineering
-critical path; start it when Phase 4 opens because clearance can
+critical path; start it now — Phase 4 launch-readiness is underway, and clearance can
 take weeks.
 
 ### Q4 — Web preview
