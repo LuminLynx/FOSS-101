@@ -1,6 +1,6 @@
 # Security Policy
 
-Libella is a learning app: an Android client, a FastAPI/Postgres
+Perpenda is a learning app: an Android client, a FastAPI/Postgres
 backend, and a regression/grading pipeline that calls an LLM
 provider. It handles an authentication layer and provider
 credentials, so it has a real security surface and we take
@@ -11,7 +11,7 @@ reports seriously.
 Please use **GitHub's private vulnerability reporting** for this
 repository:
 
-https://github.com/LuminLynx/Libella/security/advisories/new
+https://github.com/LuminLynx/Perpenda/security/advisories/new
 
 Do **not** open a public issue or pull request for a security
 problem — that discloses it before a fix is available. The
@@ -48,6 +48,6 @@ Out of scope:
 
 ## Supported versions
 
-Libella is pre-1.0 and ships from `main`. Security fixes land on
+Perpenda is pre-1.0 and ships from `main`. Security fixes land on
 `main`; there is no back-port matrix. There are no
 version-pinned releases to support yet.
