@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 
 enum class CalibrationTier { Settled, Contested, Unsettled }
 
@@ -24,7 +24,7 @@ fun TagChip(
     modifier: Modifier = Modifier,
     tier: CalibrationTier = CalibrationTier.Unsettled
 ) {
-    val colors = LibellaTheme.colors
+    val colors = PerpendaTheme.colors
     val (container, content) = when (tier) {
         CalibrationTier.Settled -> colors.settledTint to colors.onSettledTint
         CalibrationTier.Contested -> colors.contestedTint to colors.onContestedTint

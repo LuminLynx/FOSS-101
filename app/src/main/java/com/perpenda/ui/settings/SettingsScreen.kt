@@ -55,7 +55,7 @@ import com.perpenda.ui.components.AppScreenScaffold
 import com.perpenda.ui.components.SecondaryActionButton
 import com.perpenda.ui.components.SectionHeader
 import com.perpenda.ui.components.screenContentPadding
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 import com.perpenda.ui.theme.ThemeMode
 
 @Composable
@@ -204,7 +204,7 @@ private fun ThemeSegmentedControl(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(1.dp)
-                        .background(LibellaTheme.colors.hairline)
+                        .background(PerpendaTheme.colors.hairline)
                 )
             }
             val isSelected = mode == selected
@@ -257,7 +257,7 @@ private fun SettingsCard(content: @Composable () -> Unit) {
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
+        border = BorderStroke(1.dp, PerpendaTheme.colors.hairline)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             content()

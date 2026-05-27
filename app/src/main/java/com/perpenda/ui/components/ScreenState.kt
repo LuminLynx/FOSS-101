@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 
 // Flat hairline status cards — paper surface, single rule, no elevation.
 
@@ -26,7 +26,7 @@ private fun StateCard(modifier: Modifier, content: @Composable () -> Unit) {
         shape = RoundedCornerShape(2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, LibellaTheme.colors.hairline),
+        border = BorderStroke(1.dp, PerpendaTheme.colors.hairline),
         content = { content() }
     )
 }

@@ -42,7 +42,7 @@ import com.perpenda.data.repository.AuthRepository
 import com.perpenda.ui.components.AppScreenScaffold
 import com.perpenda.ui.components.SectionHeader
 import com.perpenda.ui.components.screenContentPadding
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 import kotlinx.coroutines.launch
 
 private const val FEEDBACK_EMAIL = "hello@perpenda.com"
@@ -175,7 +175,7 @@ private fun ActionCard(
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
+        border = BorderStroke(1.dp, PerpendaTheme.colors.hairline)
     ) {
         Row(
             modifier = Modifier

@@ -51,7 +51,7 @@ import com.perpenda.ui.components.AppScreenScaffold
 import com.perpenda.ui.components.PrimaryActionButton
 import com.perpenda.ui.components.SectionHeader
 import com.perpenda.ui.components.screenContentPadding
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 import com.perpenda.viewmodel.PathHomeEvent
 import com.perpenda.viewmodel.PathHomeUiState
 import com.perpenda.viewmodel.PathHomeViewModel
@@ -290,7 +290,7 @@ private fun PathNodeRow(
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             border = BorderStroke(
                 1.dp,
-                if (locked) LibellaTheme.colors.hairlineSub else LibellaTheme.colors.hairline
+                if (locked) PerpendaTheme.colors.hairlineSub else PerpendaTheme.colors.hairline
             )
         ) {
             Row(
@@ -411,7 +411,7 @@ private fun ReviewRow(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
+        border = BorderStroke(1.dp, PerpendaTheme.colors.hairline)
     ) {
         Row(
             modifier = Modifier

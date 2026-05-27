@@ -64,7 +64,7 @@ import com.perpenda.ui.components.SectionHeader
 import com.perpenda.ui.components.TagChip
 import com.perpenda.ui.components.screenContentPadding
 import com.perpenda.ui.theme.JetBrainsMono
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 import com.perpenda.viewmodel.UnitReaderEvent
 import com.perpenda.viewmodel.UnitReaderUiState
 import com.perpenda.viewmodel.UnitReaderViewModel
@@ -305,7 +305,7 @@ private fun DecisionAnswerSection(
         Text(
             text = "YOUR ANSWER",
             style = MaterialTheme.typography.titleSmall,
-            color = LibellaTheme.colors.inkTertiary
+            color = PerpendaTheme.colors.inkTertiary
         )
         OutlinedTextField(
             value = state.answerDraft,
@@ -318,7 +318,7 @@ private fun DecisionAnswerSection(
                 Text(
                     "Be specific about what you'd measure, what you'd ignore, " +
                         "and where your estimate might still be wrong.",
-                    color = LibellaTheme.colors.inkTertiary
+                    color = PerpendaTheme.colors.inkTertiary
                 )
             },
             enabled = !state.submitInProgress,
@@ -327,7 +327,7 @@ private fun DecisionAnswerSection(
             shape = RoundedCornerShape(2.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = LibellaTheme.colors.hairline,
+                unfocusedBorderColor = PerpendaTheme.colors.hairline,
                 focusedContainerColor = MaterialTheme.colorScheme.surface,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = MaterialTheme.colorScheme.primary
@@ -381,15 +381,15 @@ private fun GradeOutputSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(2.dp))
-                    .background(LibellaTheme.colors.bannerTint)
-                    .border(1.dp, LibellaTheme.colors.hairline, RoundedCornerShape(2.dp))
+                    .background(PerpendaTheme.colors.bannerTint)
+                    .border(1.dp, PerpendaTheme.colors.hairline, RoundedCornerShape(2.dp))
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = "Review needed".uppercase(),
                     style = MaterialTheme.typography.titleSmall,
-                    color = LibellaTheme.colors.onBannerTint
+                    color = PerpendaTheme.colors.onBannerTint
                 )
                 Text(
                     text = "We're not confident enough to grade this fairly. " +
@@ -418,14 +418,14 @@ private fun GradeRow(
 ) {
     val pct = (grade.confidence * 100).toInt()
     val highConfidence = pct >= 80
-    val badgeBg = if (highConfidence) LibellaTheme.colors.unsettledTint else LibellaTheme.colors.contestedTint
-    val badgeInk = if (highConfidence) LibellaTheme.colors.onUnsettledTint else LibellaTheme.colors.onContestedTint
+    val badgeBg = if (highConfidence) PerpendaTheme.colors.unsettledTint else PerpendaTheme.colors.contestedTint
+    val badgeInk = if (highConfidence) PerpendaTheme.colors.onUnsettledTint else PerpendaTheme.colors.onContestedTint
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(2.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, LibellaTheme.colors.hairline, RoundedCornerShape(2.dp))
+            .border(1.dp, PerpendaTheme.colors.hairline, RoundedCornerShape(2.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
@@ -467,7 +467,7 @@ private fun GradeRow(
                 ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
-                    .drawLeftRule(LibellaTheme.colors.hairline)
+                    .drawLeftRule(PerpendaTheme.colors.hairline)
                     .padding(start = 10.dp)
             )
         }
@@ -492,7 +492,7 @@ private fun MarkdownDisclosure(
 ) {
     if (markdown.isBlank()) return
     Column {
-        HorizontalDivider(thickness = 1.dp, color = LibellaTheme.colors.hairline)
+        HorizontalDivider(thickness = 1.dp, color = PerpendaTheme.colors.hairline)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -512,7 +512,7 @@ private fun MarkdownDisclosure(
             Text(
                 text = if (expanded) "OPEN" else "TAP TO EXPAND",
                 style = MaterialTheme.typography.titleSmall,
-                color = LibellaTheme.colors.inkTertiary
+                color = PerpendaTheme.colors.inkTertiary
             )
             Icon(
                 imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
@@ -558,7 +558,7 @@ private fun SourceRow(source: UnitSource) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(2.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, LibellaTheme.colors.hairline, RoundedCornerShape(2.dp))
+            .border(1.dp, PerpendaTheme.colors.hairline, RoundedCornerShape(2.dp))
             .clickable {
                 runCatching {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(source.url))
@@ -584,7 +584,7 @@ private fun SourceRow(source: UnitSource) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.OpenInNew,
             contentDescription = "Open in browser",
-            tint = LibellaTheme.colors.inkTertiary
+            tint = PerpendaTheme.colors.inkTertiary
         )
     }
 }

@@ -66,7 +66,7 @@ val OnSuccessContainerDark = Color(0xFFE8C4B8)
 // --- Extended editorial tokens (no Material3 role covers these) ---
 // ink-3 tertiary text, raised paper, accent chip tints with their own ink,
 // the review-needed banner, error tint. Values 1:1 from colors_and_type.css.
-data class LibellaColors(
+data class PerpendaColors(
     val inkTertiary: Color,       // ink-3 — meta / placeholder / eyebrow
     val paperRaised: Color,       // paper-1 — up-next row, pressed card
     val hairline: Color,          // hair-1 — primary divider
@@ -82,7 +82,7 @@ data class LibellaColors(
     val errorTint: Color
 )
 
-val LibellaLight = LibellaColors(
+val PerpendaLight = PerpendaColors(
     inkTertiary = Color(0xFF8A8175),
     paperRaised = Color(0xFFFAF7F0),
     hairline = Color(0xFFC8BFAE),
@@ -98,7 +98,7 @@ val LibellaLight = LibellaColors(
     errorTint = Color(0xFFF2DEDB)
 )
 
-val LibellaDark = LibellaColors(
+val PerpendaDark = PerpendaColors(
     inkTertiary = Color(0xFF7C7466),
     paperRaised = Color(0xFF1B1814),
     hairline = Color(0xFF3A352C),

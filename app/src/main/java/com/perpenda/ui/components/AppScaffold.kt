@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 
 // Flat editorial app bar (la-bar): paper background, no shadow, a single
 // bottom hairline. Serif title, uppercase UI eyebrow subtitle.
@@ -64,7 +64,7 @@ fun AppScreenScaffold(
                         actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
-                HorizontalDivider(thickness = 1.dp, color = LibellaTheme.colors.hairline)
+                HorizontalDivider(thickness = 1.dp, color = PerpendaTheme.colors.hairline)
             }
         }
     ) { innerPadding ->

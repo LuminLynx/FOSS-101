@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 
 // Primary action — oxblood fill, near-square 4dp corner, UI sans label.
 // Disabled resolves to hairline fill + tertiary ink per the design tokens.
@@ -30,8 +30,8 @@ fun PrimaryActionButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = LibellaTheme.colors.hairline,
-            disabledContentColor = LibellaTheme.colors.inkTertiary
+            disabledContainerColor = PerpendaTheme.colors.hairline,
+            disabledContentColor = PerpendaTheme.colors.inkTertiary
         )
     ) {
         Text(
