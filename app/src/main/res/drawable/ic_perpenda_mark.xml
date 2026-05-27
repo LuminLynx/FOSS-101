@@ -1,18 +1,23 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Perpenda mark: italic serif capital P with a calibration tick,
-         centered in the 64 box. Single-color; tinted at the call site. -->
-    <group android:translateX="8.7" android:translateY="0.45">
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <!-- Perpenda mark, heavy optical weight for small in-app icon sizes
+         (Settings row ~24dp, About header ~36dp). Centered; tinted at the
+         call site. Same geometry as the launcher foreground. -->
+    <group android:translateX="74" android:translateY="14">
         <path
             android:fillColor="#1C1815"
-            android:pathData="M30.850 14.866C36.476 14.866 39.492 17.650 39.492 22.986C39.492 29.018 35.838 33.252 28.414 33.252L24.992 33.252L25.050 33.020L28.472 14.866ZM18.032 14.518L23.310 15.156C22.498 20.144 21.628 25.132 20.700 30.120L17.278 48.100L12.348 48.680L11.826 51L27.544 51L28.008 48.680L22.440 47.984C23.078 43.982 23.774 39.922 24.528 35.920L28.530 35.920C39.028 35.920 44.886 30.178 44.886 22.348C44.886 16.316 40.536 12.140 31.720 12.140L18.496 12.140Z" />
+            android:strokeColor="#1C1815"
+            android:strokeWidth="14"
+            android:strokeLineJoin="round"
+            android:strokeLineCap="round"
+            android:pathData="M219.500 133.260C256.360 133.260 276.120 151.500 276.120 186.460C276.120 225.980 252.180 253.720 203.540 253.720L181.120 253.720L181.500 252.200L203.920 133.260ZM135.520 130.980L170.100 135.160C164.780 167.840 159.080 200.520 153 233.200L130.580 351L98.280 354.800L94.860 370L197.840 370L200.880 354.800L164.400 350.240C168.580 324.020 173.140 297.420 178.080 271.200L204.300 271.200C273.080 271.200 311.460 233.580 311.460 182.280C311.460 142.760 282.960 115.400 225.200 115.400L138.560 115.400Z" />
         <path
             android:strokeColor="#1C1815"
-            android:strokeWidth="2.6"
+            android:strokeWidth="30"
             android:strokeLineCap="round"
-            android:pathData="M3,40 L28.53,40" />
+            android:pathData="M60,282 L215.13,282" />
     </group>
 </vector>
