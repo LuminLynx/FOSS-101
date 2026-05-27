@@ -55,11 +55,11 @@ private val DarkColors = darkColorScheme(
     onError = ColorDarkOnPrimary
 )
 
-private val LocalLibellaColors = staticCompositionLocalOf { LibellaLight }
+private val LocalPerpendaColors = staticCompositionLocalOf { PerpendaLight }
 
-object LibellaTheme {
-    val colors: LibellaColors
-        @Composable @ReadOnlyComposable get() = LocalLibellaColors.current
+object PerpendaTheme {
+    val colors: PerpendaColors
+        @Composable @ReadOnlyComposable get() = LocalPerpendaColors.current
 }
 
 @Composable
@@ -68,7 +68,7 @@ fun Foss101Theme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalLibellaColors provides if (darkTheme) LibellaDark else LibellaLight
+        LocalPerpendaColors provides if (darkTheme) PerpendaDark else PerpendaLight
     ) {
         MaterialTheme(
             colorScheme = if (darkTheme) DarkColors else LightColors,

@@ -34,7 +34,7 @@ class ThemePreferenceStore(context: Context) {
     }
 
     companion object {
-        private const val PREFS_NAME = "libella_settings"
+        private const val PREFS_NAME = "perpenda_settings"
         private const val KEY_THEME_MODE = "theme_mode"
     }
 }

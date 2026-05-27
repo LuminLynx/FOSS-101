@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.perpenda.ui.theme.LibellaTheme
+import com.perpenda.ui.theme.PerpendaTheme
 
 // Flat hairline row (la-row / la-card): paper surface, single 1px rule,
 // near-square 2dp corner, no elevation. Serif title, uppercase UI meta.
@@ -40,7 +40,7 @@ fun NavigationTile(
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, LibellaTheme.colors.hairline)
+        border = BorderStroke(1.dp, PerpendaTheme.colors.hairline)
     ) {
         Row(
             modifier = Modifier
@@ -52,7 +52,7 @@ fun NavigationTile(
             Icon(
                 imageVector = leadingIcon,
                 contentDescription = null,
-                tint = LibellaTheme.colors.inkTertiary
+                tint = PerpendaTheme.colors.inkTertiary
             )
             Column(
                 modifier = Modifier.weight(1f),
@@ -71,7 +71,7 @@ fun NavigationTile(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = LibellaTheme.colors.inkTertiary
+                tint = PerpendaTheme.colors.inkTertiary
             )
         }
     }
