@@ -1,6 +1,6 @@
 # Backend
 
-FastAPI + PostgreSQL backend for the FOSS-101 / Libella project.
+FastAPI + PostgreSQL backend for the Perpenda project.
 
 > **Status:** transitional. The original term-glossary backend has been
 > stripped of cut features (contribution flow, AI Learning Layer cache,

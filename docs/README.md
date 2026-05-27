@@ -1,4 +1,4 @@
-# Libella docs
+# Perpenda docs
 
 This folder holds two things: the **published website** (served by GitHub
 Pages from `docs/`) and the project's **working documentation**.
