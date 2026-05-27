@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Perpenda mark: italic serif capital P with a calibration tick,
+         centered in the 64 box. Single-color; tinted at the call site. -->
+    <group android:translateX="8.7" android:translateY="0.45">
+        <path
+            android:fillColor="#1C1815"
+            android:pathData="M30.850 14.866C36.476 14.866 39.492 17.650 39.492 22.986C39.492 29.018 35.838 33.252 28.414 33.252L24.992 33.252L25.050 33.020L28.472 14.866ZM18.032 14.518L23.310 15.156C22.498 20.144 21.628 25.132 20.700 30.120L17.278 48.100L12.348 48.680L11.826 51L27.544 51L28.008 48.680L22.440 47.984C23.078 43.982 23.774 39.922 24.528 35.920L28.530 35.920C39.028 35.920 44.886 30.178 44.886 22.348C44.886 16.316 40.536 12.140 31.720 12.140L18.496 12.140Z" />
+        <path
+            android:strokeColor="#1C1815"
+            android:strokeWidth="2.6"
+            android:strokeLineCap="round"
+            android:pathData="M3,40 L28.53,40" />
+    </group>
+</vector>

@@ -116,7 +116,7 @@ fun SettingsScreen(
             SectionHeader(title = "About")
             SettingsCard {
                 SettingsRow(
-                    icon = ImageVector.vectorResource(R.drawable.ic_libella_mark),
+                    icon = ImageVector.vectorResource(R.drawable.ic_perpenda_mark),
                     title = "Perpenda",
                     description = "AI-fluent enough to lead the decisions their teams now have to make",
                     onClick = { onNavigate("about") }
