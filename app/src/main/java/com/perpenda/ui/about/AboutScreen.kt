@@ -76,7 +76,7 @@ fun AboutScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_libella_mark),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_perpenda_mark),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(36.dp)
