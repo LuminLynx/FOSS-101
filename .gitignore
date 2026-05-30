@@ -18,3 +18,6 @@ gradle-cache-agp-8.5.2-v1.tar.zst
 .env
 .env.*
 !.env.example
+
+# Local-only launch notes (not for the public repo)
+docs/launch/RELEASE_READINESS.md
