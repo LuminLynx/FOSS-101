@@ -146,11 +146,12 @@ private fun LoadedBody(
         // First-run whisper: a quiet, learn-by-doing hint shown only while the
         // user has completed nothing yet. Disappears for good after their first
         // completion; never shown to a returning user (completion state is
-        // server-synced, so a fresh device still won't re-show it). Kept small,
-        // muted, upright (not italic), and divided from the content so it reads
-        // as a quiet aside rather than a competing pull-quote.
-        
-                if (showIntro) {
+        // server-synced, so a fresh device still won't re-show it). Rendered as
+        // a tinted callout (surfaceVariant — the palette's pull-quote/callout
+        // token) with a leading info glyph so it reads as a meta aside, clearly
+        // distinct from the serif article content below — not a competing
+        // standfirst.
+        if (showIntro) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
