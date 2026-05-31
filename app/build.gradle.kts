@@ -32,6 +32,13 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "API_BASE_URL", "\"https://aware-wholeness-production-d771.up.railway.app/\"")
+        // Sentry DSN is a public identifier (it ships in every APK by design;
+        // Sentry rate-limits unknown clients). Safe to commit.
+        buildConfigField(
+            "String",
+            "SENTRY_DSN",
+            "\"https://b4b6960ba5c8f8a940cdb35e8f297ccd@o4511485646405632.ingest.de.sentry.io/4511485699620944\""
+        )
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -100,6 +107,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.3")
 
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    implementation("io.sentry:sentry-android:7.21.0")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
