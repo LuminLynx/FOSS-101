@@ -143,7 +143,7 @@
   <div class="eyebrow">Privacy</div>
   <h1>Privacy Policy</h1>
   <p class="muted">Perpenda — an Android learning app for product professionals.
-  Last updated: 30 May 2026.</p>
+  Last updated: 31 May 2026.</p>
 
   <p>This policy explains what data Perpenda collects, how it is used and shared,
   and how you can delete it. Questions:
@@ -160,9 +160,10 @@
       <tr><td>The free-text answers you submit for grading</td><td>To grade your answer against the unit's rubric (see "AI grading" below).</td></tr>
     </table>
   </div>
-  <p class="muted">The Perpenda app contains no advertising SDKs, no third-party
-  analytics or tracking, and does not collect location, contacts, or device
-  identifiers beyond what a standard network request requires. (For the
+  <p class="muted">The Perpenda app contains no advertising SDKs, no behavioural
+  analytics, and does not collect location, contacts, or advertising identifiers.
+  It does include a crash-reporting SDK (Sentry) so we can fix bugs — see
+  "Crash diagnostics" below for exactly what those reports contain. (For the
   perpenda.com website, see "This website" below.)</p>
 
   <h2>AI grading (third-party processing)</h2>
@@ -180,11 +181,20 @@
   or any form of cross-site tracking. The Android app itself remains free of
   analytics SDKs.</p>
 
+  <h2>Crash diagnostics (app)</h2>
+  <p>The Android app uses <strong>Sentry</strong> to report crashes and
+  uncaught exceptions, hosted in Sentry's EU region. Reports contain the
+  stack trace, Android version, device model, app version, and a coarse
+  locale — enough to diagnose the crash. We deliberately <strong>do not</strong>
+  attach personal information (email, sign-in token, decision-prompt answers,
+  or grades) to crash reports. Reports are only sent from release builds, not
+  debug. The website is unaffected.</p>
+
   <h2>How your data is stored and shared</h2>
   <ul>
     <li><strong>Hosting:</strong> the backend and database run on Railway; data is transmitted over HTTPS only.</li>
     <li><strong>On your device:</strong> your sign-in token is stored in Android's encrypted storage.</li>
-    <li><strong>Service providers only:</strong> Anthropic (AI grading, app), Railway (hosting, app + backend), and Google LLC (Google Analytics 4, website only — see "This website" above). We do <strong>not</strong> sell your data or share it for advertising.</li>
+    <li><strong>Service providers only:</strong> Anthropic (AI grading, app), Railway (hosting, app + backend), Sentry (crash diagnostics, app), and Google LLC (Google Analytics 4, website only — see "This website" above). We do <strong>not</strong> sell your data or share it for advertising.</li>
   </ul>
 
   <h2>Data retention and deletion</h2>

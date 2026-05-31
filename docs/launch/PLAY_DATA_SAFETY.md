@@ -43,6 +43,12 @@ Set the per-type "Is this required or optional?" as noted.
 | **Other user-generated content** | Required | App functionality | Decision-prompt answers — open-ended free text the learner writes, graded against a rubric (`POST /api/v1/units/{unit_id}/grade`). |
 | **App interactions** | Required | App functionality | In-app activity records: unit completions (`POST /api/v1/completions`, `backend/app/main.py:296`) and spaced-review ticks (`POST /api/v1/review-schedule/{unitId}/reviewed`, `backend/app/main.py:387`). These are user *actions*, not user-generated content. |
 
+### App info and performance
+
+| Data type | Required? | Purposes | Notes |
+|-----------|-----------|----------|-------|
+| **Crash logs** | Optional | App functionality; Analytics (diagnostics) | Sent via **Sentry** (EU region) on release builds only. Reports include the stack trace, Android version, device model, app version, coarse locale. We explicitly do **not** attach email, sign-in token, decision-prompt answers, or grades. |
+
 ### NOT collected (declare "No" / leave unchecked)
 
 - Location (precise or approximate)
@@ -50,8 +56,8 @@ Set the per-type "Is this required or optional?" as noted.
 - Health & fitness
 - Messages, Photos/videos, Audio, Files & docs, Calendar, Contacts
 - Web browsing history
-- **App info & performance** (no crash logs, diagnostics, or other —
-  there is no Crashlytics/Firebase/analytics SDK)
+- **App info & performance — Diagnostics / Other** (only Crash logs above
+  are collected; no general telemetry, ANR reporting, or session tracing)
 - **Device or other IDs** (no advertising ID / GAID, no device ID)
 
 ## Security practices summary (for the form's "Security practices")
