@@ -27,6 +27,60 @@
 <link rel="icon" type="image/png" sizes="16x16" href="brand/favicon-16.png" />
 <link rel="apple-touch-icon" href="brand/apple-touch-icon-180.png" />
 
+<!-- Schema.org structured data (JSON-LD).
+     Tells Google / search AI what this page is, the publishing organization,
+     and the Android app described on it. Enables richer search snippets and
+     correct knowledge-panel attribution. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://perpenda.com/#organization",
+      "name": "Perpenda",
+      "url": "https://perpenda.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://perpenda.com/brand/perpenda-icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "email": "hello@perpenda.com",
+      "sameAs": [
+        "https://github.com/LuminLynx/Perpenda"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://perpenda.com/#website",
+      "url": "https://perpenda.com/",
+      "name": "Perpenda",
+      "description": "Decision-grade fluency in LLM systems for product managers.",
+      "publisher": { "@id": "https://perpenda.com/#organization" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Perpenda",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Android 8.0+",
+      "description": "Train the AI judgment your team now expects from you. Tight units, decision prompts, calibrated grading against rubric criteria — no streaks, no badges, no daily nudge.",
+      "url": "https://perpenda.com/",
+      "image": "https://perpenda.com/brand/perpenda-og-1200x630.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": { "@id": "https://perpenda.com/#organization" },
+      "softwareVersion": "1.0",
+      "inLanguage": "en"
+    }
+  ]
+}
+</script>
+
 <!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YCV11TNED"></script>
 <script>
