@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
+        <!-- Sentry: disable auto-init so the SDK's ContentProvider doesn't crash
+             the app trying to read a DSN that lives only in code. PerpendaApplication
+             initialises Sentry explicitly in onCreate (release builds only). -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
