@@ -13,7 +13,13 @@ plugins {
 val releaseSigningProps: Properties? = rootProject.file("local.properties")
     .takeIf { it.exists() }
     ?.let { f -> Properties().apply { f.inputStream().use { load(it) } } }
-    ?.takeIf { it.getProperty("RELEASE_KEYSTORE_PATH")?.isNotBlank() == true }
+    ?.takeIf {
+        // Require both path + password before activating release signing.
+        // Missing either → fall through to an unsigned release build instead of
+        // failing at sign time.
+        it.getProperty("RELEASE_KEYSTORE_PATH")?.isNotBlank() == true &&
+            it.getProperty("RELEASE_KEYSTORE_PASSWORD")?.isNotBlank() == true
+    }
 
 android {
     namespace = "com.perpenda"
