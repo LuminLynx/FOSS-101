@@ -40,17 +40,24 @@ class MainActivity : ComponentActivity() {
                 ThemeMode.DARK -> true
             }
             Foss101Theme(darkTheme = darkTheme) {
-                // Update banner sits above the app's nav graph. Renders nothing
-                // when the installed build is up to date; ~zero overhead for
-                // users on the latest version (the common case).
-                val updateBannerViewModel: UpdateBannerViewModel = viewModel {
-                    UpdateBannerViewModel(VersionCheckRepository())
-                }
-                Column(modifier = Modifier.fillMaxSize()) {
-                    UpdateBanner(viewModel = updateBannerViewModel)
-                    Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                        AppNav()
+                // The update banner is gated on BuildConfig.SIDELOAD_DISTRIBUTION
+                // (set by the release buildType). Google Play's Device and
+                // Network Abuse policy forbids Play-distributed apps from
+                // prompting users to download APKs outside Play, so on any
+                // non-sideload build the ViewModel is never instantiated and
+                // perpenda.com/latest.json is never fetched.
+                if (BuildConfig.SIDELOAD_DISTRIBUTION) {
+                    val updateBannerViewModel: UpdateBannerViewModel = viewModel {
+                        UpdateBannerViewModel(VersionCheckRepository())
                     }
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        UpdateBanner(viewModel = updateBannerViewModel)
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                            AppNav()
+                        }
+                    }
+                } else {
+                    AppNav()
                 }
             }
         }
