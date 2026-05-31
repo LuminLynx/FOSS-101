@@ -39,6 +39,13 @@ android {
             "SENTRY_DSN",
             "\"https://b4b6960ba5c8f8a940cdb35e8f297ccd@o4511485646405632.ingest.de.sentry.io/4511485699620944\""
         )
+        // Gate for the in-app sideload-update banner. Default OFF — Google Play's
+        // Device and Network Abuse policy forbids Play-distributed apps from
+        // prompting users to install APKs outside Play. The `release` buildType
+        // below opts in because today's release artifact is the sideload APK
+        // hosted on GitHub Releases. Any future Play build (separate flavor or
+        // buildType) MUST leave this `false`.
+        buildConfigField("boolean", "SIDELOAD_DISTRIBUTION", "false")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -65,6 +72,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.findByName("release")
+            // Today's release artifact is the sideload APK on GitHub Releases.
+            // Switch this to `false` (or remove this line) when a Play-targeted
+            // build is introduced.
+            buildConfigField("boolean", "SIDELOAD_DISTRIBUTION", "true")
         }
     }
 
