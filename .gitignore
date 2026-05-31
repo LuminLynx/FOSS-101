@@ -7,6 +7,12 @@ local.properties.kotlin/
 .kotlin/
 local.properties
 
+# Android signing material — never commit. Keystores live outside the repo
+# (configured via local.properties' RELEASE_KEYSTORE_PATH). This is a
+# belt-and-suspenders guard in case one ever ends up in the project tree.
+*.jks
+*.keystore
+
 .venv/
 docs/test.kt
 gradle-cache-agp-8.5.2-v1.tar.zst

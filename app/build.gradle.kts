@@ -1,15 +1,31 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// Read keystore credentials from local.properties (gitignored). If the file or
+// any required property is missing (CI, fresh checkout), the release build runs
+// unsigned and `bundleRelease` still completes — it just produces an unsigned
+// artifact that can't be installed until signed.
+val releaseSigningProps: Properties? = rootProject.file("local.properties")
+    .takeIf { it.exists() }
+    ?.let { f -> Properties().apply { f.inputStream().use { load(it) } } }
+    ?.takeIf {
+        // Require both path + password before activating release signing.
+        // Missing either → fall through to an unsigned release build instead of
+        // failing at sign time.
+        it.getProperty("RELEASE_KEYSTORE_PATH")?.isNotBlank() == true &&
+            it.getProperty("RELEASE_KEYSTORE_PASSWORD")?.isNotBlank() == true
+    }
+
 android {
     namespace = "com.perpenda"
     compileSdk = 35
 
     defaultConfig {
-        buildConfigField("String", "API_BASE_URL", "\"https://aware-wholeness-production-d771.up.railway.app/\"")
         applicationId = "com.perpenda"
         minSdk = 26
         targetSdk = 35
@@ -22,6 +38,18 @@ android {
         }
     }
 
+    signingConfigs {
+        if (releaseSigningProps != null) {
+            create("release") {
+                storeFile = file(releaseSigningProps.getProperty("RELEASE_KEYSTORE_PATH"))
+                storePassword = releaseSigningProps.getProperty("RELEASE_KEYSTORE_PASSWORD")
+                keyAlias = releaseSigningProps.getProperty("RELEASE_KEY_ALIAS") ?: "perpenda-upload"
+                keyPassword = releaseSigningProps.getProperty("RELEASE_KEY_PASSWORD")
+                    ?: releaseSigningProps.getProperty("RELEASE_KEYSTORE_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -29,6 +57,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 
