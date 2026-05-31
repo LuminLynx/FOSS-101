@@ -143,7 +143,7 @@
   <div class="eyebrow">Privacy</div>
   <h1>Privacy Policy</h1>
   <p class="muted">Perpenda — an Android learning app for product professionals.
-  Last updated: 31 May 2026.</p>
+  Last updated: 1 June 2026.</p>
 
   <p>This policy explains what data Perpenda collects, how it is used and shared,
   and how you can delete it. Questions:
@@ -189,6 +189,14 @@
   attach personal information (email, sign-in token, decision-prompt answers,
   or grades) to crash reports. Reports are only sent from release builds, not
   debug. The website is unaffected.</p>
+
+  <h2>Update checks (app)</h2>
+  <p>On launch the app fetches a small JSON manifest from
+  <a href="https://perpenda.com/latest.json">perpenda.com/latest.json</a>
+  to see whether a newer version is available. The request contains no
+  personal data — it's a plain HTTPS GET to a static file. The website's host
+  records the request's IP address and user-agent in its standard access logs,
+  as it does for any visitor to the site.</p>
 
   <h2>How your data is stored and shared</h2>
   <ul>
