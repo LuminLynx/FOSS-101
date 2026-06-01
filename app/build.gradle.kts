@@ -26,6 +26,7 @@ val releaseSigningProps: Properties? = localProps.takeIf {
 
 val sentryAuthToken: String? = localProps.getProperty("SENTRY_AUTH_TOKEN")
     ?.takeIf { it.isNotBlank() }
+    ?: System.getenv("SENTRY_AUTH_TOKEN")?.takeIf { it.isNotBlank() }
 
 android {
     namespace = "com.perpenda"
@@ -109,9 +110,11 @@ android {
 
 // Sentry Gradle plugin — uploads the R8 mapping file to Sentry on release
 // builds so obfuscated stack traces are deobfuscated in the dashboard. The
-// auth token is read from local.properties (gitignored). Without a token,
-// upload is skipped and the build still succeeds — the only cost is that
-// stack traces remain obfuscated for that release.
+// auth token is read from local.properties (gitignored) first, then the
+// SENTRY_AUTH_TOKEN environment variable as a fallback (the standard CI /
+// release-shell pattern). Without either, upload is skipped and the build
+// still succeeds — the only cost is that stack traces remain obfuscated
+// for that release.
 sentry {
     org.set("perpenda")
     projectName.set("android")
