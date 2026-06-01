@@ -303,6 +303,61 @@
   }
   .pullquote em { font-style: italic; }
 
+  /* ─── Download band ─────────────────────────────────── */
+  .download .lede { max-width: 60ch; }
+  .release-card {
+    border: 1px solid var(--hair-1);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 24px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    background: var(--paper-1);
+  }
+  .release-meta {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 24px;
+    flex: 1 1 320px;
+  }
+  .release-meta dt {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-3);
+    margin: 0; padding-top: 2px;
+  }
+  .release-meta dd {
+    margin: 0;
+    font-family: var(--font-body); font-size: 16px; color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .release-actions {
+    display: flex; flex-direction: column; gap: 10px;
+    align-items: flex-start;
+  }
+  .release-actions .link-sm {
+    font-family: var(--font-ui); font-size: 11px; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .release-actions .link-sm:hover { color: var(--ink-1); }
+  .install-h {
+    font-family: var(--font-display); font-size: 19px; font-weight: 500;
+    margin: 32px 0 8px;
+    color: var(--ink-1);
+  }
+  .install-steps {
+    font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+    color: var(--ink-2); margin: 0 0 16px; padding-left: 24px;
+    max-width: 64ch;
+  }
+  .install-steps li { margin: 6px 0; }
+  .band-footer-note {
+    font-family: var(--font-body); font-size: 14px; color: var(--ink-3);
+    margin: 16px 0 0; max-width: 60ch;
+  }
+
   /* ─── CTA ─────────────────────────────────────────────── */
   .cta {
     text-align: center; padding: 96px 0;
@@ -365,6 +420,7 @@
     <div class="grow"></div>
     <a class="link hide-md" href="#path">The path</a>
     <a class="link hide-md" href="#screens">Screens</a>
+    <a class="link hide-md" href="#download">Download</a>
     <a class="link hide-md" href="https://github.com/LuminLynx/Perpenda">GitHub</a>
     <a class="btn btn-primary" href="#beta">Get notified</a>
   </div>
@@ -513,6 +569,39 @@
     <div class="pullquote">
       <em>Confidence as a feature, not a softening.</em>
     </div>
+  </div>
+</section>
+
+<!-- ─── Download ──────────────────────────────────────── -->
+<section id="download" class="band download">
+  <div class="wrap">
+    <div class="band-eyebrow">Current release</div>
+    <h2 class="band-h">Download v1.0</h2>
+    <p class="lede">Sideload the signed APK directly. Google Play Protect verifies the install. When v1.1 ships, the app surfaces an in-app banner — no app store required.</p>
+
+    <div class="release-card">
+      <dl class="release-meta">
+        <dt>Version</dt><dd>1.0 (build 1)</dd>
+        <dt>Size</dt><dd>7.1 MB</dd>
+        <dt>Requires</dt><dd>Android 8.0 (API 26)+</dd>
+        <dt>Released</dt><dd>1 June 2026</dd>
+      </dl>
+      <div class="release-actions">
+        <a class="btn btn-primary" href="https://github.com/LuminLynx/Perpenda/releases/download/v1.0/app-release.apk">Download APK</a>
+        <a class="link-sm" href="https://github.com/LuminLynx/Perpenda/releases/download/v1.0/app-release.apk.sha256">SHA-256 fingerprint</a>
+      </div>
+    </div>
+
+    <h3 class="install-h">Install on Android</h3>
+    <ol class="install-steps">
+      <li>Download the APK on your Android phone.</li>
+      <li>Tap the file in your file manager.</li>
+      <li>When prompted, allow that file manager to "install from unknown source".</li>
+      <li>Google Play Protect runs a pre-install scan and confirms "this app looks safe".</li>
+      <li>Tap Install. Open. Sign in.</li>
+    </ol>
+
+    <p class="band-footer-note">To verify the download, compute <code>sha256sum app-release.apk</code> on a desktop and compare against the SHA-256 file linked above. The Android app itself contains no analytics SDKs and reports crashes only.</p>
   </div>
 </section>
 
