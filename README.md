@@ -34,33 +34,28 @@ Perpenda is not a math-first ML course, a code-first engineering curriculum, a g
 
 ---
 
-## Current development status
+## Current release
 
-Perpenda is currently in **Phase 4 — launch readiness**.
+**v1.0 — sideload distribution.** The first public build shipped 1 June 2026 with fifteen of twenty units, the calibrated grader, and spaced review. The APK is hosted on [GitHub Releases](https://github.com/LuminLynx/Perpenda/releases) and linked from [perpenda.com/#download](https://perpenda.com/#download); the app surfaces an in-app banner when a new version is available.
 
-Completed:
+What v1.0 ships:
 
-- **Phase 1: Foundation** — the core path-loop spine is in place.
-- **Phase 2: Unit-1 pilot** — the LLM grader was proven and the gate passed.
+- Fifteen units across the LLM-systems curriculum (tokenization through safety + content moderation).
+- Per-criterion calibrated grading on every decision prompt — no holistic score.
+- Spaced review on completed units.
+- Cross-device progress sync once signed in.
 
-In progress:
+Held back, planned for follow-up releases:
 
-- **Phase 4: Launch readiness** — app-store packaging, beta prep, and the public-facing surfaces. The Phase 3 spine is substantially complete (15 of 20 units, F5 Spaced Review); F6 Path Overview and units 16–20 carry over in parallel.
-
-Current state, per the project docs:
-
-- 15 of 20 units are published; units 16–20 are placeholders, to be locked from real-user signal.
-- F5 Spaced Review is implemented (review schedule, endpoints, Continue-surface integration).
-- F6 Path Overview is not started (carries over from Phase 3).
-- Phase 4 launch-readiness is the active focus: the marketing landing page, privacy policy, and in-app + web account deletion are live; app-store packaging and a closed beta remain.
-
-This is an in-development product, not a finished public release.
+- Units 16–20 — the operating-phase units (monitoring, vendor risk, A/B, fallbacks). Placeholders exist in the path; authored content lands as real-use signal decides which production topics matter most.
+- F6 Path Overview.
+- Google Play distribution. v1.0 is sideload-only by deliberate choice; Play submission is a separate future decision.
 
 Canonical status docs:
 
 - `docs/strategy/STRATEGY.md` — product strategy and locked decisions.
 - `docs/roadmap/EXECUTION.md` — phase plan and sequencing.
-- `docs/roadmap/PHASE_3_4_ROADMAP.md` — current Phase 3 / Phase 4 roadmap.
+- `docs/roadmap/PHASE_3_4_ROADMAP.md` — Phase 3 / Phase 4 roadmap (historical at this point).
 - `docs/curriculum/v1-path-outline.md` — the canonical 20-unit path outline.
 
 ---
