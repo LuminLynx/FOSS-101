@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perpenda.data.repository.RepositoryProvider
 import com.perpenda.data.version.VersionCheckRepository
 import com.perpenda.navigation.AppNav
-import com.perpenda.ui.theme.Foss101Theme
+import com.perpenda.ui.theme.PerpendaTheme
 import com.perpenda.ui.theme.ThemeMode
 import com.perpenda.ui.version.UpdateBanner
 import com.perpenda.ui.version.UpdateBannerViewModel
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 ThemeMode.LIGHT -> false
                 ThemeMode.DARK -> true
             }
-            Foss101Theme(darkTheme = darkTheme) {
+            PerpendaTheme(darkTheme = darkTheme) {
                 // The update banner is gated on BuildConfig.SIDELOAD_DISTRIBUTION
                 // (set by the release buildType). Google Play's Device and
                 // Network Abuse policy forbids Play-distributed apps from
