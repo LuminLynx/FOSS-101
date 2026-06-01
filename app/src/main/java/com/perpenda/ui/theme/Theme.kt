@@ -63,7 +63,7 @@ object PerpendaTheme {
 }
 
 @Composable
-fun Foss101Theme(
+fun PerpendaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
