@@ -4,22 +4,28 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("io.sentry.android.gradle") version "4.14.1"
 }
 
-// Read keystore credentials from local.properties (gitignored). If the file or
-// any required property is missing (CI, fresh checkout), the release build runs
-// unsigned and `bundleRelease` still completes — it just produces an unsigned
-// artifact that can't be installed until signed.
-val releaseSigningProps: Properties? = rootProject.file("local.properties")
+// Single load of local.properties (gitignored). Individual properties are
+// read defensively below — any one of them missing falls back to a sensible
+// default (unsigned build / no mapping upload) so a fresh checkout or CI run
+// still completes without local secrets.
+val localProps: Properties = rootProject.file("local.properties")
     .takeIf { it.exists() }
     ?.let { f -> Properties().apply { f.inputStream().use { load(it) } } }
-    ?.takeIf {
-        // Require both path + password before activating release signing.
-        // Missing either → fall through to an unsigned release build instead of
-        // failing at sign time.
-        it.getProperty("RELEASE_KEYSTORE_PATH")?.isNotBlank() == true &&
-            it.getProperty("RELEASE_KEYSTORE_PASSWORD")?.isNotBlank() == true
-    }
+    ?: Properties()
+
+val releaseSigningProps: Properties? = localProps.takeIf {
+    // Require both path + password before activating release signing.
+    // Missing either → fall through to an unsigned release build instead of
+    // failing at sign time.
+    it.getProperty("RELEASE_KEYSTORE_PATH")?.isNotBlank() == true &&
+        it.getProperty("RELEASE_KEYSTORE_PASSWORD")?.isNotBlank() == true
+}
+
+val sentryAuthToken: String? = localProps.getProperty("SENTRY_AUTH_TOKEN")
+    ?.takeIf { it.isNotBlank() }
 
 android {
     namespace = "com.perpenda"
@@ -66,7 +72,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -97,6 +104,22 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+// Sentry Gradle plugin — uploads the R8 mapping file to Sentry on release
+// builds so obfuscated stack traces are deobfuscated in the dashboard. The
+// auth token is read from local.properties (gitignored). Without a token,
+// upload is skipped and the build still succeeds — the only cost is that
+// stack traces remain obfuscated for that release.
+sentry {
+    org.set("perpenda")
+    projectName.set("android")
+    autoUploadProguardMapping.set(sentryAuthToken != null)
+    includeProguardMapping.set(true)
+    uploadNativeSymbols.set(false)
+    if (sentryAuthToken != null) {
+        authToken.set(sentryAuthToken)
     }
 }
 
