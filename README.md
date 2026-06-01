@@ -1,6 +1,6 @@
 # Perpenda
 
-![Status](https://img.shields.io/badge/status-Phase%204-blue)
+![Status](https://img.shields.io/badge/status-v1.0%20released-brightgreen)
 ![Units](https://img.shields.io/badge/units-15%20of%2020%20published-purple)
 ![Platform](https://img.shields.io/badge/platform-Android-green)
 ![Backend](https://img.shields.io/badge/backend-FastAPI-teal)
