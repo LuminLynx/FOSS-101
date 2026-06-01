@@ -1,17 +1,45 @@
-# Perpenda
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/perpenda-wordmark-dark.svg">
+    <img src="docs/brand/perpenda-wordmark.svg" alt="Perpenda" width="360">
+  </picture>
+</p>
 
-![Status](https://img.shields.io/badge/status-v1.0%20released-brightgreen)
-![Units](https://img.shields.io/badge/units-15%20of%2020%20published-purple)
-![Platform](https://img.shields.io/badge/platform-Android-green)
-![Backend](https://img.shields.io/badge/backend-FastAPI-teal)
-![Database](https://img.shields.io/badge/database-PostgreSQL-blue)
-![License](https://img.shields.io/badge/license-GPL--3.0-orange)
+<h3 align="center">Decision-grade fluency in LLM systems<br>for senior product managers.</h3>
 
-Perpenda is a mobile-native learning product for product-side professionals who need to become AI-fluent enough to make AI product decisions, not become machine-learning engineers.
+<p align="center">
+  Twenty units, in order, each one a single trade-off.<br>
+  Decision prompts, per-criterion calibrated grading, spaced review.<br>
+  <em>Not a tutorial app.</em>
+</p>
 
-The product teaches LLM systems through trade-offs: what a concept changes, what it costs, when it breaks, and how a product decision-maker should reason about it.
+<p align="center">
+  <a href="https://github.com/LuminLynx/Perpenda/releases/latest"><img src="https://img.shields.io/github/v/release/luminlynx/perpenda?label=latest&color=brightgreen" alt="Latest release"></a>
+  <a href="https://perpenda.com"><img src="https://img.shields.io/badge/website-perpenda.com-7D2A1A" alt="perpenda.com"></a>
+  <a href="https://perpenda.com/legal/privacy-policy.html"><img src="https://img.shields.io/badge/app-no%20trackers-7D2A1A" alt="No trackers in the app"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-orange" alt="License: GPL-3.0"></a>
+</p>
 
-> Development note: this repository began as **FOSS-101 / AI-101**, a glossary-oriented Android app. The canonical strategy now reshapes it into **Perpenda**, a path-centric learning product. Some package names, app labels, legacy glossary files, and repo history still reflect that transition.
+<p align="center">
+  <a href="https://github.com/LuminLynx/Perpenda/releases/download/V1.0/app-release.apk"><img src="https://img.shields.io/badge/Download%20APK-v1.0%20%C2%B7%207.1%20MB%20%C2%B7%20Android%208%2B-brightgreen?style=for-the-badge" alt="Download v1.0 APK"></a>
+</p>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/app-store/screens-dark/02-unit-reader.png">
+    <img src="docs/app-store/screens/02-unit-reader.png" alt="Perpenda unit reader" width="280">
+  </picture>
+</p>
+
+---
+
+## Install
+
+Sideload the signed APK directly. Google Play Protect verifies on install. The in-app banner surfaces when a new version is available.
+
+- **[Download v1.0 APK](https://github.com/LuminLynx/Perpenda/releases/download/V1.0/app-release.apk)** · 7.1 MB · Android 8.0 (API 26)+
+- **[SHA-256 fingerprint](https://github.com/LuminLynx/Perpenda/releases/download/V1.0/app-release.apk.sha256)** for verification
+- Full install instructions: **[perpenda.com/#download](https://perpenda.com/#download)**
 
 ---
 
@@ -244,7 +272,7 @@ This is part of the product's reliability moat, not an optional test harness.
 
 ## Legacy / transition notes
 
-Some old glossary-oriented features are intentionally being demoted or removed as the product moves from FOSS-101 / AI-101 toward Perpenda.
+Some old glossary-oriented features were intentionally demoted or removed as the product moved from its FOSS-101 / AI-101 origins to Perpenda.
 
 Examples of legacy or demoted surfaces:
 
@@ -255,27 +283,6 @@ Examples of legacy or demoted surfaces:
 - Glossary-first home screen patterns
 
 The current source of truth for what survives, changes, or gets removed is `docs/audits/AUDIT.md`.
-
----
-
-## Public launch status
-
-Perpenda has not publicly launched. Phase 4 launch-readiness is in progress.
-
-Done or live:
-
-- Marketing landing page (auto light/dark).
-- Privacy policy and account-deletion page (web), plus in-app account deletion.
-
-Remaining before a closed beta / public launch:
-
-- Trademark review for the Perpenda name.
-- Read-only web preview.
-- Beta cohort recruitment and the closed-test window.
-- Cost dashboards.
-- App-store packaging: signed release build, store listing, screenshots, content rating.
-
-Until then, this repo should be understood as an active product-development repository.
 
 ---
 
